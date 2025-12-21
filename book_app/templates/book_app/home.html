@@ -1,12 +1,6 @@
-{% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Book Store</title>
-    <link rel="stylesheet" href="{% static 'book_app/style.css' %}">
-</head>
-<body>
-    <h1>Welcome to Book Store</h1>
-    <p>This page is loading correctly.</p>
-</body>
-</html>
+{% extends 'book_app/base.html' %}
+
+{% block content %}
+<h1>Home Page</h1>
+<p>This page uses base.html correctly.</p>
+{% endblock %}
