@@ -1,6 +1,26 @@
 {% extends 'book_app/base.html' %}
 
 {% block content %}
-<h2>{{ book.title }}</h2>
-<p>{{ book.author }}</p>
+
+<div class="book-detail-container" style="padding: 20px; max-width: 800px; margin: auto;">
+
+    <!-- Book Title -->
+    <h1>{{ book.title }}</h1>
+
+    <!-- Author Name -->
+    <p><strong>Author:</strong> {{ book.author }}</p>
+
+    <!-- Description -->
+    <p>{{ book.description }}</p>
+
+    <!-- Price -->
+    <p><strong>Price:</strong> ₹{{ book.price }}</p>
+
+    <!-- Optional Image (can skip for now) -->
+    {% if book.image %}
+        <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width:300px; display:block; margin-top:20px;">
+    {% endif %}
+
+</div>
+
 {% endblock %}
