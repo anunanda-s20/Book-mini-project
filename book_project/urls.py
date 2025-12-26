@@ -20,5 +20,6 @@ from django.urls import path,include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    path('', include('book_app.urls')),
+    path('accounts/', include('django.contrib.auth.urls')), # Django built-in authentication URLs-This provides login, logout, password reset, etc.
+    path('', include('book_app.urls')), # App URLs (home, books, signup, etc.)
 ]

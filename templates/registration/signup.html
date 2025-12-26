@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Signup</h2>
+
+<form method="post"><!-- Form sends data using POST method -->
+    {% csrf_token %}<!-- Security token required by Django -->
+    {{ form.as_p }}<!-- forms as paragraph -->
+    <button type="submit">Sign Up</button>
+</form>
+
+<p>
+Already have an account?<!--msg-->
+<a href="{% url 'login' %}">Login</a> <!-- Link to login page -->
+</p>
+
+{% endblock %}
