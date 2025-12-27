@@ -30,7 +30,7 @@ def book_detail(request, id):
 # SIGNUP PAGE
 # Logged-in users should NOT access signup page
 def signup(request):
-    # 🔒 If user is already logged in → send to home
+    # If user is already logged in → send to home
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -43,3 +43,19 @@ def signup(request):
         form = SimpleUserCreationForm()
 
     return render(request, 'registration/signup.html', {'form': form})
+
+
+
+from .forms import BookForm
+
+@login_required
+def add_book(request):
+    if request.method == 'POST':
+        form = BookForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('book_list')  # use your list page name
+    else:
+        form = BookForm()
+
+    return render(request, 'book_app/add_book.html', {'form': form})

@@ -11,3 +11,11 @@ class SimpleUserCreationForm(UserCreationForm):
     class Meta:
         model = User
         fields = ("username", "password1", "password2")
+
+
+from .models import Book
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book #taking the structure of Book-model
+        fields = ['title', 'author', 'price', 'published_date']#apply required fields
