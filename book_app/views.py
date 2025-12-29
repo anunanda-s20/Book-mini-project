@@ -1,36 +1,35 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 
 from .models import Book
-from .forms import SimpleUserCreationForm
+from .forms import SimpleUserCreationForm, BookForm
 
 
 # HOME PAGE
-# This page is visible to everyone (logged in or not)
+# Visible to everyone
 def home(request):
     return render(request, 'book_app/home.html')
 
 
-# BOOK LIST PAGE (login required)
-# Only logged-in users can see the list of books
+# BOOK LIST PAGE (READ)
+# Login required
 @login_required
 def book_list(request):
-    books = Book.objects.all()  # get all books from database
+    books = Book.objects.all()
     return render(request, 'book_app/book_list.html', {'books': books})
 
 
-# BOOK DETAIL PAGE (login required)
-# Shows details of one book using its ID
+# BOOK DETAIL PAGE (READ)
+# Login required
 @login_required
 def book_detail(request, id):
-    book = get_object_or_404(Book, id=id)  # get book or show 404 error
+    book = get_object_or_404(Book, id=id)
     return render(request, 'book_app/book_detail.html', {'book': book})
 
 
 # SIGNUP PAGE
-# Logged-in users should NOT access signup page
 def signup(request):
-    # If user is already logged in → send to home
+    # If already logged in → redirect to home
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -38,24 +37,71 @@ def signup(request):
         form = SimpleUserCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('login')  # Django built-in login page
+            return redirect('login')
     else:
         form = SimpleUserCreationForm()
 
     return render(request, 'registration/signup.html', {'form': form})
 
 
-
-from .forms import BookForm
-
+# ADD BOOK (CREATE)
+# Login required
 @login_required
 def add_book(request):
     if request.method == 'POST':
         form = BookForm(request.POST)
         if form.is_valid():
             form.save()
-            return redirect('book_list')  # use your list page name
+            return redirect('book_list')
     else:
         form = BookForm()
 
     return render(request, 'book_app/add_book.html', {'form': form})
+
+
+# DASHBOARD (STAFF ONLY)
+
+# Staff check
+def staff_required(user):
+    return user.is_staff
+
+
+# DASHBOARD HOME
+@login_required
+@user_passes_test(staff_required)
+def dashboard(request):
+    return render(request, 'dashboard/dashboard.html')
+
+
+# MANAGE BOOKS (READ)
+@login_required
+@user_passes_test(staff_required)
+def manage_books(request):
+    books = Book.objects.all()
+    return render(request, 'dashboard/manage_books.html', {'books': books})
+
+
+# EDIT BOOK (UPDATE)
+@login_required
+@user_passes_test(staff_required)
+def edit_book(request, id):
+    book = get_object_or_404(Book, id=id)
+
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)
+        if form.is_valid():
+            form.save()
+            return redirect('manage_books')
+    else:
+        form = BookForm(instance=book)
+
+    return render(request, 'dashboard/edit_book.html', {'form': form})
+
+
+# DELETE BOOK (DELETE)
+@login_required
+@user_passes_test(staff_required)
+def delete_book(request, id):
+    book = get_object_or_404(Book, id=id)
+    book.delete()
+    return redirect('manage_books')

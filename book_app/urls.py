@@ -7,4 +7,10 @@ urlpatterns = [
     path('books/<int:id>/', views.book_detail, name='book_detail'),#book detail pg
     path('signup/', views.signup, name='signup'),
     path('add-book/', views.add_book, name='add_book'),
+    #dashboard
+    path('dashboard/', views.dashboard, name='dashboard'),
+    path('dashboard/books/', views.manage_books, name='manage_books'),
+    path('dashboard/books/edit/<int:id>/', views.edit_book, name='edit_book'),
+    path('dashboard/books/delete/<int:id>/', views.delete_book, name='delete_book'),
+
 ]

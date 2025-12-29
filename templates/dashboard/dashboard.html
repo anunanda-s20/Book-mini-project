@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Dashboard</h2>
+
+<p>Welcome, {{ request.user.username }}</p>
+
+<a href="{% url 'manage_books' %}" class="btn btn-primary">
+    Manage Books
+</a>
+{% endblock %}
