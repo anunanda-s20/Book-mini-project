@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
+from django.contrib.auth import authenticate, login
+from django.contrib import messages
 
 from .models import Book, Order
 from .forms import SimpleUserCreationForm, BookForm
-
-
+from django.contrib.auth import logout
 
 # HOME PAGE
 # Visible to everyone
@@ -13,7 +14,7 @@ def home(request):
 
 
 # BOOK LIST PAGE (READ)
-# Login required
+# Login required (admin OR normal user)
 @login_required
 def book_list(request):
     books = Book.objects.all()
@@ -21,7 +22,7 @@ def book_list(request):
 
 
 # BOOK DETAIL PAGE (READ)
-# Login required
+# Login required (admin OR normal user)
 @login_required
 def book_detail(request, id):
     book = get_object_or_404(Book, id=id)
@@ -29,6 +30,7 @@ def book_detail(request, id):
 
 
 # SIGNUP PAGE
+# Only for NOT logged-in users
 def signup(request):
     # If already logged in → redirect to home
     if request.user.is_authenticated:
@@ -45,8 +47,35 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
+# LOGIN PAGE
+# Only for NOT logged-in users
+def custom_login(request):
+    # If already logged in → redirect to home
+    if request.user.is_authenticated:
+        return redirect('home')
+
+    if request.method == "POST":
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        user = authenticate(request, username=username, password=password)
+        if user is not None:
+            login(request, user)
+            return redirect('home')  # or 'dashboard' if staff
+        else:
+            messages.error(request, "Invalid username or password")
+
+    return render(request, 'registration/login.html')
+
+
+# CUSTOM LOGOUT
+@login_required
+def custom_logout(request):
+    logout(request)
+    return redirect('home')  # redirect to home page after logout
+
+
 # ADD BOOK (CREATE)
-# Login required
+# Login required (admin OR normal user)
 @login_required
 def add_book(request):
     if request.method == 'POST':
@@ -60,7 +89,9 @@ def add_book(request):
     return render(request, 'book_app/add_book.html', {'form': form})
 
 
+# =========================
 # DASHBOARD (STAFF ONLY)
+# =========================
 
 # Staff check
 def staff_required(user):
@@ -68,6 +99,7 @@ def staff_required(user):
 
 
 # DASHBOARD HOME
+# Only staff users allowed
 @login_required
 @user_passes_test(staff_required)
 def dashboard(request):
@@ -75,6 +107,7 @@ def dashboard(request):
 
 
 # MANAGE BOOKS (READ)
+# Only staff users allowed
 @login_required
 @user_passes_test(staff_required)
 def manage_books(request):
@@ -83,6 +116,7 @@ def manage_books(request):
 
 
 # EDIT BOOK (UPDATE)
+# Only staff users allowed
 @login_required
 @user_passes_test(staff_required)
 def edit_book(request, id):
@@ -100,6 +134,7 @@ def edit_book(request, id):
 
 
 # DELETE BOOK (DELETE)
+# Only staff users allowed
 @login_required
 @user_passes_test(staff_required)
 def delete_book(request, id):
@@ -108,9 +143,11 @@ def delete_book(request, id):
     return redirect('manage_books')
 
 
+# PAYMENT (SIMULATION)
+
 
 # BUY BOOK (PAYMENT - SIMULATION)
-# Login required
+# Login required (normal users)
 @login_required
 def buy_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
@@ -126,6 +163,7 @@ def buy_book(request, book_id):
 
 
 # PAYMENT SUCCESS PAGE
+# Login required
 @login_required
 def payment_success(request):
     return render(request, 'book_app/payment_success.html')
