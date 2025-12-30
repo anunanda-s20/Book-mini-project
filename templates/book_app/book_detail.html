@@ -16,7 +16,18 @@
     <!-- Price -->
     <p><strong>Price:</strong> ₹{{ book.price }}</p>
 
-    <!-- Optional Image (can skip for now) -->
+    <!-- Buy Button -->
+    {% if user.is_authenticated %}
+        <a href="{% url 'buy_book' book.id %}" class="btn btn-success">
+            Buy Now
+        </a>
+    {% else %}
+        <p>
+            <a href="{% url 'login' %}">Login</a> to buy this book.
+        </p>
+    {% endif %}
+
+    <!-- Optional Image -->
     {% if book.image %}
         <img src="{{ book.image.url }}" alt="{{ book.title }}" style="width:300px; display:block; margin-top:20px;">
     {% endif %}

@@ -12,5 +12,8 @@ urlpatterns = [
     path('dashboard/books/', views.manage_books, name='manage_books'),
     path('dashboard/books/edit/<int:id>/', views.edit_book, name='edit_book'),
     path('dashboard/books/delete/<int:id>/', views.delete_book, name='delete_book'),
+    #paymnt
+    path('buy/<int:book_id>/', views.buy_book, name='buy_book'),
+    path('payment-success/', views.payment_success, name='payment_success'),
 
 ]

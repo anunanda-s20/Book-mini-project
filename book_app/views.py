@@ -1,8 +1,9 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required, user_passes_test
 
-from .models import Book
+from .models import Book, Order
 from .forms import SimpleUserCreationForm, BookForm
+
 
 
 # HOME PAGE
@@ -105,3 +106,26 @@ def delete_book(request, id):
     book = get_object_or_404(Book, id=id)
     book.delete()
     return redirect('manage_books')
+
+
+
+# BUY BOOK (PAYMENT - SIMULATION)
+# Login required
+@login_required
+def buy_book(request, book_id):
+    book = get_object_or_404(Book, id=book_id)
+
+    # Fake payment success (save order)
+    Order.objects.create(
+        user=request.user,
+        book=book,
+        price=book.price
+    )
+
+    return redirect('payment_success')
+
+
+# PAYMENT SUCCESS PAGE
+@login_required
+def payment_success(request):
+    return render(request, 'book_app/payment_success.html')
