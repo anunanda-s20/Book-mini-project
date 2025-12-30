@@ -3,14 +3,26 @@
 {% block content %}
 <h2>Login</h2>
 
-<form method="post"> <!-- Form sends data using POST method -->
-    {% csrf_token %} <!-- Security token required by Django -->
-    {{ form.as_p }} <!-- Render form fields as paragraphs -->
+<form method="post">  <!-- Form sends data using POST method -->
+    {% csrf_token %}  <!-- Security token required by Django -->
+
+    <!-- Username field -->
+    <label>Username</label><br>
+    <input type="text" name="username" required>  <!-- Must match request.POST.get('username') -->
+    <br><br>
+
+    <!-- Password field -->
+    <label>Password</label><br>
+    <input type="password" name="password" required>  <!-- Must match request.POST.get('password') -->
+    <br><br>
+
+    <!-- Submit button -->
     <button type="submit">Login</button>
 </form>
 
 <p>
-No account? <!-- Message -->
-<a href="{% url 'signup' %}">Signup</a> <!-- Link to login page -->
+    No account?  <!-- Message -->
+    <a href="{% url 'signup' %}">Signup</a>  <!-- Link to signup page -->
 </p>
+
 {% endblock %}
