@@ -3,6 +3,15 @@
 {% block content %}
 <h2>Login</h2>
 
+<!-- SHOW ERROR / INFO MESSAGES (IMPORTANT) -->
+{% if messages %}  <!-- Check if any message exists -->
+    {% for message in messages %}  <!-- Loop through all messages -->
+        <div class="alert alert-danger">
+            {{ message }}  <!-- Display message text -->
+        </div>
+    {% endfor %}
+{% endif %}
+
 <form method="post">  <!-- Form sends data using POST method -->
     {% csrf_token %}  <!-- Security token required by Django -->
 

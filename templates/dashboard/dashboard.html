@@ -2,10 +2,68 @@
 
 {% block content %}
 <h2>Dashboard</h2>
-
 <p>Welcome, {{ request.user.username }}</p>
+
+<hr>
+
+<h4>Books</h4>
+
+<!-- Add Book button -->
+<a href="{% url 'add_book' %}" class="btn btn-success mb-3">
+    + Add Book
+</a>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+    </tr>
+    {% for book in books %}
+    <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+    </tr>
+    {% endfor %}
+</table>
 
 <a href="{% url 'manage_books' %}" class="btn btn-primary">
     Manage Books
 </a>
+
+<hr>
+
+<h4>Orders</h4>
+<table class="table table-bordered">
+    <tr>
+        <th>User</th>
+        <th>Book</th>
+        <th>Price</th>
+        <th>Status</th>
+        <th>Update</th>
+    </tr>
+
+    {% for order in orders %}
+    <tr>
+        <td>{{ order.user.username }}</td>
+        <td>{{ order.book.title }}</td>
+        <td>{{ order.price }}</td>
+        <td>{{ order.status }}</td>
+        <td>
+            <form method="post" action="{% url 'update_order_status' order.id %}">
+                {% csrf_token %}
+                <select name="status">
+                    <option value="PENDING">Pending</option>
+                    <option value="PAID">Paid</option>
+                    <option value="SHIPPED">Shipped</option>
+                    <option value="DELIVERED">Delivered</option>
+                </select>
+                <button type="submit" class="btn btn-sm btn-success">
+                    Update
+                </button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
 {% endblock %}

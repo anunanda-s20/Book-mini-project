@@ -19,4 +19,8 @@ urlpatterns = [
     # Payment
     path('buy/<int:book_id>/', views.buy_book, name='buy_book'),
     path('payment-success/', views.payment_success, name='payment_success'),
+    
+    # Used to change order status from the dashboard
+    path('dashboard/orders/update/<int:order_id>/',views.update_order_status,name='update_order_status'),
+
 ]
