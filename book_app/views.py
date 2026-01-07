@@ -92,7 +92,7 @@ def add_book(request):
 # =========================
 
 def staff_required(user):
-    return user.is_staff
+    return user.is_staff  # allow only staff users
 
 
 @login_required
@@ -146,13 +146,18 @@ def delete_book(request, id):
 @login_required
 @user_passes_test(staff_required)
 def update_order_status(request, order_id):
+    # get the order safely or show 404 if not found
     order = get_object_or_404(Order, id=order_id)
 
     if request.method == 'POST':
+        # get selected status from form
         new_status = request.POST.get('status')
-        order.status = new_status
-        order.save()
 
+        # update order status
+        order.status = new_status
+        order.save()  # save changes to database
+
+    # after update, go back to dashboard
     return redirect('dashboard')
 
 
@@ -165,9 +170,9 @@ def buy_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
     Order.objects.create(
-        user=request.user,
-        book=book,
-        price=book.price
+        user=request.user,   # who is buying
+        book=book,           # which book
+        price=book.price     # price at purchase time
     )
 
     return redirect('payment_success')

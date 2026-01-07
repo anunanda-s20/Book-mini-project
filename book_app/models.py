@@ -17,21 +17,36 @@ class Book(models.Model):
 class Order(models.Model):
 
     STATUS_CHOICES = [
-        ('PENDING', 'Pending'),
-        ('PAID', 'Paid'),
-        ('SHIPPED', 'Shipped'),
-        ('DELIVERED', 'Delivered'),
+        ('pending', 'Pending'),       # order created, not paid yet
+        ('paid', 'Paid'),             # payment completed
+        ('shipped', 'Shipped'),       # order sent to customer
+        ('delivered', 'Delivered'),   # order successfully delivered
     ]
 
-    user = models.ForeignKey(User,on_delete=models.CASCADE)  # which user placed the order
+    user = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE
+    )  # which user placed the order
 
-    book = models.ForeignKey(Book,on_delete=models.CASCADE)  # which book was ordered
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE
+    )  # which book was ordered
 
-    price = models.DecimalField(max_digits=8,decimal_places=2)  # price at the time of order
+    price = models.DecimalField(
+        max_digits=8,
+        decimal_places=2
+    )  # price at the time of order
 
-    status = models.CharField(max_length=10,choices=STATUS_CHOICES,default='PENDING')  # current order status
+    status = models.CharField(
+        max_length=10,
+        choices=STATUS_CHOICES,
+        default='pending'
+    )  # current order status
 
-    ordered_at = models.DateTimeField(auto_now_add=True)  # date & time of order
+    ordered_at = models.DateTimeField(
+        auto_now_add=True
+    )  # date & time of order
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title} - {self.status}"
