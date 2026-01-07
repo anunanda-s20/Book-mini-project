@@ -12,32 +12,29 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Base directory of the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/6.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = "django-insecure-%v+$^=u=%8_cym@j=2n3h$5ywjtk=gz9k_(clkre3rn@1s13o)"
 
-# SECURITY WARNING: don't run with debug turned on in production!
+# Debug mode ON (only for development)
 DEBUG = True
 
+# Allowed hosts (empty for local development)
 ALLOWED_HOSTS = []
 
 
 # Application definition
-
 INSTALLED_APPS = [
     "django.contrib.admin",
-    "django.contrib.auth",#auth system-login works
+    "django.contrib.auth",      # Django authentication (login, logout)
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    'book_app',
+    "book_app",                 # Our custom app
 ]
 
 MIDDLEWARE = [
@@ -55,7 +52,7 @@ ROOT_URLCONF = "book_project.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-         "DIRS": [BASE_DIR / 'templates'],  # point to the root templates folder
+        "DIRS": [BASE_DIR / "templates"],  # Main templates folder
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -70,9 +67,7 @@ TEMPLATES = [
 WSGI_APPLICATION = "book_project.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/6.0/ref/settings/#databases
-
+# Database configuration (SQLite)
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -81,31 +76,30 @@ DATABASES = {
 }
 
 
-# Password validation
-# https://docs.djangoproject.com/en/6.0/ref/settings/#auth-password-validators
-
+# Password validation (disabled for learning stage)
 AUTH_PASSWORD_VALIDATORS = []
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/6.0/topics/i18n/
-
+# Language & time zone
 LANGUAGE_CODE = "en-us"
-
 TIME_ZONE = "UTC"
-
 USE_I18N = True
-
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/6.0/howto/static-files/
-
+# ================= STATIC FILES =================
+# Used for CSS, JS, icons
 STATIC_URL = "/static/"
 
 
-# Django authentication URLs
-LOGIN_URL = 'login'#protected pg
-LOGIN_REDIRECT_URL = 'home'#after-login
-LOGOUT_REDIRECT_URL = 'home'#after-logout
+# ================= MEDIA FILES =================
+# Used for uploaded images (book covers)
+MEDIA_URL = "/media/"               # URL to access images
+MEDIA_ROOT = BASE_DIR / "media"     # Folder where images are stored
+
+
+# ================= AUTHENTICATION =================
+# Redirect rules for login/logout
+LOGIN_URL = "login"                 # Redirect if user not logged in
+LOGIN_REDIRECT_URL = "home"         # After successful login
+LOGOUT_REDIRECT_URL = "home"        # After logout

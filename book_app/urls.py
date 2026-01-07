@@ -1,14 +1,20 @@
 from django.urls import path
 from . import views
 
+from django.conf import settings          # access MEDIA settings
+from django.conf.urls.static import static # serve media files in development
+
 urlpatterns = [
     path('', views.home, name='home'),   # home page
-    path('books/', views.book_list, name='book_list'),
-    path('books/<int:id>/', views.book_detail, name='book_detail'),  # book detail page
-    path('signup/', views.signup, name='signup'),
-    path('login/', views.custom_login, name='login'),  # ← custom login added
-    path('logout/', views.custom_logout, name='logout'), # optional logout view
-    path('add-book/', views.add_book, name='add_book'),
+
+    path('books/', views.book_list, name='book_list'),  # all books
+    path('books/<int:id>/', views.book_detail, name='book_detail'),  # book detail
+
+    path('signup/', views.signup, name='signup'),       # signup page
+    path('login/', views.custom_login, name='login'),   # custom login
+    path('logout/', views.custom_logout, name='logout'),# logout
+
+    path('add-book/', views.add_book, name='add_book'), # add book
 
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -19,8 +25,15 @@ urlpatterns = [
     # Payment
     path('buy/<int:book_id>/', views.buy_book, name='buy_book'),
     path('payment-success/', views.payment_success, name='payment_success'),
-    
-    # Used to change order status from the dashboard
-    path('dashboard/orders/update/<int:order_id>/',views.update_order_status,name='update_order_status'),
 
+    # Update order status
+    path(
+        'dashboard/orders/update/<int:order_id>/',
+        views.update_order_status,
+        name='update_order_status'
+    ),
 ]
+
+# Serve uploaded images (MEDIA) during development
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
