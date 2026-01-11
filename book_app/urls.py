@@ -10,6 +10,10 @@ urlpatterns = [
     path('books/', views.book_list, name='book_list'),  # all books
     path('books/<int:id>/', views.book_detail, name='book_detail'),  # book detail
 
+    # Cart
+    path('add-to-cart/<int:book_id>/', views.add_to_cart, name='add_to_cart'),  # add book to cart
+    path('cart/', views.view_cart, name='view_cart'),                           # view cart
+
     path('signup/', views.signup, name='signup'),       # signup page
     path('login/', views.custom_login, name='login'),   # custom login
     path('logout/', views.custom_logout, name='logout'),# logout

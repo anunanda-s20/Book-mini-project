@@ -3,7 +3,8 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Book, Order
+from .models import Book, Order, Cart, CartItem
+
 from .forms import SimpleUserCreationForm, BookForm
 
 
@@ -181,3 +182,40 @@ def buy_book(request, book_id):
 @login_required
 def payment_success(request):
     return render(request, 'book_app/payment_success.html')
+
+
+# =========================
+# CART SYSTEM (USER)
+# =========================
+
+@login_required
+def add_to_cart(request, book_id):
+    book = get_object_or_404(Book, id=book_id)  # get selected book
+
+    cart, created = Cart.objects.get_or_create(user=request.user)  # get or create cart
+
+    cart_item, item_created = CartItem.objects.get_or_create(
+        cart=cart,
+        book=book
+    )  # get or create cart item
+
+    if not item_created:
+        cart_item.quantity += 1  # increase quantity
+        cart_item.save()  # save updated quantity
+
+    return redirect('view_cart')  # go to cart page
+
+
+@login_required
+def view_cart(request):
+    cart = Cart.objects.filter(user=request.user).first()  # get user cart
+    items = cart.items.all() if cart else []  # get cart items safely
+
+    total = sum(item.book.price * item.quantity for item in items)  # total price
+
+    context = {
+        'cart': cart,
+        'items': items,
+        'total': total,
+    }
+    return render(request, 'book_app/cart.html', context)

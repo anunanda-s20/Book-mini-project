@@ -1,0 +1,21 @@
+{% extends 'base.html' %}  <!-- use main layout -->
+
+{% block content %}
+<h2>Your Cart</h2>
+
+{% if items %}  <!-- check if cart has items -->
+    <ul>
+        {% for item in items %}  <!-- loop cart items -->
+            <li>
+                {{ item.book.title }} -
+                ₹{{ item.book.price }} × {{ item.quantity }}  <!-- price × quantity -->
+            </li>
+        {% endfor %}
+    </ul>
+
+    <h3>Total: ₹{{ total }}</h3>  <!-- total amount -->
+{% else %}
+    <p>Your cart is empty.</p>  <!-- empty cart message -->
+{% endif %}
+
+{% endblock %}
