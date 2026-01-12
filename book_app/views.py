@@ -4,7 +4,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 
-from .models import Book, Order, OrderItem, Cart, CartItem
+from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist
 from .forms import SimpleUserCreationForm, BookForm
 
 # =========================
@@ -225,3 +225,36 @@ def checkout(request):  # checkout page
 @login_required
 def order_success(request):  # simple order confirmation
     return render(request, 'book_app/order_success.html')
+
+
+# =========================
+# WISHLIST SYSTEM
+# =========================
+
+@login_required
+def add_to_wishlist(request, book_id):  # add book to wishlist
+    book = get_object_or_404(Book, id=book_id)
+
+    # create wishlist item if not already added
+    Wishlist.objects.get_or_create(
+        user=request.user,
+        book=book
+    )
+
+    return redirect('wishlist')  # go to wishlist page
+
+
+@login_required
+def remove_from_wishlist(request, book_id):  # remove book from wishlist
+    Wishlist.objects.filter(
+        user=request.user,
+        book_id=book_id
+    ).delete()
+
+    return redirect('wishlist')
+
+
+@login_required
+def wishlist(request):  # show user's wishlist
+    items = Wishlist.objects.filter(user=request.user)
+    return render(request, 'book_app/wishlist.html', {'items': items})
