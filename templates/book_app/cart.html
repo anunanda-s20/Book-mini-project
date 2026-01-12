@@ -4,18 +4,37 @@
 <h2>Your Cart</h2>
 
 {% if items %}  <!-- check if cart has items -->
-    <ul>
-        {% for item in items %}  <!-- loop cart items -->
-            <li>
-                {{ item.book.title }} -
-                ₹{{ item.book.price }} × {{ item.quantity }}  <!-- price × quantity -->
-            </li>
-        {% endfor %}
-    </ul>
+<table border="1" cellpadding="10">  <!-- simple table layout -->
+    <tr>
+        <th>Book</th>
+        <th>Price</th>
+        <th>Quantity</th>
+        <th>Action</th>
+    </tr>
 
-    <h3>Total: ₹{{ total }}</h3>  <!-- total amount -->
+    {% for item in items %}  <!-- loop cart items -->
+    <tr>
+        <td>{{ item.book.title }}</td>  <!-- book name -->
+
+        <td>₹{{ item.book.price }}</td>  <!-- book price -->
+
+        <td>{{ item.quantity }}</td>  <!-- show quantity -->
+
+        <td>
+            <a href="{% url 'decrease_quantity' item.id %}"
+               style="padding:5px 10px; background:#ddd; text-decoration:none;">−</a>  <!-- minus -->
+
+            <a href="{% url 'increase_quantity' item.id %}"
+               style="padding:5px 10px; background:#ddd; text-decoration:none;">+</a>  <!-- plus -->
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total: ₹{{ total }}</h3>  <!-- total amount -->
+
 {% else %}
-    <p>Your cart is empty.</p>  <!-- empty cart message -->
+<p>Your cart is empty.</p>  <!-- empty cart message -->
 {% endif %}
 
 {% endblock %}

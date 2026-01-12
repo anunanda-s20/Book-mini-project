@@ -4,7 +4,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
 from .models import Book, Order, Cart, CartItem
-
 from .forms import SimpleUserCreationForm, BookForm
 
 
@@ -147,18 +146,13 @@ def delete_book(request, id):
 @login_required
 @user_passes_test(staff_required)
 def update_order_status(request, order_id):
-    # get the order safely or show 404 if not found
-    order = get_object_or_404(Order, id=order_id)
+    order = get_object_or_404(Order, id=order_id)  # get order safely
 
     if request.method == 'POST':
-        # get selected status from form
-        new_status = request.POST.get('status')
-
-        # update order status
+        new_status = request.POST.get('status')  # get status from form
         order.status = new_status
-        order.save()  # save changes to database
+        order.save()  # save updated status
 
-    # after update, go back to dashboard
     return redirect('dashboard')
 
 
@@ -171,9 +165,9 @@ def buy_book(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
     Order.objects.create(
-        user=request.user,   # who is buying
-        book=book,           # which book
-        price=book.price     # price at purchase time
+        user=request.user,
+        book=book,
+        price=book.price
     )
 
     return redirect('payment_success')
@@ -190,26 +184,26 @@ def payment_success(request):
 
 @login_required
 def add_to_cart(request, book_id):
-    book = get_object_or_404(Book, id=book_id)  # get selected book
+    book = get_object_or_404(Book, id=book_id)  # selected book
 
-    cart, created = Cart.objects.get_or_create(user=request.user)  # get or create cart
+    cart, created = Cart.objects.get_or_create(user=request.user)  # user cart
 
     cart_item, item_created = CartItem.objects.get_or_create(
         cart=cart,
         book=book
-    )  # get or create cart item
+    )
 
     if not item_created:
         cart_item.quantity += 1  # increase quantity
-        cart_item.save()  # save updated quantity
+        cart_item.save()
 
-    return redirect('view_cart')  # go to cart page
+    return redirect('view_cart')
 
 
 @login_required
 def view_cart(request):
-    cart = Cart.objects.filter(user=request.user).first()  # get user cart
-    items = cart.items.all() if cart else []  # get cart items safely
+    cart = Cart.objects.filter(user=request.user).first()  # get cart
+    items = cart.items.all() if cart else []  # cart items
 
     total = sum(item.book.price * item.quantity for item in items)  # total price
 
@@ -219,3 +213,28 @@ def view_cart(request):
         'total': total,
     }
     return render(request, 'book_app/cart.html', context)
+
+
+# =========================
+# DAY 6 — PLUS / MINUS QUANTITY
+# =========================
+
+@login_required
+def increase_quantity(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id)  # get cart item
+    cart_item.quantity += 1  # increase quantity
+    cart_item.save()  # save change
+    return redirect('view_cart')  # reload cart page
+
+
+@login_required
+def decrease_quantity(request, item_id):
+    cart_item = get_object_or_404(CartItem, id=item_id)  # get cart item
+    cart_item.quantity -= 1  # decrease quantity
+
+    if cart_item.quantity <= 0:
+        cart_item.delete()  # remove item if zero
+    else:
+        cart_item.save()  # save updated quantity
+
+    return redirect('view_cart')  # reload cart page

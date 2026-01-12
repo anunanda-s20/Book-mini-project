@@ -13,12 +13,14 @@ urlpatterns = [
     # Cart
     path('add-to-cart/<int:book_id>/', views.add_to_cart, name='add_to_cart'),  # add book to cart
     path('cart/', views.view_cart, name='view_cart'),                           # view cart
+    path('cart/increase/<int:item_id>/', views.increase_quantity, name='increase_quantity'),  # increase quantity
+    path('cart/decrease/<int:item_id>/', views.decrease_quantity, name='decrease_quantity'),  # decrease quantity
 
-    path('signup/', views.signup, name='signup'),       # signup page
-    path('login/', views.custom_login, name='login'),   # custom login
-    path('logout/', views.custom_logout, name='logout'),# logout
+    path('signup/', views.signup, name='signup'),        # signup page
+    path('login/', views.custom_login, name='login'),    # custom login
+    path('logout/', views.custom_logout, name='logout'), # logout
 
-    path('add-book/', views.add_book, name='add_book'), # add book
+    path('add-book/', views.add_book, name='add_book'),  # add book
 
     # Dashboard
     path('dashboard/', views.dashboard, name='dashboard'),
@@ -31,11 +33,7 @@ urlpatterns = [
     path('payment-success/', views.payment_success, name='payment_success'),
 
     # Update order status
-    path(
-        'dashboard/orders/update/<int:order_id>/',
-        views.update_order_status,
-        name='update_order_status'
-    ),
+    path('dashboard/orders/update/<int:order_id>/', views.update_order_status, name='update_order_status'),
 ]
 
 # Serve uploaded images (MEDIA) during development
