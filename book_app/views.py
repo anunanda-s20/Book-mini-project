@@ -3,26 +3,25 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 
-from .models import Book, Order, Cart, CartItem
-from .forms import SimpleUserCreationForm, BookForm
 
+from .models import Book, Order, OrderItem, Cart, CartItem
+from .forms import SimpleUserCreationForm, BookForm
 
 # =========================
 # PUBLIC PAGES
 # =========================
-
-def home(request):
+def home(request):  # show home page
     return render(request, 'book_app/home.html')
 
 
 @login_required
-def book_list(request):
+def book_list(request):  # show all books
     books = Book.objects.all()
     return render(request, 'book_app/book_list.html', {'books': books})
 
 
 @login_required
-def book_detail(request, id):
+def book_detail(request, id):  # single book detail
     book = get_object_or_404(Book, id=id)
     return render(request, 'book_app/book_detail.html', {'book': book})
 
@@ -30,14 +29,13 @@ def book_detail(request, id):
 # =========================
 # AUTHENTICATION
 # =========================
-
-def signup(request):
+def signup(request):  # register new user
     if request.user.is_authenticated:
         return redirect('home')
 
     if request.method == "POST":
         form = SimpleUserCreationForm(request.POST)
-        if form.is_valid():
+        if form.is_valid():  # valid form → save user
             form.save()
             return redirect('login')
     else:
@@ -46,7 +44,7 @@ def signup(request):
     return render(request, 'registration/signup.html', {'form': form})
 
 
-def custom_login(request):
+def custom_login(request):  # login user
     if request.user.is_authenticated:
         return redirect('home')
 
@@ -54,18 +52,17 @@ def custom_login(request):
         username = request.POST.get('username')
         password = request.POST.get('password')
         user = authenticate(request, username=username, password=password)
-
-        if user:
+        if user:  # correct credentials → login
             login(request, user)
             return redirect('home')
         else:
-            messages.error(request, "Invalid username or password")
+            messages.error(request, "Invalid username or password")  # show error
 
     return render(request, 'registration/login.html')
 
 
 @login_required
-def custom_logout(request):
+def custom_logout(request):  # logout user
     logout(request)
     return redirect('home')
 
@@ -73,168 +70,158 @@ def custom_logout(request):
 # =========================
 # BOOK CRUD (STAFF)
 # =========================
-
 @login_required
-def add_book(request):
+def add_book(request):  # add new book
     if request.method == 'POST':
         form = BookForm(request.POST)
-        if form.is_valid():
+        if form.is_valid():  # valid → save
             form.save()
             return redirect('book_list')
     else:
         form = BookForm()
-
     return render(request, 'book_app/add_book.html', {'form': form})
 
 
 # =========================
 # DASHBOARD (STAFF ONLY)
 # =========================
-
-def staff_required(user):
-    return user.is_staff  # allow only staff users
+def staff_required(user):  # staff only
+    return user.is_staff
 
 
 @login_required
 @user_passes_test(staff_required)
-def dashboard(request):
+def dashboard(request):  # show dashboard
     books = Book.objects.all()
     orders = Order.objects.all().order_by('-ordered_at')
-
-    context = {
-        'books': books,
-        'orders': orders,
-    }
-    return render(request, 'dashboard/dashboard.html', context)
+    return render(request, 'dashboard/dashboard.html', {'books': books, 'orders': orders})
 
 
 @login_required
 @user_passes_test(staff_required)
-def manage_books(request):
+def manage_books(request):  # manage books
     books = Book.objects.all()
     return render(request, 'dashboard/manage_books.html', {'books': books})
 
 
 @login_required
 @user_passes_test(staff_required)
-def edit_book(request, id):
+def edit_book(request, id):  # edit book
     book = get_object_or_404(Book, id=id)
-
     if request.method == 'POST':
         form = BookForm(request.POST, instance=book)
         if form.is_valid():
-            form.save()
+            form.save()  # save changes
             return redirect('manage_books')
     else:
         form = BookForm(instance=book)
-
     return render(request, 'dashboard/edit_book.html', {'form': form})
 
 
 @login_required
 @user_passes_test(staff_required)
-def delete_book(request, id):
+def delete_book(request, id):  # delete book
     book = get_object_or_404(Book, id=id)
-    book.delete()
+    book.delete()  # remove from DB
     return redirect('manage_books')
 
 
 # =========================
 # ORDER STATUS UPDATE
 # =========================
-
 @login_required
 @user_passes_test(staff_required)
-def update_order_status(request, order_id):
-    order = get_object_or_404(Order, id=order_id)  # get order safely
-
+def update_order_status(request, order_id):  # change order status
+    order = get_object_or_404(Order, id=order_id)
     if request.method == 'POST':
-        new_status = request.POST.get('status')  # get status from form
-        order.status = new_status
-        order.save()  # save updated status
-
+        order.status = request.POST.get('status')  # update status
+        order.save()  # save
     return redirect('dashboard')
 
 
 # =========================
 # PAYMENT (SIMULATION)
 # =========================
-
 @login_required
-def buy_book(request, book_id):
+def buy_book(request, book_id):  # single book buy
     book = get_object_or_404(Book, id=book_id)
-
-    Order.objects.create(
-        user=request.user,
-        book=book,
-        price=book.price
-    )
-
+    Order.objects.create(user=request.user, book=book, price=book.price)  # create order
     return redirect('payment_success')
 
 
 @login_required
-def payment_success(request):
+def payment_success(request):  # payment success page
     return render(request, 'book_app/payment_success.html')
 
 
 # =========================
-# CART SYSTEM (USER)
+# CART SYSTEM
 # =========================
-
 @login_required
-def add_to_cart(request, book_id):
-    book = get_object_or_404(Book, id=book_id)  # selected book
-
-    cart, created = Cart.objects.get_or_create(user=request.user)  # user cart
-
-    cart_item, item_created = CartItem.objects.get_or_create(
-        cart=cart,
-        book=book
-    )
-
-    if not item_created:
-        cart_item.quantity += 1  # increase quantity
+def add_to_cart(request, book_id):  # add book to cart
+    book = get_object_or_404(Book, id=book_id)
+    cart, _ = Cart.objects.get_or_create(user=request.user)  # get or create cart
+    cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book)
+    if not created:
+        cart_item.quantity += 1  # increase quantity if exists
         cart_item.save()
-
     return redirect('view_cart')
 
 
 @login_required
-def view_cart(request):
-    cart = Cart.objects.filter(user=request.user).first()  # get cart
-    items = cart.items.all() if cart else []  # cart items
-
-    total = sum(item.book.price * item.quantity for item in items)  # total price
-
-    context = {
-        'cart': cart,
-        'items': items,
-        'total': total,
-    }
-    return render(request, 'book_app/cart.html', context)
-
-
-# =========================
-# DAY 6 — PLUS / MINUS QUANTITY
-# =========================
-
-@login_required
-def increase_quantity(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id)  # get cart item
-    cart_item.quantity += 1  # increase quantity
-    cart_item.save()  # save change
-    return redirect('view_cart')  # reload cart page
+def view_cart(request):  # show cart
+    cart = Cart.objects.filter(user=request.user).first()
+    items = cart.items.all() if cart else []
+    total = sum(item.book.price * item.quantity for item in items)  # calculate total
+    return render(request, 'book_app/cart.html', {'cart': cart, 'items': items, 'total': total})
 
 
 @login_required
-def decrease_quantity(request, item_id):
-    cart_item = get_object_or_404(CartItem, id=item_id)  # get cart item
-    cart_item.quantity -= 1  # decrease quantity
+def increase_quantity(request, item_id):  # + button
+    item = get_object_or_404(CartItem, id=item_id)
+    item.quantity += 1
+    item.save()
+    return redirect('view_cart')
 
-    if cart_item.quantity <= 0:
-        cart_item.delete()  # remove item if zero
+
+@login_required
+def decrease_quantity(request, item_id):  # − button
+    item = get_object_or_404(CartItem, id=item_id)
+    item.quantity -= 1
+    if item.quantity <= 0:
+        item.delete()  # remove if zero
     else:
-        cart_item.save()  # save updated quantity
+        item.save()
+    return redirect('view_cart')
 
-    return redirect('view_cart')  # reload cart page
+
+# =========================
+# CHECKOUT
+# =========================
+@login_required
+def checkout(request):  # checkout page
+    cart = Cart.objects.filter(user=request.user).first()
+    if not cart:
+        return redirect('view_cart')
+
+    cart_items = cart.items.all()
+    total = sum(item.book.price * item.quantity for item in cart_items)  # total price
+
+    if request.method == 'POST':
+        order = Order.objects.create(user=request.user, total_price=total)  # create order
+        for item in cart_items:  # move items to order
+            OrderItem.objects.create(
+                order=order,
+                book=item.book,
+                quantity=item.quantity,
+                price=item.book.price
+            )
+        cart_items.delete()  # clear cart
+        return redirect('order_success')
+
+    return render(request, 'book_app/checkout.html', {'cart_items': cart_items, 'total': total})
+
+
+@login_required
+def order_success(request):  # simple order confirmation
+    return render(request, 'book_app/order_success.html')

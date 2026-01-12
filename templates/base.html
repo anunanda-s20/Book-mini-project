@@ -9,33 +9,53 @@
 
     <!-- Favicon -->
     <link rel="icon" href="{% static 'book_app/img/favicon.ico' %}">
-    
-    <!-- ✅ Bootstrap CSS (CDN – IMPORTANT FIX) -->
+
+    <!-- ✅ Bootstrap CSS (CDN) -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Icons -->
+    <!-- Icons (FontAwesome) -->
     <link rel="stylesheet" href="{% static 'book_app/css/fontawesome.min.css' %}">
 
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'book_app/style.css' %}">
 
     <style>
+        /* ---------------------- */
+        /* NAVBAR LINK COLORS */
+        /* ---------------------- */
         .nav-link {
-            color: #000 !important;
+            color: #000 !important; /* black text for all nav links */
             padding: 0.5rem 1rem;
         }
+
         .nav-link:hover {
-            color: #007bff !important;
+            color: #007bff !important; /* blue hover */
         }
-        .btn-link.nav-link {
-            padding: 0.5rem 1rem;
+
+        /* ---------------------- */
+        /* BUTTON FIXES */
+        /* ---------------------- */
+        /* Keep Bootstrap default styling for buttons */
+        button, .btn {
+            cursor: pointer; /* pointer on hover */
+        }
+
+        /* Optional: small buttons for + / − */
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        /* Ensure all text is visible */
+        body, h1, h2, h3, p, a {
+            color: #000; /* default black text */
         }
     </style>
 </head>
 
 <body>
 
-<!-- NAVBAR (USER SIDE ONLY) -->
+<!-- ==================== NAVBAR ==================== -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
 
@@ -44,7 +64,7 @@
             <img src="{% static 'book_app/img/logo/logo.png' %}" alt="Logo" height="30">
         </a>
 
-        <!-- Mobile toggle -->
+        <!-- Mobile toggle button -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
                 data-bs-target="#mainNavbar" aria-controls="mainNavbar"
                 aria-expanded="false" aria-label="Toggle navigation">
@@ -55,12 +75,10 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
             <ul class="navbar-nav ms-auto">
 
-                <!-- Home -->
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'home' %}">Home</a>
                 </li>
 
-                <!-- Books -->
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'book_list' %}">Books</a>
                 </li>
@@ -71,7 +89,7 @@
                         <span class="nav-link">Hi, {{ user.username }}</span>
                     </li>
 
-                    <!-- Logout -->
+                    <!-- Logout button -->
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
@@ -94,20 +112,20 @@
     </div>
 </nav>
 
-<!-- PAGE CONTENT -->
+<!-- ==================== PAGE CONTENT ==================== -->
 <div class="container mt-4">
     {% block content %}
     {% endblock %}
 </div>
 
-<!-- FOOTER -->
+<!-- ==================== FOOTER ==================== -->
 <footer class="bg-dark text-light pt-4 pb-4 mt-5">
     <div class="container text-center">
         <p class="mb-0">&copy; 2025 Book Mini Project</p>
     </div>
 </footer>
 
-<!-- Bootstrap JS -->
+<!-- ==================== BOOTSTRAP JS ==================== -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 </body>

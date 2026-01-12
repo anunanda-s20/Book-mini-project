@@ -1,0 +1,34 @@
+{% extends 'base.html' %}  <!-- use main layout -->
+
+{% block content %}
+<h2>Checkout</h2>
+
+{% if cart_items %}  <!-- check if cart has items -->
+<table border="1" cellpadding="10">  <!-- simple table -->
+    <tr>
+        <th>Book</th>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+
+    {% for item in cart_items %}
+    <tr>
+        <td>{{ item.book.title }}</td>  <!-- book name -->
+        <td>{{ item.quantity }}</td>    <!-- quantity -->
+        <td>₹{{ item.book.price }}</td> <!-- price -->
+    </tr>
+    {% endfor %}
+</table>
+
+<h3>Total: ₹{{ total }}</h3>  <!-- total amount -->
+
+<form method="post">  <!-- confirm order -->
+    {% csrf_token %}
+    <button type="submit">Confirm Order</button>
+</form>
+
+{% else %}
+<p>Your cart is empty.</p>  <!-- empty cart -->
+{% endif %}
+
+{% endblock %}

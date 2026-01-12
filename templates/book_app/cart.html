@@ -4,7 +4,7 @@
 <h2>Your Cart</h2>
 
 {% if items %}  <!-- check if cart has items -->
-<table border="1" cellpadding="10">  <!-- simple table layout -->
+<table border="1" cellpadding="10">  <!-- simple table -->
     <tr>
         <th>Book</th>
         <th>Price</th>
@@ -15,23 +15,23 @@
     {% for item in items %}  <!-- loop cart items -->
     <tr>
         <td>{{ item.book.title }}</td>  <!-- book name -->
-
         <td>₹{{ item.book.price }}</td>  <!-- book price -->
-
-        <td>{{ item.quantity }}</td>  <!-- show quantity -->
-
+        <td>{{ item.quantity }}</td>  <!-- quantity -->
         <td>
-            <a href="{% url 'decrease_quantity' item.id %}"
-               style="padding:5px 10px; background:#ddd; text-decoration:none;">−</a>  <!-- minus -->
+            <!-- decrease quantity button -->
+            <a href="{% url 'decrease_quantity' item.id %}" style="padding:5px 10px; background:#ddd; text-decoration:none;">−</a>
 
-            <a href="{% url 'increase_quantity' item.id %}"
-               style="padding:5px 10px; background:#ddd; text-decoration:none;">+</a>  <!-- plus -->
+            <!-- increase quantity button -->
+            <a href="{% url 'increase_quantity' item.id %}" style="padding:5px 10px; background:#ddd; text-decoration:none;">+</a>
         </td>
     </tr>
     {% endfor %}
 </table>
 
 <h3>Total: ₹{{ total }}</h3>  <!-- total amount -->
+
+<!-- checkout button -->
+<a href="{% url 'checkout' %}" style="padding:10px 20px; background:green; color:white; text-decoration:none;">Proceed to Checkout</a>
 
 {% else %}
 <p>Your cart is empty.</p>  <!-- empty cart message -->

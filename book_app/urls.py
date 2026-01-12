@@ -34,6 +34,10 @@ urlpatterns = [
 
     # Update order status
     path('dashboard/orders/update/<int:order_id>/', views.update_order_status, name='update_order_status'),
+    #checkout
+    path('checkout/', views.checkout, name='checkout'),
+    #order success
+    path('order-success/', views.order_success, name='order_success'),
 ]
 
 # Serve uploaded images (MEDIA) during development
