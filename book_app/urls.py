@@ -41,8 +41,8 @@ urlpatterns = [
     # -----------------
     # PAYMENT & ORDERS
     # -----------------
-    path('buy/<int:book_id>/', views.buy_book, name='buy_book'),
-    path('payment-success/', views.payment_success, name='payment_success'),
+    #path('buy/<int:book_id>/', views.buy_book, name='buy_book'),
+    #path('payment-success/', views.payment_success, name='payment_success'),
     path('dashboard/orders/update/<int:order_id>/', views.update_order_status, name='update_order_status'),
 
     # -----------------

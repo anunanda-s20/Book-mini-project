@@ -26,6 +26,10 @@
         <td>{{ book.title }}</td>   <!-- book title -->
         <td>{{ book.author }}</td>  <!-- book author -->
     </tr>
+    {% empty %}  <!-- if no books -->
+    <tr>
+        <td colspan="2">No books available.</td>
+    </tr>
     {% endfor %}
 </table>
 
@@ -42,8 +46,8 @@
 <table class="table table-bordered">
     <tr>
         <th>User</th>
-        <th>Book</th>
-        <th>Price</th>
+        <th>Books</th>
+        <th>Total Price</th>
         <th>Status</th>
         <th>Update</th>
     </tr>
@@ -51,14 +55,23 @@
     {% for order in orders %}   <!-- loop through all orders -->
     <tr>
         <td>{{ order.user.username }}</td>   <!-- user who ordered -->
-        <td>{{ order.book.title }}</td>      <!-- ordered book -->
-        <td>{{ order.price }}</td>            <!-- order price -->
+
+        <!-- show all books in the order -->
+        <td>
+            {% for item in order.items.all %}
+                {{ item.book.title }} (x{{ item.quantity }})<br>
+            {% empty %}
+                No items
+            {% endfor %}
+        </td>
+
+        <td>₹{{ order.total_price }}</td>   <!-- order total price -->
 
         <!-- show readable order status -->
         <td>{{ order.get_status_display }}</td>
 
+        <!-- form to update order status -->
         <td>
-            <!-- form to update order status -->
             <form method="post" action="{% url 'update_order_status' order.id %}">
                 {% csrf_token %}   <!-- security token -->
 
@@ -77,6 +90,10 @@
                 </button>
             </form>
         </td>
+    </tr>
+    {% empty %}  <!-- if no orders -->
+    <tr>
+        <td colspan="5">No orders yet.</td>
     </tr>
     {% endfor %}
 </table>
