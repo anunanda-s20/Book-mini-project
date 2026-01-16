@@ -1,10 +1,12 @@
-{% extends 'base.html' %}  <!-- use main layout -->
+{% extends 'base.html' %}  <!-- main layout -->
 
 {% block content %}
 <h2>Checkout</h2>
 
 {% if cart_items %}  <!-- check if cart has items -->
-<table border="1" cellpadding="10">  <!-- simple table -->
+
+<!-- Cart Table -->
+<table border="1" cellpadding="10">
     <tr>
         <th>Book</th>
         <th>Quantity</th>
@@ -13,22 +15,25 @@
 
     {% for item in cart_items %}
     <tr>
-        <td>{{ item.book.title }}</td>  <!-- book name -->
-        <td>{{ item.quantity }}</td>    <!-- quantity -->
-        <td>₹{{ item.book.price }}</td> <!-- price -->
+        <td>{{ item.book.title }}</td>
+        <td>{{ item.quantity }}</td>
+        <td>₹{{ item.book.price }}</td>
     </tr>
     {% endfor %}
 </table>
 
-<h3>Total: ₹{{ total }}</h3>  <!-- total amount -->
+<h3>Total: ₹{{ total }}</h3>  <!-- total price -->
 
-<form method="post">  <!-- confirm order -->
+<!-- Address Form -->
+<h3>Shipping Address</h3>
+<form method="post">
     {% csrf_token %}
-    <button type="submit">Confirm Order</button>
+    {{ form.as_p }}  <!-- renders address fields: full_name, phone, street, city, state, pincode -->
+    <button type="submit">Place Order</button>
 </form>
 
 {% else %}
-<p>Your cart is empty.</p>  <!-- empty cart -->
+<p>Your cart is empty.</p>  <!-- show if no items -->
 {% endif %}
 
 {% endblock %}

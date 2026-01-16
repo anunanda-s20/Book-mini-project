@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import Book, Order, BookImage, Cart, CartItem,OrderItem,Wishlist
+from .models import Book, Order, BookImage, Cart, CartItem,OrderItem,Wishlist,Address
 
 
 @admin.register(Book)
@@ -15,6 +15,7 @@ class BookAdmin(admin.ModelAdmin):
 
 
 admin.site.register(BookImage)
+admin.site.register(Address)
 admin.site.register(Cart)
 admin.site.register(CartItem)
 admin.site.register(Order)

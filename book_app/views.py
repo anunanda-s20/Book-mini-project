@@ -233,7 +233,7 @@ def decrease_quantity(request, item_id):
 
 
 # =========================
-# CHECKOUT
+# CHECKOUT (BACKEND SAFE – NO UI YET)
 # =========================
 @login_required
 def checkout(request):
@@ -248,7 +248,14 @@ def checkout(request):
     if request.method == 'POST':
         order = Order.objects.create(
             user=request.user,
-            total_price=total  # status = pending
+            total_price=total,                 # total order price
+
+            # temporary backend-safe values
+            shipping_name="Not provided",       # customer name
+            shipping_phone="Not provided",      # phone number
+            shipping_address="Not provided",    # delivery address
+            shipping_city="Not provided",       # city
+            shipping_pincode="Not provided"     # pincode
         )
 
         for item in cart_items:
@@ -275,7 +282,7 @@ def order_success(request):
 
 
 # =========================
-# USER ORDERS (DAY 3)
+# USER ORDERS
 # =========================
 @login_required
 def my_orders(request):
@@ -318,3 +325,59 @@ def wishlist(request):
     # show user's wishlist
     items = Wishlist.objects.filter(user=request.user)
     return render(request, 'book_app/wishlist.html', {'items': items})
+
+# =========================
+# CHECKOUT (WITH ADDRESS FORM)
+# =========================
+@login_required
+def checkout(request):
+    # get user's cart
+    cart = Cart.objects.filter(user=request.user).first()
+    if not cart:
+        return redirect('view_cart')  # if cart empty, go back
+
+    cart_items = cart.items.all()
+    total = sum(item.book.price * item.quantity for item in cart_items)
+
+    # POST = user submitted the address form
+    if request.method == 'POST':
+        from .forms import AddressForm  # import here to follow your style
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            # save the address linked to this user
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+
+            # create order with this address
+            order = Order.objects.create(
+                user=request.user,
+                address=address,  # link to address
+                total_price=total,
+                status='pending',  # default status
+            )
+
+            # move cart items to order items
+            for item in cart_items:
+                OrderItem.objects.create(
+                    order=order,
+                    book=item.book,
+                    quantity=item.quantity,
+                    price=item.book.price
+                )
+
+            cart_items.delete()  # clear cart after order
+
+            return redirect('order_success')
+
+    else:
+        # GET = show empty address form
+        from .forms import AddressForm
+        form = AddressForm()
+
+    # render checkout page with cart items, total price, and address form
+    return render(request, 'book_app/checkout.html', {
+        'cart_items': cart_items,
+        'total': total,
+        'form': form
+    })
