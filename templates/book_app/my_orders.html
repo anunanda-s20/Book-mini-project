@@ -1,0 +1,43 @@
+{% extends 'base.html' %}  <!-- use main layout -->
+
+{% block content %}
+
+<h2>My Orders</h2>
+
+{% if orders %}  <!-- check if user has orders -->
+
+    {% for order in orders %}  <!-- loop through orders -->
+
+    <div style="border:1px solid #ccc; padding:10px; margin-bottom:15px;">
+
+        <p><strong>Order ID:</strong> {{ order.id }}</p>
+
+        <p><strong>Total:</strong> ₹{{ order.total_price }}</p>
+
+        <p>
+            <strong>Status:</strong>
+            {{ order.get_status_display }}  
+            <!-- THIS LINE FIXES YOUR ISSUE -->
+        </p>
+
+        <p><strong>Ordered At:</strong> {{ order.ordered_at }}</p>
+
+        <h4>Items:</h4>
+
+        <ul>
+            {% for item in order.items.all %}  <!-- order items -->
+                <li>
+                    {{ item.book.title }} × {{ item.quantity }}
+                </li>
+            {% endfor %}
+        </ul>
+
+    </div>
+
+    {% endfor %}
+
+{% else %}
+    <p>You have not placed any orders yet.</p>
+{% endif %}
+
+{% endblock %}
