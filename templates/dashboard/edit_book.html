@@ -3,15 +3,18 @@
 {% block content %}
 <h2>Edit Book</h2>
 
+<!-- Form to edit book -->
 <form method="post" class="mt-3">
-    {% csrf_token %}
+    {% csrf_token %}  <!-- security token -->
 
-    {{ form.as_p }}
+    {{ form.as_p }}  <!-- auto-render all BookForm fields -->
 
+    <!-- Submit button -->
     <button type="submit" class="btn btn-success">
         Update Book
     </button>
 
+    <!-- Cancel button -->
     <a href="{% url 'manage_books' %}" class="btn btn-secondary">
         Cancel
     </a>

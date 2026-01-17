@@ -50,3 +50,23 @@ class AddressForm(forms.ModelForm):
         if not pincode.isdigit() or len(pincode) != 6:  # must be 6 digits
             raise forms.ValidationError("Enter a valid 6-digit pincode")
         return pincode
+
+# -----------------------------
+# BOOK FORM (FOR DASHBOARD)
+# -----------------------------
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        # all editable fields in your Book model
+        fields = [
+            'title',           # book name
+            'author',          # author name
+            'price',           # price
+            'description',     # optional description
+            'stock',           # available quantity
+            'is_active',       # show/hide book
+            'published_date'   # optional published date
+        ]
+        widgets = {
+            'published_date': forms.DateInput(attrs={'type': 'date'})  # show date picker
+        }

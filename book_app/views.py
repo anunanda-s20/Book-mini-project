@@ -394,3 +394,18 @@ def dashboard_order_detail(request, order_id):
     
     # send order to template
     return render(request, 'dashboard/order_detail.html', {'order': order})
+
+
+@login_required
+@user_passes_test(staff_required)
+def edit_book(request, id):
+    book = get_object_or_404(Book, id=id)  # get the book
+    if request.method == 'POST':
+        form = BookForm(request.POST, instance=book)  # bind form to book
+        if form.is_valid():
+            form.save()  # save all changes
+            return redirect('manage_books')
+    else:
+        form = BookForm(instance=book)  # show current book data
+
+    return render(request, 'dashboard/edit_book.html', {'form': form})
