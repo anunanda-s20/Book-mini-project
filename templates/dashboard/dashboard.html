@@ -1,4 +1,4 @@
-{% extends 'base.html' %}   <!-- use common base layout -->
+{% extends 'base.html' %}  <!-- use common base layout -->
 
 {% block content %}
 
@@ -10,9 +10,7 @@
 <h4>Books</h4>
 
 <!-- button to go to add book page -->
-<a href="{% url 'add_book' %}" class="btn btn-success mb-3">
-    + Add Book
-</a>
+<a href="{% url 'add_book' %}" class="btn btn-success mb-3">+ Add Book</a>
 
 <!-- books list table -->
 <table class="table table-bordered">
@@ -21,12 +19,12 @@
         <th>Author</th>
     </tr>
 
-    {% for book in books %}   <!-- loop through all books -->
+    {% for book in books %}
     <tr>
         <td>{{ book.title }}</td>   <!-- book title -->
         <td>{{ book.author }}</td>  <!-- book author -->
     </tr>
-    {% empty %}  <!-- if no books -->
+    {% empty %}
     <tr>
         <td colspan="2">No books available.</td>
     </tr>
@@ -34,9 +32,7 @@
 </table>
 
 <!-- link to manage books page -->
-<a href="{% url 'manage_books' %}" class="btn btn-primary">
-    Manage Books
-</a>
+<a href="{% url 'manage_books' %}" class="btn btn-primary">Manage Books</a>
 
 <hr>
 
@@ -45,6 +41,7 @@
 <!-- orders list table -->
 <table class="table table-bordered">
     <tr>
+        <th>Order ID</th>   <!-- clickable Order ID -->
         <th>User</th>
         <th>Books</th>
         <th>Total Price</th>
@@ -52,11 +49,17 @@
         <th>Update</th>
     </tr>
 
-    {% for order in orders %}   <!-- loop through all orders -->
+    {% for order in orders %}
     <tr>
-        <td>{{ order.user.username }}</td>   <!-- user who ordered -->
+        <!-- clickable Order ID -->
+        <td>
+            <a href="{% url 'dashboard-order-detail' order.id %}">{{ order.id }}</a>
+        </td>
 
-        <!-- show all books in the order -->
+        <!-- user who ordered -->
+        <td>{{ order.user.username }}</td>
+
+        <!-- books in this order -->
         <td>
             {% for item in order.items.all %}
                 {{ item.book.title }} (x{{ item.quantity }})<br>
@@ -65,35 +68,30 @@
             {% endfor %}
         </td>
 
-        <td>₹{{ order.total_price }}</td>   <!-- order total price -->
+        <!-- total price -->
+        <td>₹{{ order.total_price }}</td>
 
-        <!-- show readable order status -->
+        <!-- order status -->
         <td>{{ order.get_status_display }}</td>
 
         <!-- form to update order status -->
         <td>
             <form method="post" action="{% url 'update_order_status' order.id %}">
-                {% csrf_token %}   <!-- security token -->
-
-                <!-- dropdown to change order status -->
+                {% csrf_token %}
                 <select name="status" class="form-select form-select-sm">
-                    {% for key, value in order.STATUS_CHOICES %}  <!-- loop status choices -->
+                    {% for key, value in order.STATUS_CHOICES %}
                         <option value="{{ key }}" {% if order.status == key %}selected{% endif %}>
-                            {{ value }}   <!-- display status name -->
+                            {{ value }}
                         </option>
                     {% endfor %}
                 </select>
-
-                <!-- update button -->
-                <button type="submit" class="btn btn-sm btn-success mt-1">
-                    Update
-                </button>
+                <button type="submit" class="btn btn-sm btn-success mt-1">Update</button>
             </form>
         </td>
     </tr>
-    {% empty %}  <!-- if no orders -->
+    {% empty %}
     <tr>
-        <td colspan="5">No orders yet.</td>
+        <td colspan="6">No orders yet.</td>
     </tr>
     {% endfor %}
 </table>

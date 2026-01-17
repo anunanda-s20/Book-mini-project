@@ -1,0 +1,41 @@
+{% extends 'base.html' %}  <!-- use common base layout -->
+
+{% block content %}
+
+<h2>Order Details</h2>
+
+<!-- basic order info -->
+<p><strong>Order ID:</strong> {{ order.id }}</p>             <!-- show order ID -->
+<p><strong>User:</strong> {{ order.user.username }}</p>     <!-- who ordered -->
+<p><strong>Status:</strong> {{ order.get_status_display }}</p> <!-- readable status -->
+<p><strong>Total Price:</strong> ₹{{ order.total_price }}</p>  <!-- total amount -->
+
+<hr>
+
+<h4>Books in this order:</h4>
+
+<!-- table of books in this order -->
+<table class="table table-bordered">
+    <tr>
+        <th>Book</th>
+        <th>Quantity</th>
+        <th>Price</th>
+    </tr>
+
+    {% for item in order.items.all %}
+    <tr>
+        <td>{{ item.book.title }}</td>   <!-- book title -->
+        <td>{{ item.quantity }}</td>     <!-- quantity ordered -->
+        <td>₹{{ item.price }}</td>      <!-- price per book -->
+    </tr>
+    {% empty %}
+    <tr>
+        <td colspan="3">No items in this order.</td>  <!-- if order has no items -->
+    </tr>
+    {% endfor %}
+</table>
+
+<!-- back button to dashboard -->
+<a href="{% url 'dashboard' %}" class="btn btn-primary mt-3">Back to Dashboard</a>
+
+{% endblock %}

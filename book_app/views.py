@@ -381,3 +381,16 @@ def checkout(request):
         'total': total,
         'form': form
     })
+
+
+# =========================
+# ORDER DETAIL (STAFF ONLY)
+# =========================
+@login_required
+@user_passes_test(staff_required)
+def dashboard_order_detail(request, order_id):
+    # get the specific order or 404 if not found
+    order = get_object_or_404(Order, id=order_id)
+    
+    # send order to template
+    return render(request, 'dashboard/order_detail.html', {'order': order})
