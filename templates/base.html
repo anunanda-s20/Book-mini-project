@@ -19,14 +19,15 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'book_app/style.css' %}">
 
+    <!-- Simple color safety -->
     <style>
         .nav-link {
-            color: #000 !important; /* default black */
+            color: #000 !important;
             padding: 0.5rem 1rem;
         }
 
         .nav-link:hover {
-            color: #007bff !important; /* blue on hover */
+            color: #007bff !important;
         }
 
         body, h1, h2, h3, p, a {
@@ -46,14 +47,33 @@
             <img src="{% static 'book_app/img/logo/logo.png' %}" alt="Logo" height="30">
         </a>
 
-        <!-- Mobile menu button -->
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+        <!-- Mobile toggle -->
+        <button class="navbar-toggler" type="button"
+                data-bs-toggle="collapse"
                 data-bs-target="#mainNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
 
-        <!-- Navbar links -->
+        <!-- Navbar content -->
         <div class="collapse navbar-collapse" id="mainNavbar">
+
+            <!-- 🔍 SEARCH FORM (LOGIC ONLY) -->
+            <form class="d-flex me-3"
+                  method="get"
+                  action="{% url 'book_list' %}">
+                <input
+                    class="form-control me-2"
+                    type="text"
+                    name="q"
+                    placeholder="Search books"
+                    value="{{ request.GET.q }}"
+                >
+                <button class="btn btn-outline-primary" type="submit">
+                    Search
+                </button>
+            </form>
+
+            <!-- NAV LINKS -->
             <ul class="navbar-nav ms-auto">
 
                 <!-- Home -->
@@ -67,28 +87,29 @@
                 </li>
 
                 {% if user.is_authenticated %}
-                    <!-- Logged-in user section -->
 
+                    <!-- Cart -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'view_cart' %}">Cart</a>
                     </li>
 
+                    <!-- Wishlist -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
                     </li>
 
-                    <!-- ✅ USER ORDERS LINK (IMPORTANT) -->
+                    <!-- Orders -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'my_orders' %}">
                             My Orders
                         </a>
-                        <!-- Goes to /my-orders/ -->
-                        <!-- Shows order status correctly -->
                     </li>
 
                     <!-- Greeting -->
                     <li class="nav-item">
-                        <span class="nav-link">Hi, {{ user.username }}</span>
+                        <span class="nav-link">
+                            Hi, {{ user.username }}
+                        </span>
                     </li>
 
                     <!-- Logout -->
@@ -102,15 +123,17 @@
                     </li>
 
                 {% else %}
-                    <!-- Guest user section -->
 
+                    <!-- Login -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'login' %}">Login</a>
                     </li>
 
+                    <!-- Signup -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'signup' %}">Signup</a>
                     </li>
+
                 {% endif %}
 
             </ul>
