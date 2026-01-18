@@ -409,3 +409,8 @@ def edit_book(request, id):
         form = BookForm(instance=book)  # show current book data
 
     return render(request, 'dashboard/edit_book.html', {'form': form})
+
+
+
+
+#[Backend stable before extras]
