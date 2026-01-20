@@ -19,11 +19,11 @@ class OrderItemInline(admin.TabularInline):
 # ---------------- Order admin ----------------
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'total_price', 'status', 'ordered_at')  # Order ID + summary
+    list_display = ('id', 'user', 'total_price', 'status', 'created_at')  # Order ID + summary
     list_filter = ('status',)  # filter by order status
-    ordering = ('-ordered_at',)  # newest orders first
+    ordering = ('-created_at',)  # newest orders first
     inlines = [OrderItemInline]  # show items inside order
-    readonly_fields = ('user', 'total_price', 'ordered_at', 'address')  # protect core data
+    readonly_fields = ('user', 'total_price', 'created_at', 'address')  # protect core data
 
 # ---------------- Other models ----------------
 admin.site.register(BookImage)  # manage book images

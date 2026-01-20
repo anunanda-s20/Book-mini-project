@@ -13,31 +13,38 @@
     <!-- Price -->
     <p><strong>Price:</strong> ₹{{ book.price }}</p>
 
+    <!-- ✅ Book Description (THIS WAS MISSING) -->
+    {% if book.description %}
+        <p><strong>Description:</strong></p>
+        <p>{{ book.description }}</p>
+    {% else %}
+        <p><em>No description available.</em></p>
+    {% endif %}
+
+    <hr>
+
     <!-- ================= BOOK IMAGES ================= -->
     {% if book.images.all %}
     <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel">
 
         <div class="carousel-inner">
 
-            <!-- Loop book images -->
+            <!-- Loop images -->
             {% for image in book.images.all %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                
-                <!-- Show image -->
                 <img src="{{ image.image.url }}" class="d-block w-100" alt="Book image">
-
             </div>
             {% endfor %}
 
         </div>
 
-        <!-- Previous image -->
+        <!-- Previous -->
         <button class="carousel-control-prev" type="button"
                 data-bs-target="#bookCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </button>
 
-        <!-- Next image -->
+        <!-- Next -->
         <button class="carousel-control-next" type="button"
                 data-bs-target="#bookCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon"></span>
@@ -45,9 +52,10 @@
 
     </div>
     {% else %}
-        <!-- No images -->
         <p>No images available for this book.</p>
     {% endif %}
+
+    <hr>
 
     <!-- ================= ACTION BUTTONS ================= -->
     {% if user.is_authenticated %}
@@ -57,14 +65,13 @@
             Add to Cart
         </a>
 
-        
         <!-- Add to wishlist -->
         <a href="{% url 'add_to_wishlist' book.id %}" class="btn btn-outline-danger mt-3 ms-2">
             ❤ Add to Wishlist
         </a>
 
     {% else %}
-        <!-- Login required -->
+        <!-- Login message -->
         <p class="mt-3">
             <a href="{% url 'login' %}">Login</a> to buy or save this book.
         </p>
