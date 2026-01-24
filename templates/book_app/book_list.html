@@ -5,88 +5,83 @@
 <section class="new-arrival">
     <div class="container">
 
-        <!-- ============================= -->
-        <!-- 1️⃣ SEARCH FORM -->
-        <!-- ============================= -->
-        <form method="get" class="mb-3">
-            <input type="text" name="q" placeholder="Search books" value="{{ query }}">
-            <button type="submit">Search</button>
-        </form>
+        <!-- 🔍 FILTER BAR -->
+        <div class="filter-bar">
 
-        <!-- ============================= -->
-        <!-- 2️⃣ ORDERING LINKS -->
-        <!-- ============================= -->
-        <p>
-            Order:
-            <a href="?{% if query %}q={{ query }}&{% endif %}order=latest">Latest</a> |
-            <a href="?{% if query %}q={{ query }}&{% endif %}order=price_low">Price Low → High</a> |
-            <a href="?{% if query %}q={{ query }}&{% endif %}order=alpha">A → Z</a>
+            <!-- Search books -->
+            <form method="get" class="filter-item">
+                <input type="text" name="q" placeholder="Search books" value="{{ query|default:'' }}">
+                <button type="submit">Search</button>
+            </form>
+
+            <!-- Sort links -->
+            <div class="filter-item">
+                <label>Sort:</label>
+                <!-- Add 'active' class for current sort -->
+                <a href="?order=latest" class="{% if order == 'latest' %}active{% endif %}">Latest</a> |
+                <a href="?order=price_low" class="{% if order == 'price_low' %}active{% endif %}">Price</a> |
+                <a href="?order=alpha" class="{% if order == 'alpha' %}active{% endif %}">A–Z</a>
+            </div>
+
+            <!-- Availability filter -->
+            <div class="filter-item">
+                <label>Status:</label>
+                <!-- Add 'active' class if availability is selected -->
+                <a href="?availability=in_stock" class="{% if availability == 'in_stock' %}active{% endif %}">
+                    In Stock
+                </a>
+            </div>
+
+        </div>
+
+        <!-- 🔢 RESULT COUNT -->
+        <p class="text-muted">
+            Showing {{ page_obj.paginator.count }} books
         </p>
 
-        <!-- ============================= -->
-        <!-- 3️⃣ FILTER LINKS -->
-        <!-- ============================= -->
-        <p>
-            Availability:
-            <a href="?{% if query %}q={{ query }}&{% endif %}availability=in_stock">In Stock</a>
-        </p>
-
-        <!-- ============================= -->
-        <!-- 4️⃣ BOOKS LOOP -->
-        <!-- ============================= -->
+        <!-- 📚 BOOK LIST -->
         <div class="row">
             {% for book in page_obj %}
             <div class="col-xl-3 col-lg-3 col-md-6 col-sm-6">
                 <div class="single-new-arrival mb-50 text-center">
 
-                    <!-- book image -->
+                    <!-- Book image -->
                     <div class="popular-img">
-                        {% if book.image %}
-                            <img src="{{ book.image.url }}" alt="{{ book.title }}">
-                        {% else %}
-                            <img src="{% static 'book_app/images/default-book.png' %}" alt="No image">
-                        {% endif %}
+                        <a href="{% url 'book_detail' book.id %}">
+                            {% with book.images.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.image.url }}" alt="{{ book.title }}">
+                                {% else %}
+                                    <img src="{% static 'book_app/images/default-book.png' %}" alt="No image">
+                                {% endif %}
+                            {% endwith %}
+                        </a>
                     </div>
 
-                    <!-- book info -->
+                    <!-- Book info -->
                     <div class="popular-caption">
                         <h3>
-                            <a href="{% url 'book_detail' book.id %}">
-                                {{ book.title }}
-                            </a>
+                            <a href="{% url 'book_detail' book.id %}">{{ book.title }}</a>
                         </h3>
                         <span>{{ book.author }}</span>
+                        <p class="fw-bold mt-2">₹ {{ book.price }}</p>
                     </div>
 
                 </div>
             </div>
+            {% empty %}
+            <p class="text-center text-muted">No books found.</p>
             {% endfor %}
         </div>
 
-        <!-- ============================= -->
-        <!-- 5️⃣ PAGINATION -->
-        <!-- ============================= -->
-        <div style="margin-top: 20px; text-align: center;">
+        <!-- 📄 PAGINATION -->
+        <div style="margin-top:20px; text-align:center;">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}
-                    {% if query %}&q={{ query }}{% endif %}
-                    {% if order %}&order={{ order }}{% endif %}
-                    {% if availability %}&availability={{ availability }}{% endif %}">
-                    Previous
-                </a>
+                <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if availability %}&availability={{ availability }}{% endif %}">Previous</a>
             {% endif %}
-
-            <span>
-                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-            </span>
-
+            <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}
-                    {% if query %}&q={{ query }}{% endif %}
-                    {% if order %}&order={{ order }}{% endif %}
-                    {% if availability %}&availability={{ availability }}{% endif %}">
-                    Next
-                </a>
+                <a href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if availability %}&availability={{ availability }}{% endif %}">Next</a>
             {% endif %}
         </div>
 

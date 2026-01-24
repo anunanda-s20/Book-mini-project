@@ -44,23 +44,11 @@
         <!-- Navbar content -->
         <div class="collapse navbar-collapse" id="mainNavbar">
 
-            <!-- 🔍 Search bar (ONLY for logged-in users) -->
-            {% if user.is_authenticated %}
-            <form class="d-flex me-3"
-                  method="get"
-                  action="{% url 'book_list' %}">
-                <input
-                    class="form-control me-2"
-                    type="text"
-                    name="q"
-                    placeholder="Search books"
-                    value="{{ request.GET.q }}"
-                >
-                <button class="btn btn-outline-primary" type="submit">
-                    Search
-                </button>
+            <!-- 🔍 SEARCH BAR: only one form, fixed spacing -->
+            <form class="d-flex me-3" method="get" action="{% url 'book_list' %}">
+                <input class="form-control me-2" type="text" name="q" placeholder="Search books" value="{{ request.GET.q }}">
+                <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
-            {% endif %}
 
             <!-- Navigation links -->
             <ul class="navbar-nav ms-auto">
@@ -89,25 +77,19 @@
 
                     <!-- Orders -->
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'my_orders' %}">
-                            My Orders
-                        </a>
+                        <a class="nav-link" href="{% url 'my_orders' %}">My Orders</a>
                     </li>
 
                     <!-- Greeting -->
                     <li class="nav-item">
-                        <span class="nav-link">
-                            Hi, {{ user.username }}
-                        </span>
+                        <span class="nav-link">Hi, {{ user.username }}</span>
                     </li>
 
                     <!-- Logout -->
                     <li class="nav-item">
                         <form method="post" action="{% url 'logout' %}">
                             {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link">
-                                Logout
-                            </button>
+                            <button type="submit" class="btn btn-link nav-link">Logout</button>
                         </form>
                     </li>
 
@@ -132,8 +114,7 @@
 
 <!-- ==================== PAGE CONTENT ==================== -->
 <div class="container mt-4">
-    {% block content %}
-    {% endblock %}
+    {% block content %}{% endblock %}
 </div>
 
 <!-- ==================== FOOTER ==================== -->

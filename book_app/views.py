@@ -18,8 +18,8 @@ def home(request):
 
 
 def book_list(request):
-    # search
-    query = request.GET.get("q")
+    # 🔍 Search
+    query = request.GET.get("q", "")
     books = Book.objects.all()
 
     if query:
@@ -28,8 +28,13 @@ def book_list(request):
             Q(author__icontains=query)
         )
 
-    # ordering
-    order = request.GET.get("order")
+    # 🔹 Availability filter
+    availability = request.GET.get("availability", "")
+    if availability == "in_stock":
+        books = books.filter(stock__gt=0)  # only books with stock
+
+    # 🔹 Ordering
+    order = request.GET.get("order", "")
     if order == "price_low":
         books = books.order_by("price")
     elif order == "latest":
@@ -37,16 +42,20 @@ def book_list(request):
     elif order == "alpha":
         books = books.order_by("title")
 
-    # pagination
+    # 🔢 Pagination
     paginator = Paginator(books, 8)
     page_number = request.GET.get("page")
     page_obj = paginator.get_page(page_number)
 
-    return render(request, "book_app/book_list.html", {
+    # ✅ Pass everything needed to template
+    context = {
         "page_obj": page_obj,
         "query": query,
         "order": order,
-    })
+        "availability": availability,  # <- important for active highlight
+    }
+
+    return render(request, "book_app/book_list.html", context)
 
 
 def book_detail(request, id):

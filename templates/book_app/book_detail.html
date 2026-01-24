@@ -4,47 +4,42 @@
 
 <div class="book-detail-container" style="padding:20px; max-width:800px; margin:auto;">
 
-    <!-- Book title -->
+    <!-- ================= BOOK TITLE ================= -->
     <h1>{{ book.title }}</h1>
 
-    <!-- Author -->
+    <!-- ================= AUTHOR ================= -->
     <p><strong>Author:</strong> {{ book.author }}</p>
 
-    <!-- Price -->
+    <!-- ================= PRICE ================= -->
     <p><strong>Price:</strong> ₹{{ book.price }}</p>
 
-    <!-- ✅ Book Description (THIS WAS MISSING) -->
+    <!-- ================= DESCRIPTION ================= -->
     {% if book.description %}
         <p><strong>Description:</strong></p>
         <p>{{ book.description }}</p>
     {% else %}
-        <p><em>No description available.</em></p>
+        <p><em>No description available.</em></p>  <!-- Fallback text if description is empty -->
     {% endif %}
 
     <hr>
 
-    <!-- ================= BOOK IMAGES ================= -->
+    <!-- ================= BOOK IMAGES (CAROUSEL) ================= -->
     {% if book.images.all %}
     <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel">
 
         <div class="carousel-inner">
-
-            <!-- Loop images -->
             {% for image in book.images.all %}
             <div class="carousel-item {% if forloop.first %}active{% endif %}">
                 <img src="{{ image.image.url }}" class="d-block w-100" alt="Book image">
             </div>
             {% endfor %}
-
         </div>
 
-        <!-- Previous -->
+        <!-- Carousel controls -->
         <button class="carousel-control-prev" type="button"
                 data-bs-target="#bookCarousel" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </button>
-
-        <!-- Next -->
         <button class="carousel-control-next" type="button"
                 data-bs-target="#bookCarousel" data-bs-slide="next">
             <span class="carousel-control-next-icon"></span>
@@ -52,7 +47,7 @@
 
     </div>
     {% else %}
-        <p>No images available for this book.</p>
+        <p>No images available for this book.</p>  <!-- Fallback if no images -->
     {% endif %}
 
     <hr>
