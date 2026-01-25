@@ -1,115 +1,104 @@
 {% extends 'base.html' %}
-{# This page uses the common layout from base.html #}
-
 {% block content %}
-{# All page-specific content goes inside this block #}
 
 <div class="container my-5">
-{# Bootstrap container for proper spacing and centering #}
 
-    <!-- ================= BLOCK 1: MAIN BOOK SECTION ================= -->
+    <!-- ===== MAIN BOOK SECTION ===== -->
     <div class="row">
-    {# Row to create left-right layout #}
 
-        <!-- LEFT SIDE: BOOK IMAGE -->
-        <div class="col-md-5">
-        {# Left column for book image #}
-
+        <!-- LEFT: BOOK IMAGES -->
+        <div class="col-md-5 d-flex justify-content-center align-items-start pt-3">
             {% if book.images.all %}
-            {# If book has images, show carousel #}
-
-            <div id="bookCarousel" class="carousel slide" data-bs-ride="carousel">
+            <div id="bookCarousel" class="carousel slide w-100" data-bs-ride="carousel">
                 <div class="carousel-inner">
-
                     {% for image in book.images.all %}
-                    {# Loop through all book images #}
-
                     <div class="carousel-item {% if forloop.first %}active{% endif %}">
-                        {# First image is active by default #}
-
                         <img src="{{ image.image.url }}"
-                             class="d-block w-100"
-                             alt="Book image">
+                             class="d-block mx-auto"
+                             alt="{{ book.title }}">
                     </div>
-
                     {% endfor %}
                 </div>
-
-                {# Carousel navigation buttons #}
-                <button class="carousel-control-prev" type="button"
-                        data-bs-target="#bookCarousel" data-bs-slide="prev">
+                <!-- Controls -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#bookCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
-
-                <button class="carousel-control-next" type="button"
-                        data-bs-target="#bookCarousel" data-bs-slide="next">
+                <button class="carousel-control-next" type="button" data-bs-target="#bookCarousel" data-bs-slide="next">
                     <span class="carousel-control-next-icon"></span>
                 </button>
             </div>
-
             {% else %}
-            {# If no image exists, show placeholder #}
-
-                <img src="https://via.placeholder.com/300x400"
-                     class="img-fluid"
-                     alt="No image available">
+            <!-- Placeholder if no images -->
+            <img src="https://via.placeholder.com/400x600"
+                 class="img-fluid rounded"
+                 alt="No image available">
             {% endif %}
-
         </div>
 
-        <!-- RIGHT SIDE: BOOK INFORMATION -->
+        <!-- RIGHT: BOOK DETAILS -->
         <div class="col-md-7">
-        {# Right column for book details #}
 
-            <h2 class="mb-2">{{ book.title }}</h2>
-            {# Book title #}
+            <!-- Title & Author -->
+            <h2 class="mb-1">{{ book.title }}</h2>
+            <p class="text-muted mb-2">by {{ book.author }}</p>
 
-            <p class="text-muted mb-1">
-                by {{ book.author }}
-            </p>
-            {# Author name #}
+            <!-- Rating -->
+            <p class="mb-2">⭐ ⭐ ⭐ ⭐ <small class="text-muted">(4.0/5)</small></p>
 
-            <h4 class="book-price mb-3"">
-                ₹{{ book.price }}
-            </h4>
-            {# Book price #}
+            <!-- Price -->
+            <h4 class="mb-2">₹{{ book.price }}</h4>
 
-            {% if user.is_authenticated %}
-            {# Show buttons only if user is logged in #}
-
-                <a href="{% url 'add_to_cart' book.id %}"
-                   class="btn btn-primary me-2">
-                    Add to Cart
-                </a>
-
-                <a href="{% url 'add_to_wishlist' book.id %}"
-                   class="btn btn-outline-danger">
-                    ❤ Wishlist
-                </a>
-
+            <!-- Stock status -->
+            {% if book.stock == 0 %}
+                <p class="stock out-stock mb-2">Out of stock</p>
+            {% elif book.stock <= 3 %}
+                <p class="stock low-stock mb-2">Only few left in stock</p>
             {% else %}
-            {# If user is not logged in #}
-
-                <p>
-                    <a href="{% url 'login' %}">Login</a> to buy or save this book.
-                </p>
+                <p class="stock in-stock mb-2">In stock</p>
             {% endif %}
+
+            <!-- Delivery info -->
+            <p class="text-success mt-2 mb-3">✔ Delivery within 4–6 business days</p>
+
+            <!-- Buttons -->
+            {% if user.is_authenticated %}
+                <a href="{% url 'add_to_cart' book.id %}" class="btn btn-primary me-2 mb-2">Add to Cart</a>
+                <a href="{% url 'add_to_wishlist' book.id %}" class="btn btn-outline-danger mb-2">❤ Wishlist</a>
+            {% else %}
+                <p class="mt-2 mb-2"><a href="{% url 'login' %}">Login</a> to buy or save this book.</p>
+            {% endif %}
+
+            <!-- Other Details -->
+            <div class="mt-4">
+                <h4 class="mb-2">Other Details</h4>
+                <div class="border rounded p-3 bg-light">
+                    <p class="mb-1"><strong>Publisher:</strong> Penguin Books</p>
+                    <p class="mb-1"><strong>Binding:</strong> Paperback</p>
+                    <p class="mb-1"><strong>Language:</strong> English</p>
+                    <p class="mb-1"><strong>Condition:</strong> Gently Used</p>
+                </div>
+            </div>
 
         </div>
     </div>
 
-    <!-- ================= BLOCK 2: BOOK DESCRIPTION ================= -->
+    <!-- ===== DESCRIPTION ===== -->
     <div class="row mt-5">
         <div class="col">
-
-            <h4>Description</h4>
-
+            <h4 class="mb-2">Description</h4>
             {% if book.description %}
                 <p>{{ book.description }}</p>
             {% else %}
-                <p><em>No description available.</em></p>
+                <p class="text-muted"><em>No description available.</em></p>
             {% endif %}
+        </div>
+    </div>
 
+    <!-- ===== YOU MAY ALSO LIKE ===== -->
+    <div class="row mt-5">
+        <div class="col">
+            <h4 class="mb-2">You may also like</h4>
+            <p class="text-muted">More books you might enjoy</p>
         </div>
     </div>
 
