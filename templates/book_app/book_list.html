@@ -14,22 +14,22 @@
                 <button type="submit">Search</button>
             </form>
 
-            <!-- Sort links -->
+            <!-- Sort links (preserve search & availability) -->
             <div class="filter-item">
                 <label>Sort:</label>
-                <!-- Add 'active' class for current sort -->
-                <a href="?order=latest" class="{% if order == 'latest' %}active{% endif %}">Latest</a> |
-                <a href="?order=price_low" class="{% if order == 'price_low' %}active{% endif %}">Price</a> |
-                <a href="?order=alpha" class="{% if order == 'alpha' %}active{% endif %}">A–Z</a>
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if availability %}availability={{ availability }}&{% endif %}order=latest"
+                   class="{% if order == 'latest' %}active{% endif %}">Latest</a> |
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if availability %}availability={{ availability }}&{% endif %}order=price_low"
+                   class="{% if order == 'price_low' %}active{% endif %}">Price</a> |
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if availability %}availability={{ availability }}&{% endif %}order=alpha"
+                   class="{% if order == 'alpha' %}active{% endif %}">A–Z</a>
             </div>
 
-            <!-- Availability filter -->
+            <!-- Availability filter (preserve search & sort) -->
             <div class="filter-item">
                 <label>Status:</label>
-                <!-- Add 'active' class if availability is selected -->
-                <a href="?availability=in_stock" class="{% if availability == 'in_stock' %}active{% endif %}">
-                    In Stock
-                </a>
+                <a href="?{% if query %}q={{ query }}&{% endif %}{% if order %}order={{ order }}&{% endif %}availability=in_stock"
+                   class="{% if availability == 'in_stock' %}active{% endif %}">In Stock</a>
             </div>
 
         </div>
@@ -74,7 +74,7 @@
             {% endfor %}
         </div>
 
-        <!-- 📄 PAGINATION -->
+        <!-- 📄 PAGINATION (already preserves all filters) -->
         <div style="margin-top:20px; text-align:center;">
             {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if availability %}&availability={{ availability }}{% endif %}">Previous</a>
