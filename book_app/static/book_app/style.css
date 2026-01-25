@@ -9,14 +9,12 @@
 /* ========================= */
 /* GLOBAL TEXT (DEFAULT FONT) */
 /* ========================= */
-/* Poppins is used for all normal text */
 body, p, span, a {
     font-family: 'Poppins', sans-serif;
     color: #000;
     font-weight: 400;
 }
 
-/* Links inherit text color */
 a {
     text-decoration: none;
     color: inherit;
@@ -43,13 +41,12 @@ a {
     padding: 5rem 1rem;
 }
 
-/* SPECIAL FONT FOR HERO TITLE */
 .hero-section h1 {
-    font-family: 'Playfair Display', serif;   /* old special font */
+    font-family: 'Playfair Display', serif;
     font-weight: 600;
     letter-spacing: 1px;
     font-size: 2.5rem;
-    color: #6a1b9a;   /* elegant purple */
+    color: #6a1b9a;
 }
 
 .hero-section p {
@@ -69,7 +66,6 @@ a {
     font-size: 1.1rem;
 }
 
-/* Responsive hero */
 @media (max-width: 576px) {
     .hero-section img {
         max-width: 80%;
@@ -98,35 +94,34 @@ a {
 /* ========================= */
 /* FILTER BAR */
 /* ========================= */
-.filter-bar {
-    display: flex;
-    gap: 20px;
+.filter-bar-container {
+    background-color: #f1f3f6; /* light grey background */
+    padding: 8px 12px;          /* spacing inside filter bar */
+    border-radius: 8px;         /* rounded corners */
+    display: inline-flex;       /* shrink to content width */
     align-items: center;
-    padding: 15px;
-    background: #f8f8f8;
-    margin-bottom: 30px;
-    flex-wrap: wrap;
+    margin-bottom: 15px;
 }
 
-.filter-item {
-    font-size: 14px;
-}
-
-.filter-item input {
-    padding: 6px;
-}
-
-/* Normal filter links */
-.filter-item a {
+.filter-link {
+    text-decoration: none;
+    color: #007BFF;          /* default blue */
+    padding: 3px 8px;
+    border-radius: 4px;
     font-weight: 500;
-    color: #007bff;
-    margin: 0 5px;
+    transition: 0.2s;
+    margin: 0 3px;            /* spacing between links */
 }
 
-/* ACTIVE filter ONLY */
-.filter-bar a.active {
-    font-weight: 700;
-    color: #007bff;
+.filter-link:hover {
+    background-color: #007BFF; /* blue hover */
+    color: #fff;
+}
+
+.filter-link.active {
+    background-color: #007BFF; /* active blue */
+    color: #fff;
+    font-weight: 700;           /* bold active */
 }
 
 /* ========================= */
@@ -143,7 +138,6 @@ a {
     object-fit: cover;
 }
 
-/* BOOK TITLE FONT (OPTIONAL – CLEAN LOOK) */
 .popular-caption h3 a {
     font-family: 'Playfair Display', serif;
     font-weight: 500;
@@ -160,14 +154,12 @@ a {
 /* ========================= */
 /* BOOK DETAIL PAGE */
 /* ========================= */
-/* BOOK NAME SPECIAL FONT */
 .book-detail-title {
     font-family: 'Playfair Display', serif;
     font-weight: 600;
     letter-spacing: 0.5px;
 }
 
-/* Book images */
 .carousel-item img {
     max-height: 400px;
     object-fit: contain;
