@@ -1,39 +1,76 @@
-{% extends 'base.html' %}  <!-- main layout -->
+{% extends 'base.html' %}  <!-- Use main layout -->
 
 {% block content %}
-<h2>Checkout</h2>
 
-{% if cart_items %}  <!-- check if cart has items -->
+<div class="container mt-5">  <!-- Center content with spacing -->
 
-<!-- Cart Table -->
-<table border="1" cellpadding="10">
-    <tr>
-        <th>Book</th>
-        <th>Quantity</th>
-        <th>Price</th>
-    </tr>
+    <!-- Checkout Card -->
+    <div class="card shadow-sm p-4">  <!-- Card gives structure & calm feeling -->
 
-    {% for item in cart_items %}
-    <tr>
-        <td>{{ item.book.title }}</td>
-        <td>{{ item.quantity }}</td>
-        <td>₹{{ item.book.price }}</td>
-    </tr>
-    {% endfor %}
-</table>
+        <!-- Page Title -->
+        <h2 class="text-center mb-2">Checkout</h2>
 
-<h3>Total: ₹{{ total }}</h3>  <!-- total price -->
+        <!-- Gentle reassurance line -->
+        <p class="text-center text-muted mb-4">
+            Please review your order before confirming.
+        </p>
 
-<!-- Address Form -->
-<h3>Shipping Address</h3>
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}  <!-- renders address fields: full_name, phone, street, city, state, pincode -->
-    <button type="submit">Place Order</button>
-</form>
+        {% if cart_items %}
+        <!-- ✅ Cart has items -->
 
-{% else %}
-<p>Your cart is empty.</p>  <!-- show if no items -->
-{% endif %}
+        <!-- Order Summary Section -->
+        <h5 class="mb-3">Order Summary</h5>
+        <hr>  <!-- Thin divider for clarity -->
+
+        <!-- Order Table -->
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Book</th>
+                    <th>Quantity</th>
+                    <th class="text-end">Price</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                {% for item in cart_items %}
+                <tr>
+                    <td>{{ item.book.title }}</td>      <!-- Book name -->
+                    <td>{{ item.quantity }}</td>        <!-- Quantity -->
+                    <td class="text-end">
+                        ₹{{ item.book.price }}
+                    </td>                               <!-- Price -->
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Total Section -->
+        <div class="d-flex justify-content-between align-items-center bg-light p-3 rounded mt-3">
+            <strong>Total Amount</strong>
+            <strong>₹{{ total }}</strong>
+        </div>
+
+        <!-- Confirm Button -->
+        <form method="post" class="text-center mt-4">
+            {% csrf_token %}  <!-- Security token -->
+
+            <button type="submit" class="btn btn-primary px-5">
+                Confirm Order
+            </button>
+        </form>
+
+        <!-- Trust message -->
+        <p class="text-center text-muted mt-3" style="font-size: 14px;">
+            You can review your order again before payment.
+        </p>
+
+        {% else %}
+        <!-- ❌ Cart empty -->
+        <p class="text-center">Your cart is empty.</p>
+        {% endif %}
+
+    </div>
+</div>
 
 {% endblock %}
