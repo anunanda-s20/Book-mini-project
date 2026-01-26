@@ -53,9 +53,9 @@
 
     {% for order in orders %}
     <tr>
-        <!-- clickable order -->
+        <!-- clickable order (corrected URL name!) -->
         <td>
-            <a href="{% url 'dashboard-order-detail' order.id %}">
+            <a href="{% url 'dashboard_order_detail' order.id %}">
                 #{{ order.id }}
             </a>
         </td>
