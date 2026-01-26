@@ -16,7 +16,7 @@
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 
-    <!-- Font Awesome (trash icon, etc.) -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 
     <!-- Main project CSS -->
@@ -24,44 +24,83 @@
 </head>
 
 <body>
+
 <!-- ==================== NAVBAR ==================== -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container">
+
+        <!-- Logo -->
         <a class="navbar-brand" href="{% url 'home' %}">
             <img src="{% static 'book_app/img/logo/logo.png' %}" alt="Logo" height="30">
         </a>
+
+        <!-- Mobile toggle -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
-            <!-- Search form -->
-            <form class="d-flex me-3" method="get" action="{% url 'book_list' %}">
-                <input class="form-control me-2" type="text" name="q" placeholder="Search books" value="{{ request.GET.q }}">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
-            </form>
 
-            <!-- Navbar links -->
-            <ul class="navbar-nav ms-auto">
-                <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
-                <li class="nav-item"><a class="nav-link" href="{% url 'book_list' %}">Books</a></li>
+            <!-- 🔹 HIDE SEARCH & LINKS ON LOGIN / SIGNUP PAGES -->
+            {% if request.path != '/login/' and request.path != '/signup/' %}
 
-                {% if user.is_authenticated %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'view_cart' %}">Cart</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'my_orders' %}">My Orders</a></li>
-                    <li class="nav-item"><span class="nav-link">Hi, {{ user.username }}</span></li>
+                <!-- Search form -->
+                <form class="d-flex me-3" method="get" action="{% url 'book_list' %}">
+                    <input class="form-control me-2"
+                           type="text"
+                           name="q"
+                           placeholder="Search books"
+                           value="{{ request.GET.q }}">
+                    <button class="btn btn-outline-primary" type="submit">
+                        Search
+                    </button>
+                </form>
+
+                <!-- Navbar links -->
+                <ul class="navbar-nav ms-auto">
+
                     <li class="nav-item">
-                        <form method="post" action="{% url 'logout' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="btn btn-link nav-link">Logout</button>
-                        </form>
+                        <a class="nav-link" href="{% url 'home' %}">Home</a>
                     </li>
-                {% else %}
-                    <li class="nav-item"><a class="nav-link" href="{% url 'login' %}">Login</a></li>
-                    <li class="nav-item"><a class="nav-link" href="{% url 'signup' %}">Signup</a></li>
-                {% endif %}
-            </ul>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'book_list' %}">Books</a>
+                    </li>
+
+                    {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'view_cart' %}">Cart</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'my_orders' %}">My Orders</a>
+                        </li>
+                        <li class="nav-item">
+                            <span class="nav-link">Hi, {{ user.username }}</span>
+                        </li>
+                        <li class="nav-item">
+                            <form method="post" action="{% url 'logout' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-link nav-link">
+                                    Logout
+                                </button>
+                            </form>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'login' %}">Login</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'signup' %}">Signup</a>
+                        </li>
+                    {% endif %}
+                </ul>
+
+            {% endif %}
+            <!-- 🔹 END AUTH PAGE CONDITION -->
+
         </div>
     </div>
 </nav>

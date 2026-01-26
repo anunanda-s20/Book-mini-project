@@ -1,37 +1,77 @@
-{% extends 'base.html' %}  <!-- Extend the global base template -->
+{% extends 'base.html' %}
 
 {% block content %}
-<h2>Login</h2>
 
-<!-- SHOW ERROR / INFO MESSAGES (IMPORTANT) -->
-{% if messages %}  <!-- Check if any message exists -->
-    {% for message in messages %}  <!-- Loop through all messages -->
-        <div class="alert alert-danger">
-            {{ message }}  <!-- Display message text -->
+<!-- Flex wrapper to center card vertically + horizontally -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
+
+    <!-- Fixed width column -->
+    <div class="col-md-5 col-lg-4">
+
+        <!-- Login Card -->
+        <div class="card shadow-sm">
+
+            <!-- Card Header -->
+            <div class="card-header text-center">
+                <h4 class="mb-1">🔑Login to BookStore</h4>
+                <small class="text-muted">
+                    Welcome back. Please login to continue.
+                </small>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+
+                <!-- Django messages (error/info) -->
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endif %}
+
+                <!-- Login Form -->
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        <input type="text" id="id_username" name="username" class="form-control" required autofocus>
+                        <!-- Optional: field-specific errors -->
+                        {% if form.username.errors %}
+                            <div class="text-danger small">{{ form.username.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <input type="password" name="password" class="form-control" required>
+                        <!-- Optional: field-specific errors -->
+                        {% if form.password.errors %}
+                            <div class="text-danger small">{{ form.password.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Login Button -->
+                    <button type="submit" class="btn btn-dark w-100">
+                        Login
+                    </button>
+                </form>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer text-center">
+                <small>
+                    Don’t have an account?
+                    <a href="{% url 'signup' %}">Signup</a>
+                </small>
+            </div>
+
         </div>
-    {% endfor %}
-{% endif %}
-
-<form method="post">  <!-- Form sends data using POST method -->
-    {% csrf_token %}  <!-- Security token required by Django -->
-
-    <!-- Username field -->
-    <label>Username</label><br>
-    <input type="text" name="username" required>  <!-- Must match request.POST.get('username') -->
-    <br><br>
-
-    <!-- Password field -->
-    <label>Password</label><br>
-    <input type="password" name="password" required>  <!-- Must match request.POST.get('password') -->
-    <br><br>
-
-    <!-- Submit button -->
-    <button type="submit">Login</button>
-</form>
-
-<p>
-    No account?  <!-- Message -->
-    <a href="{% url 'signup' %}">Signup</a>  <!-- Link to signup page -->
-</p>
+    </div>
+</div>
 
 {% endblock %}

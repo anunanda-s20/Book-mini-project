@@ -1,16 +1,109 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>Signup</h2>
+<!-- Center card vertically + horizontally -->
+<div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
 
-<form method="post"><!-- Form sends data using POST method -->
-    {% csrf_token %}<!-- Security token required by Django -->
-    {{ form.as_p }}<!-- forms as paragraph -->
-    <button type="submit">Sign Up</button>
-</form>
+    <!-- Fixed width column -->
+    <div class="col-md-5 col-lg-4">
 
-<p>
-Already have an account?<!--msg-->
-<a href="{% url 'login' %}">Login</a> <!-- Link to login page -->
-</p>
+        <!-- Signup Card -->
+        <div class="card shadow-sm">
 
+            <!-- Card Header -->
+            <div class="card-header text-center">
+                <!-- Optional project touch -->
+                <strong>📘 BookStore</strong>
+
+                <h4 class="mt-2 mb-1">Create Your Account</h4>
+                <small class="text-muted">
+                    Join BookStore to buy and manage your books.
+                </small>
+            </div>
+
+            <!-- Card Body -->
+            <div class="card-body">
+
+                <!-- General form error -->
+                {% if form.errors %}
+                    <div class="alert alert-danger">
+                        Please fix the errors below.
+                    </div>
+                {% endif %}
+
+                <!-- Signup Form -->
+                <form method="post">
+                    {% csrf_token %}
+
+                    <!-- Username -->
+                    <div class="mb-3">
+                        <label class="form-label">Username</label>
+                        {{ form.username }}
+                        <!-- Field error -->
+                        {% if form.username.errors %}
+                            <div class="text-danger small">
+                                {{ form.username.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Email -->
+                    <div class="mb-3">
+                        <label class="form-label">Email</label>
+                        {{ form.email }}
+                        <!-- Field error -->
+                        {% if form.email.errors %}
+                            <div class="text-danger small">
+                                {{ form.email.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        {{ form.password1 }}
+                        <!-- Field error -->
+                        {% if form.password1.errors %}
+                            <div class="text-danger small">
+                                {{ form.password1.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Confirm Password -->
+                    <div class="mb-3">
+                        <label class="form-label">Confirm Password</label>
+                        {{ form.password2 }}
+                        <!-- Field error -->
+                        {% if form.password2.errors %}
+                            <div class="text-danger small">
+                                {{ form.password2.errors.0 }}
+                            </div>
+                        {% endif %}
+                    </div>
+
+                    <!-- Submit Button -->
+                    <button type="submit" class="btn btn-dark w-100">
+                        Create Account
+                    </button>
+                </form>
+            </div>
+
+            <!-- Card Footer -->
+            <div class="card-footer text-center">
+                <small>
+                    Already have an account?
+                    <a href="{% url 'login' %}">Login</a>
+                </small>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- Auto-focus username field -->
+<script>
+    document.getElementById("id_username")?.focus();
+</script>
 {% endblock %}
