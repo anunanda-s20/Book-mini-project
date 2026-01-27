@@ -1,109 +1,89 @@
-{% extends 'base.html' %}   <!-- common layout -->
+{% extends 'base.html' %}
 
 {% block content %}
 
 <h2>Dashboard</h2>
-<p>Welcome, {{ request.user.username }}</p>   <!-- admin name -->
+<p class="text-muted">Welcome, {{ request.user.username }}</p>
 
 <hr>
 
-<!-- ================= BOOK SECTION ================= -->
-<h4>Books</h4>
+<!-- ================= SUMMARY CARDS ================= -->
+<div class="row mb-4">
 
-<a href="{% url 'add_book' %}" class="btn btn-success mb-3">
-    + Add Book
-</a>
+    <!-- TOTAL BOOKS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-uppercase">Total Books</h5>
+                <h3>{{ books.count }}</h3>
+                <a href="{% url 'manage_books' %}" class="btn btn-sm btn-primary mt-2">
+                    Manage Books
+                </a>
+                <!-- ✅ Short Command: 'Manage Books here' -->
+                <br>
+                <a href="{% url 'add_book' %}" class="btn btn-sm btn-success mt-1">
+                    + Add Book
+                </a>
+                <!-- ✅ Short Command: 'Add new book here' -->
+            </div>
+        </div>
+    </div>
 
-<table class="table table-bordered">
-    <tr>
-        <th>Title</th>
-        <th>Author</th>
-    </tr>
+    <!-- TOTAL ORDERS -->
+    <div class="col-md-4">
+        <div class="card shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-uppercase">Total Orders</h5>
+                <h3>{{ orders.count }}</h3>
+                <p class="text-muted mt-2 mb-0">
+                    Orders listed below ↓
+                </p>
+                <!-- ✅ Short Command: 'Orders reminder, not button' -->
+            </div>
+        </div>
+    </div>
 
-    {% for book in books %}
-    <tr>
-        <td>{{ book.title }}</td>      <!-- book name -->
-        <td>{{ book.author }}</td>     <!-- author -->
-    </tr>
-    {% empty %}
-    <tr>
-        <td colspan="2">No books available.</td>
-    </tr>
-    {% endfor %}
-</table>
-
-<a href="{% url 'manage_books' %}" class="btn btn-primary">
-    Manage Books
-</a>
+</div>
 
 <hr>
 
-<!-- ================= ORDER SECTION ================= -->
+<!-- ================= ORDERS TABLE ================= -->
 <h4>Orders</h4>
 
 <table class="table table-bordered">
-    <tr>
-        <th>Order ID</th>
-        <th>User</th>
-        <th>Books</th>
-        <th>Total</th>
-        <th>Status</th>
-        <th>Update</th>
-    </tr>
+    <thead class="table-light">
+        <tr>
+            <th>Order ID</th>
+            <th>User</th>
+            <th>Total</th>
+            <th>Status</th>
+            <th>View</th>
+        </tr>
+    </thead>
 
-    {% for order in orders %}
-    <tr>
-        <!-- clickable order (corrected URL name!) -->
-        <td>
-            <a href="{% url 'dashboard_order_detail' order.id %}">
-                #{{ order.id }}
-            </a>
-        </td>
-
-        <!-- user -->
-        <td>{{ order.user.username }}</td>
-
-        <!-- order items -->
-        <td>
-            {% for item in order.items.all %}
-                {{ item.book.title }} (x{{ item.quantity }})<br>
-            {% empty %}
-                No items
-            {% endfor %}
-        </td>
-
-        <!-- total -->
-        <td>₹{{ order.total_price }}</td>
-
-        <!-- current status -->
-        <td>{{ order.get_status_display }}</td>
-
-        <!-- update status -->
-        <td>
-            <form method="post" action="{% url 'update_order_status' order.id %}">
-                {% csrf_token %}
-
-                <select name="status" class="form-select form-select-sm">
-                    <option value="pending" {% if order.status == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="paid" {% if order.status == 'paid' %}selected{% endif %}>Paid</option>
-                    <option value="processing" {% if order.status == 'processing' %}selected{% endif %}>Processing</option>
-                    <option value="shipped" {% if order.status == 'shipped' %}selected{% endif %}>Shipped</option>
-                    <option value="delivered" {% if order.status == 'delivered' %}selected{% endif %}>Delivered</option>
-                    <option value="cancelled" {% if order.status == 'cancelled' %}selected{% endif %}>Cancelled</option>
-                </select>
-
-                <button type="submit" class="btn btn-sm btn-success mt-1">
-                    Update
-                </button>
-            </form>
-        </td>
-    </tr>
-
-    {% empty %}
-    <tr>
-        <td colspan="6">No orders yet.</td>
-    </tr>
-    {% endfor %}
+    <tbody>
+        {% for order in orders %}
+        <tr>
+            <td>#{{ order.id }}</td>
+            <td>{{ order.user.username }}</td>
+            <td>₹{{ order.total_price }}</td>
+            <td>{{ order.get_status_display }}</td>
+            <td>
+                <a href="{% url 'dashboard_order_detail' order.id %}"
+                   class="btn btn-sm btn-outline-secondary">
+                    Details
+                </a>
+                <!-- ✅ Short Command: 'View order details' -->
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" class="text-center text-muted">
+                No orders found.
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
 
 {% endblock %}
