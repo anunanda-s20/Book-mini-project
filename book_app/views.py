@@ -8,6 +8,7 @@ from django.db.models import Q
 from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist
 from .forms import SimpleUserCreationForm, BookForm, AddressForm
 
+
 # =========================
 # PUBLIC PAGES
 # =========================
@@ -18,6 +19,7 @@ def home(request):
 def book_list(request):
     books = Book.objects.all()
     query = request.GET.get("q", "")
+
     if query:
         books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
 
@@ -45,19 +47,15 @@ def book_list(request):
     })
 
 
-# ✅ UPDATED FUNCTION (ONLY CHANGE IN THIS FILE)
 def book_detail(request, id):
     book = get_object_or_404(Book, id=id)
-
-    # Default: book is NOT wishlisted
     is_wishlisted = False
 
-    # Check only if user is logged in
     if request.user.is_authenticated:
         is_wishlisted = Wishlist.objects.filter(
             user=request.user,
             book=book
-        ).exists()  # fast DB check
+        ).exists()
 
     return render(request, 'book_app/book_detail.html', {
         'book': book,
@@ -71,16 +69,19 @@ def book_detail(request, id):
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')
+
     form = SimpleUserCreationForm(request.POST or None)
     if request.method == "POST" and form.is_valid():
         form.save()
         return redirect('login')
+
     return render(request, 'registration/signup.html', {'form': form})
 
 
 def custom_login(request):
     if request.user.is_authenticated:
         return redirect('home')
+
     if request.method == "POST":
         user = authenticate(
             request,
@@ -91,6 +92,7 @@ def custom_login(request):
             login(request, user)
             return redirect('home')
         messages.error(request, "Invalid username or password")
+
     return render(request, 'registration/login.html')
 
 
@@ -166,11 +168,13 @@ def manage_books(request):
 @user_passes_test(staff_required)
 def update_order_status(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+
     if request.method == 'POST':
         status = request.POST.get('status')
         if status in dict(Order.STATUS_CHOICES):
             order.status = status
             order.save()
+
     return redirect('dashboard')
 
 
@@ -207,7 +211,11 @@ def view_cart(request):
     cart = Cart.objects.filter(user=request.user).first()
     items = cart.items.all() if cart else []
     total = sum(item.book.price * item.quantity for item in items)
-    return render(request, 'book_app/cart.html', {'items': items, 'total': total})
+
+    return render(request, 'book_app/cart.html', {
+        'items': items,
+        'total': total
+    })
 
 
 @login_required
@@ -255,7 +263,11 @@ def checkout(request):
         address.user = request.user
         address.save()
 
-        order = Order.objects.create(user=request.user, address=address, total_price=total)
+        order = Order.objects.create(
+            user=request.user,
+            address=address,
+            total_price=total
+        )
 
         for item in cart_items:
             OrderItem.objects.create(
@@ -287,6 +299,47 @@ def order_success(request):
 def my_orders(request):
     orders = Order.objects.filter(user=request.user).order_by('-created_at')
     return render(request, 'book_app/my_orders.html', {'orders': orders})
+
+
+# =========================
+# ✅ ORDER DETAIL (NEWLY ADDED)
+# =========================
+@login_required
+def order_detail(request, order_id):
+    """
+    Shows single order details for logged-in user only
+    """
+    order = get_object_or_404(
+        Order,
+        id=order_id,
+        user=request.user  # security check
+    )
+
+    return render(request, 'book_app/order_detail.html', {
+        'order': order
+    })
+
+
+# =========================
+# USER ORDER CANCELLATION
+# =========================
+@login_required
+def cancel_order(request, order_id):
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    if order.status not in ['pending', 'paid']:
+        messages.error(request, "You cannot cancel this order now.")
+        return redirect('my_orders')
+
+    order.status = 'cancelled'
+    order.save()
+
+    for item in order.items.all():
+        item.book.stock += item.quantity
+        item.book.save()
+
+    messages.success(request, "Your order has been cancelled successfully.")
+    return redirect('my_orders')
 
 
 # =========================

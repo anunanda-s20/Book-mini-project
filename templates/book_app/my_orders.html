@@ -1,43 +1,73 @@
-{% extends 'base.html' %}  <!-- use main layout -->
+{% extends 'base.html' %}
+<!-- Use main layout -->
 
 {% block content %}
+<div class="container my-4" style="max-width: 900px;">
+    <!-- Page heading -->
+    <h2 class="mb-4">My Orders</h2>
 
-<h2>My Orders</h2>
+    {% if orders %}
+        {% for order in orders %}
+        <!-- Single order card -->
+        <div class="card mb-4 border-0 shadow-sm rounded-3 order-card">
+            <div class="card-body">
 
-{% if orders %}  <!-- check if user has orders -->
+                <!-- Header: Order ID + Status -->
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <!-- Order ID clickable for order summary -->
+                        <h6 class="fw-bold mb-1">
+                            <a href="{% url 'order_detail' order.id %}" class="order-link">
+                                ORDER #{{ order.id }}
+                            </a>
+                        </h6>
+                        <small class="text-muted">Placed on {{ order.created_at|date:"F d, Y" }}</small>
+                    </div>
 
-    {% for order in orders %}  <!-- loop through orders -->
+                    <!-- Status with soft pastel colors -->
+                    {% if order.status == 'pending' %}
+                        <span class="badge badge-pending px-3 py-2">Pending</span>
+                    {% elif order.status == 'paid' %}
+                        <span class="badge badge-paid px-3 py-2">Paid</span>
+                    {% elif order.status == 'shipped' %}
+                        <span class="badge badge-shipped px-3 py-2">Shipped</span>
+                    {% elif order.status == 'delivered' %}
+                        <span class="badge badge-delivered px-3 py-2">Delivered</span>
+                    {% elif order.status == 'cancelled' %}
+                        <span class="badge badge-cancelled px-3 py-2">Cancelled</span>
+                    {% endif %}
+                </div>
 
-    <div style="border:1px solid #ccc; padding:10px; margin-bottom:15px;">
+                <hr class="my-3">
 
-        <p><strong>Order ID:</strong> {{ order.id }}</p>
+                <!-- Order Items -->
+                {% for item in order.items.all %}
+                    <div class="d-flex justify-content-between">
+                        <span>{{ item.book.title }}</span>
+                        <span class="text-muted">× {{ item.quantity }}</span>
+                    </div>
+                {% endfor %}
 
-        <p><strong>Total:</strong> ₹{{ order.total_price }}</p>
+                <hr class="my-3">
 
-        <p>
-            <strong>Status:</strong>
-            {{ order.get_status_display }}  
-            <!-- THIS LINE FIXES YOUR ISSUE -->
-        </p>
+                <!-- Total + Cancel Button -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="fw-bold mb-1">Total: ₹{{ order.total_price }}</div>
 
-        <p><strong>Ordered At:</strong> {{ order.ordered_at }}</p>
+                    {% if order.status in 'pending paid' %}
+                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger cancel-btn">
+                            Cancel Order
+                        </a>
+                    {% endif %}
+                </div>
 
-        <h4>Items:</h4>
+            </div>
+        </div>
+        {% endfor %}
 
-        <ul>
-            {% for item in order.items.all %}  <!-- order items -->
-                <li>
-                    {{ item.book.title }} × {{ item.quantity }}
-                </li>
-            {% endfor %}
-        </ul>
+    {% else %}
+        <div class="alert alert-info">You haven’t placed any orders yet.</div>
+    {% endif %}
 
-    </div>
-
-    {% endfor %}
-
-{% else %}
-    <p>You have not placed any orders yet.</p>
-{% endif %}
-
+</div>
 {% endblock %}
