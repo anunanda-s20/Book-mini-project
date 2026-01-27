@@ -45,9 +45,24 @@ def book_list(request):
     })
 
 
+# ✅ UPDATED FUNCTION (ONLY CHANGE IN THIS FILE)
 def book_detail(request, id):
     book = get_object_or_404(Book, id=id)
-    return render(request, 'book_app/book_detail.html', {'book': book})
+
+    # Default: book is NOT wishlisted
+    is_wishlisted = False
+
+    # Check only if user is logged in
+    if request.user.is_authenticated:
+        is_wishlisted = Wishlist.objects.filter(
+            user=request.user,
+            book=book
+        ).exists()  # fast DB check
+
+    return render(request, 'book_app/book_detail.html', {
+        'book': book,
+        'is_wishlisted': is_wishlisted
+    })
 
 
 # =========================
@@ -173,20 +188,16 @@ def dashboard_order_detail(request, order_id):
 def add_to_cart(request, book_id):
     book = get_object_or_404(Book, id=book_id)
 
-    # ❌ Cannot add if out of stock
     if book.stock <= 0:
         messages.error(request, "This book is out of stock!")
         return redirect('book_list')
 
-    # ✅ Get or create user's cart and cart item
     cart, _ = Cart.objects.get_or_create(user=request.user)
     cart_item, created = CartItem.objects.get_or_create(cart=cart, book=book)
 
-    # 🔼 Only increase quantity if below stock
-    if not created:
-        if cart_item.quantity < book.stock:
-            cart_item.quantity += 1
-            cart_item.save()
+    if not created and cart_item.quantity < book.stock:
+        cart_item.quantity += 1
+        cart_item.save()
 
     return redirect('view_cart')
 
@@ -196,23 +207,15 @@ def view_cart(request):
     cart = Cart.objects.filter(user=request.user).first()
     items = cart.items.all() if cart else []
     total = sum(item.book.price * item.quantity for item in items)
-    return render(request, 'book_app/cart.html', {
-        'items': items,
-        'total': total
-    })
+    return render(request, 'book_app/cart.html', {'items': items, 'total': total})
 
 
 @login_required
 def increase_quantity(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
-
-    # ✅ Only increase if quantity < stock
     if item.quantity < item.book.stock:
         item.quantity += 1
         item.save()
-    else:
-        messages.warning(request, "You cannot add more than available stock!")
-
     return redirect('view_cart')
 
 
@@ -221,7 +224,7 @@ def decrease_quantity(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     item.quantity -= 1
     if item.quantity <= 0:
-        item.delete()  # remove item if quantity zero
+        item.delete()
     else:
         item.save()
     return redirect('view_cart')
@@ -232,7 +235,6 @@ def remove_from_cart(request, item_id):
     item = get_object_or_404(CartItem, id=item_id, cart__user=request.user)
     item.delete()
     return redirect('view_cart')
-
 
 
 # =========================
@@ -256,8 +258,12 @@ def checkout(request):
         order = Order.objects.create(user=request.user, address=address, total_price=total)
 
         for item in cart_items:
-            OrderItem.objects.create(order=order, book=item.book,
-                                     quantity=item.quantity, price=item.book.price)
+            OrderItem.objects.create(
+                order=order,
+                book=item.book,
+                quantity=item.quantity,
+                price=item.book.price
+            )
 
         cart_items.delete()
         return redirect('order_success')

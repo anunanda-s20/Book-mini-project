@@ -41,7 +41,7 @@
 
         <div class="collapse navbar-collapse" id="mainNavbar">
 
-            <!-- 🔹 HIDE SEARCH & LINKS ON LOGIN / SIGNUP PAGES -->
+            <!-- Hide links on login/signup -->
             {% if request.path != '/login/' and request.path != '/signup/' %}
 
                 <!-- Search form -->
@@ -71,15 +71,28 @@
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'view_cart' %}">Cart</a>
                         </li>
+
+                        <!-- Wishlist with count -->
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a>
+                            <a class="nav-link" href="{% url 'wishlist' %}">
+                                Wishlist
+                                {% if wishlist_count > 0 %}
+                                    <!-- Show wishlist count -->
+                                    <span class="badge bg-danger">
+                                        {{ wishlist_count }}
+                                    </span>
+                                {% endif %}
+                            </a>
                         </li>
+
                         <li class="nav-item">
                             <a class="nav-link" href="{% url 'my_orders' %}">My Orders</a>
                         </li>
+
                         <li class="nav-item">
                             <span class="nav-link">Hi, {{ user.username }}</span>
                         </li>
+
                         <li class="nav-item">
                             <form method="post" action="{% url 'logout' %}">
                                 {% csrf_token %}
@@ -99,7 +112,7 @@
                 </ul>
 
             {% endif %}
-            <!-- 🔹 END AUTH PAGE CONDITION -->
+            <!-- End auth page condition -->
 
         </div>
     </div>

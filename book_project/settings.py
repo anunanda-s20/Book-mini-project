@@ -56,9 +56,11 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.debug",     # debug info
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
+                "book_app.context_processors.wishlist_count",   # wishlist count for navbar
             ],
         },
     },

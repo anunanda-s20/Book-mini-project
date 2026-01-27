@@ -19,7 +19,8 @@
                     </div>
                     {% endfor %}
                 </div>
-                <!-- Controls -->
+
+                <!-- Carousel controls -->
                 <button class="carousel-control-prev" type="button" data-bs-target="#bookCarousel" data-bs-slide="prev">
                     <span class="carousel-control-prev-icon"></span>
                 </button>
@@ -28,7 +29,7 @@
                 </button>
             </div>
             {% else %}
-            <!-- Placeholder if no images -->
+            <!-- Show placeholder if no image -->
             <img src="https://via.placeholder.com/400x600"
                  class="img-fluid rounded"
                  alt="No image available">
@@ -60,12 +61,32 @@
             <!-- Delivery info -->
             <p class="text-success mt-2 mb-3">✔ Delivery within 4–6 business days</p>
 
-            <!-- Buttons -->
+            <!-- ===== ACTION BUTTONS ===== -->
             {% if user.is_authenticated %}
-                <a href="{% url 'add_to_cart' book.id %}" class="btn btn-primary me-2 mb-2">Add to Cart</a>
-                <a href="{% url 'add_to_wishlist' book.id %}" class="btn btn-outline-danger mb-2">❤ Wishlist</a>
+                <!-- Add to cart button -->
+                <a href="{% url 'add_to_cart' book.id %}"
+                   class="btn btn-primary me-2 mb-2">
+                    Add to Cart
+                </a>
+
+                <!-- Wishlist logic -->
+                {% if is_wishlisted %}
+                    <!-- Disable if already wishlisted -->
+                    <button class="btn btn-danger mb-2" disabled>
+                        ❤ Already in Wishlist
+                    </button>
+                {% else %}
+                    <!-- Show add to wishlist -->
+                    <a href="{% url 'add_to_wishlist' book.id %}"
+                       class="btn btn-outline-danger mb-2">
+                        ❤ Add to Wishlist
+                    </a>
+                {% endif %}
             {% else %}
-                <p class="mt-2 mb-2"><a href="{% url 'login' %}">Login</a> to buy or save this book.</p>
+                <!-- Ask user to login -->
+                <p class="mt-2 mb-2">
+                    <a href="{% url 'login' %}">Login</a> to buy or save this book.
+                </p>
             {% endif %}
 
             <!-- Other Details -->
