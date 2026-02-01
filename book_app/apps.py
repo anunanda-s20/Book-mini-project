@@ -2,4 +2,8 @@ from django.apps import AppConfig
 
 
 class BookAppConfig(AppConfig):
-    name = "book_app"
+    default_auto_field = 'django.db.models.BigAutoField'
+    name = 'book_app'
+
+    def ready(self):
+        import book_app.signals

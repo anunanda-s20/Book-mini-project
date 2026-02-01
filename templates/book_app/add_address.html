@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>Add New Address</h2>
+<hr>
+
+<!-- Address form -->
+<form method="post">
+    {% csrf_token %}
+    
+    <!-- Render form fields with Bootstrap styling -->
+    {{ form.as_p }}
+    
+    <button type="submit" class="btn btn-primary">Add Address</button>
+</form>
+
+<!-- Display validation errors clearly -->
+{% if form.errors %}
+    <div class="alert alert-danger mt-3">
+        <ul class="mb-0">
+        {% for field in form %}
+            {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+            {% endfor %}
+        {% endfor %}
+        </ul>
+    </div>
+{% endif %}
+
+<a href="{% url 'address_list' %}" class="btn btn-secondary mt-3">⬅ Back to Addresses</a>
+{% endblock %}

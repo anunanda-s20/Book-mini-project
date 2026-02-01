@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h2>My Addresses</h2>
+<hr>
+
+{% if addresses %}
+<ul>
+    {% for addr in addresses %}
+    <li>{{ addr.full_name }} | {{ addr.street }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No addresses added yet.</p>
+{% endif %}
+
+<a href="{% url 'add_address' %}">➕ Add New Address</a>
+{% endblock %}

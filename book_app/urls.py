@@ -28,6 +28,13 @@ urlpatterns = [
     path('logout/', views.custom_logout, name='logout'),  # Logout
 
     # =========================
+    # USER PROFILE & ADDRESSES
+    # =========================
+    path('profile/', views.my_profile, name='my_profile'),  # My profile
+    path('addresses/', views.address_list, name='address_list'),       # List all addresses
+    path('addresses/add/', views.add_address, name='add_address'),    # Add new address
+
+    # =========================
     # STAFF BOOK MANAGEMENT
     # =========================
     path('add-book/', views.add_book, name='add_book'),  # Add book (staff)
@@ -39,7 +46,6 @@ urlpatterns = [
     # =========================
     # ORDERS (STAFF)
     # =========================
-    # ✅ Removed old update_order_status URL
     path('dashboard/order/<int:order_id>/', views.dashboard_order_detail, name='dashboard_order_detail'),  # Order detail + update status
 
     # =========================
@@ -48,7 +54,7 @@ urlpatterns = [
     path('checkout/', views.checkout, name='checkout'),  # Checkout page
     path('order-success/', views.order_success, name='order_success'),  # Order success
 
-    # 👇 USER ORDERS
+    # USER ORDERS
     path('my-orders/', views.my_orders, name='my_orders'),  # User's orders
     path('order/<int:order_id>/', views.order_detail, name='order_detail'),  # Order detail for user
     path('cancel-order/<int:order_id>/', views.cancel_order, name='cancel_order'),  # Cancel order

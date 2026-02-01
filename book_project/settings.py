@@ -10,33 +10,38 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/6.0/ref/settings/
 """
 
+"""
+Django settings for book_project project.
+"""
+
 from pathlib import Path
 
-# Base directory of the project
+# Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = "django-insecure-%v+$^=u=%8_cym@j=2n3h$5ywjtk=gz9k_(clkre3rn@1s13o)"
+# SECURITY (development only)
+SECRET_KEY = "django-insecure-%v+$^=u=%8_cym@j=2n3h$5ywjtk=gz9k_(clkre3rn@1s13o"
 
-# Debug mode ON (only for development)
 DEBUG = True
-
-# Allowed hosts (empty for local development)
 ALLOWED_HOSTS = []
 
 
-# Application definition
+# ================= APPLICATIONS =================
 INSTALLED_APPS = [
     "django.contrib.admin",
-    "django.contrib.auth",      # Django authentication (login, logout)
+    "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "book_app",                 # Our custom app
+
+    # Our app (AppConfig REQUIRED for signals)
+    "book_app.apps.BookAppConfig",
 ]
 
+
+# ================= MIDDLEWARE =================
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
@@ -47,29 +52,35 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
 
+
 ROOT_URLCONF = "book_project.urls"
 
+
+# ================= TEMPLATES =================
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],  # Main templates folder
+        "DIRS": [BASE_DIR / "templates"],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
-                "django.template.context_processors.debug",     # debug info
+                "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
                 "django.contrib.messages.context_processors.messages",
-                "book_app.context_processors.wishlist_count",   # wishlist count for navbar
+
+                # Custom context processor
+                "book_app.context_processors.wishlist_count",
             ],
         },
     },
 ]
 
+
 WSGI_APPLICATION = "book_project.wsgi.application"
 
 
-# Database configuration (SQLite)
+# ================= DATABASE =================
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -78,31 +89,27 @@ DATABASES = {
 }
 
 
-# Password validation (disabled for learning stage)
+# ================= PASSWORD VALIDATION =================
 AUTH_PASSWORD_VALIDATORS = []
 
 
-# Language & time zone
+# ================= LANGUAGE & TIME =================
 LANGUAGE_CODE = "en-us"
-USE_I18N = True
 TIME_ZONE = "Asia/Kolkata"
+USE_I18N = True
 USE_TZ = True
 
 
-
 # ================= STATIC FILES =================
-# Used for CSS, JS, icons
 STATIC_URL = "/static/"
 
 
 # ================= MEDIA FILES =================
-# Used for uploaded images (book covers)
-MEDIA_URL = "/media/"               # URL to access images
-MEDIA_ROOT = BASE_DIR / "media"     # Folder where images are stored
+MEDIA_URL = "/media/"
+MEDIA_ROOT = BASE_DIR / "media"
 
 
-# ================= AUTHENTICATION =================
-# Redirect rules for login/logout
-LOGIN_URL = "login"                 # Redirect if user not logged in
-LOGIN_REDIRECT_URL = "home"         # After successful login
-LOGOUT_REDIRECT_URL = "home"        # After logout
+# ================= AUTH SETTINGS =================
+LOGIN_URL = "login"
+LOGIN_REDIRECT_URL = "home"
+LOGOUT_REDIRECT_URL = "home"

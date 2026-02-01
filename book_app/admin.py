@@ -1,33 +1,76 @@
-from django.contrib import admin  # admin tools
-from .models import Book, BookImage, Order, OrderItem, Wishlist, Address, Cart, CartItem  # import models
+from django.contrib import admin
+from .models import (
+    UserProfile,
+    Book,
+    BookImage,
+    Address,
+    Order,
+    OrderItem,
+    Cart,
+    CartItem,
+    Wishlist
+)
 
-# ---------------- Book admin ----------------
+# ================= USER PROFILE =================
+@admin.register(UserProfile)
+class UserProfileAdmin(admin.ModelAdmin):
+    list_display = ('user', 'phone')
+    search_fields = ('user__username', 'phone')
+
+
+# ================= BOOK =================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'price', 'stock', 'is_active')  # show main book info
-    list_filter = ('is_active',)  # filter active/inactive books
-    search_fields = ('title', 'author')  # search by title/author
-    ordering = ('title',)  # alphabetical order
+    list_display = ('title', 'author', 'price', 'stock', 'is_active')
+    list_filter = ('is_active',)
+    search_fields = ('title', 'author')
+    ordering = ('title',)
 
-# ---------------- OrderItems inline ----------------
-class OrderItemInline(admin.TabularInline):  
-    model = OrderItem  # connect OrderItems to Orders
-    readonly_fields = ('book', 'quantity', 'price')  # prevent editing
-    extra = 0  # no empty rows
-    can_delete = False  # prevent deletion from admin
 
-# ---------------- Order admin ----------------
+# ================= BOOK IMAGE =================
+@admin.register(BookImage)
+class BookImageAdmin(admin.ModelAdmin):
+    list_display = ('book',)
+
+
+# ================= ADDRESS =================
+@admin.register(Address)
+class AddressAdmin(admin.ModelAdmin):
+    list_display = ('full_name', 'user', 'city', 'state', 'pincode')
+    search_fields = ('full_name', 'city', 'pincode')
+    list_filter = ('city', 'state')
+
+
+# ================= ORDER ITEM INLINE =================
+class OrderItemInline(admin.TabularInline):
+    model = OrderItem
+    readonly_fields = ('book', 'quantity', 'price')
+    extra = 0
+    can_delete = False
+
+
+# ================= ORDER =================
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
-    list_display = ('id', 'user', 'total_price', 'status', 'created_at')  # Order ID + summary
-    list_filter = ('status',)  # filter by order status
-    ordering = ('-created_at',)  # newest orders first
-    inlines = [OrderItemInline]  # show items inside order
-    readonly_fields = ('user', 'total_price', 'created_at', 'address')  # protect core data
+    list_display = ('id', 'user', 'total_price', 'status', 'created_at')
+    list_filter = ('status',)
+    ordering = ('-created_at',)
+    readonly_fields = ('user', 'total_price', 'created_at', 'address')
+    inlines = [OrderItemInline]
 
-# ---------------- Other models ----------------
-admin.site.register(BookImage)  # manage book images
-admin.site.register(Address)    # view addresses
-admin.site.register(Wishlist)   # view wishlists
-admin.site.register(Cart)       # view carts
-admin.site.register(CartItem)   # view cart items
+
+# ================= CART =================
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('user', 'created_at')
+
+
+@admin.register(CartItem)
+class CartItemAdmin(admin.ModelAdmin):
+    list_display = ('cart', 'book', 'quantity')
+
+
+# ================= WISHLIST =================
+@admin.register(Wishlist)
+class WishlistAdmin(admin.ModelAdmin):
+    list_display = ('user', 'book', 'added_at')

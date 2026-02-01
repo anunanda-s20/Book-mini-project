@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist
+from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address
 from .forms import SimpleUserCreationForm, BookForm, AddressForm
 
 
@@ -296,3 +296,50 @@ def remove_from_wishlist(request, book_id):
 def wishlist(request):
     items = Wishlist.objects.filter(user=request.user)
     return render(request, 'book_app/wishlist.html', {'items': items})  # ✅ Short cmd: 'View wishlist'
+
+
+# =========================
+# USER PROFILE
+# =========================
+from .models import UserProfile
+
+@login_required
+def my_profile(request):
+    # Get profile for logged-in user
+    profile, created = UserProfile.objects.get_or_create(user=request.user)
+
+    context = {
+        'user': request.user,   # username, email
+        'profile': profile      # phone
+    }
+    return render(request, 'book_app/my_profile.html', context)
+    # ✅ Short cmd: 'Render user profile page'
+
+
+
+# =========================
+# USER ADDRESSES
+# =========================
+@login_required
+def address_list(request):
+    """Show all addresses of logged-in user"""
+    addresses = Address.objects.filter(user=request.user)
+    return render(request, 'book_app/address_list.html', {'addresses': addresses})
+    # ✅ Short cmd: 'List user addresses'
+
+
+@login_required
+def add_address(request):
+    """Add a new address"""
+    if request.method == 'POST':
+        form = AddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user = request.user
+            address.save()
+            messages.success(request, "Address added successfully!")
+            return redirect('address_list')
+    else:
+        form = AddressForm()
+    return render(request, 'book_app/add_address.html', {'form': form})
+    # ✅ Short cmd: 'Add new address'
