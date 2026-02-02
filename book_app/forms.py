@@ -3,13 +3,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Book, Address
 
-
 # =============================
 # USER SIGNUP FORM
 # =============================
 class SimpleUserCreationForm(UserCreationForm):
-    # Email field with proper validation
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(
+        required=True,
+        help_text="Enter a valid email, e.g., user@gmail.com"
+    )
 
     class Meta:
         model = User
@@ -17,20 +18,32 @@ class SimpleUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Add Bootstrap class + remove help text
+        # Add Bootstrap styling + remove default help text
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
             field.help_text = ''
 
     # -----------------------------
-    # Block duplicate email signup
+    # Validate email: duplicates + allowed domains
     # -----------------------------
     def clean_email(self):
         email = self.cleaned_data.get('email')
 
-        # Check if email already exists
+        # ✅ Block duplicate email
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email is already registered.")
+
+        # ✅ Only allow specific email domains
+        allowed_domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com']
+        try:
+            domain = email.split('@')[1]
+        except IndexError:
+            raise forms.ValidationError("Enter a valid email address.")
+        
+        if domain not in allowed_domains:
+            raise forms.ValidationError(
+                "Please use a valid email address from Gmail, Yahoo, Outlook, or Hotmail."
+            )
 
         return email
 
@@ -65,7 +78,7 @@ class AddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Make all fields required + Bootstrap styling
+        # ✅ Make all fields required + Bootstrap styling
         for field in self.fields.values():
             field.required = True
             field.widget.attrs['class'] = 'form-control'

@@ -52,7 +52,7 @@ urlpatterns = [
     # CHECKOUT & USER ORDERS
     # =========================
     path('checkout/', views.checkout, name='checkout'),  # Checkout page
-    path('order-success/', views.order_success, name='order_success'),  # Order success
+    path('order-success/', views.order_success, name='order_success'),#order success
 
     # USER ORDERS
     path('my-orders/', views.my_orders, name='my_orders'),  # User's orders

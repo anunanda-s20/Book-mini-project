@@ -214,34 +214,55 @@ def remove_from_cart(request, item_id):
     item.delete()
     return redirect('view_cart')  # ✅ Short cmd: 'Remove item from cart'
 
-
 # =========================
 # CHECKOUT
 # =========================
 @login_required
 def checkout(request):
+    # ✅ Get user's cart
     cart = Cart.objects.filter(user=request.user).first()
     if not cart:
         return redirect('view_cart')
+
     cart_items = cart.items.all()
     total = sum(item.book.price * item.quantity for item in cart_items)
-    form = AddressForm(request.POST or None)
-    if request.method == 'POST' and form.is_valid():
-        address = form.save(commit=False)
-        address.user = request.user
-        address.save()
-        order = Order.objects.create(user=request.user, address=address, total_price=total)
+
+    # ✅ Get the first address of logged-in user (from profile/addresses)
+    address = Address.objects.filter(user=request.user).first()
+
+    if not address:
+        messages.error(request, "No address found. Please add an address in your profile first.")
+        return redirect('my_profile')
+
+    if request.method == 'POST':
+        # ✅ Create order with existing address
+        order = Order.objects.create(
+            user=request.user,
+            address=address,
+            total_price=total,
+            status='pending'
+        )
+
+        # ✅ Add order items
         for item in cart_items:
-            OrderItem.objects.create(order=order, book=item.book, quantity=item.quantity, price=item.book.price)
+            OrderItem.objects.create(
+                order=order,
+                book=item.book,
+                quantity=item.quantity,
+                price=item.book.price
+            )
+
+        # ✅ Clear cart after order
         cart_items.delete()
+
         return redirect('order_success')
-    return render(request, 'book_app/checkout.html', {'cart_items': cart_items, 'total': total, 'form': form})
-    # ✅ Short cmd: 'Checkout + create order'
 
+    return render(request, 'book_app/checkout.html', {
+        'cart_items': cart_items,
+        'total': total,
+        'address': address  # ✅ Pass address to template
+    })  # ✅ Short cmd: 'Checkout page showing cart + address'
 
-@login_required
-def order_success(request):
-    return render(request, 'book_app/order_success.html')  # ✅ Short cmd: 'Show success page'
 
 
 # =========================
@@ -343,3 +364,12 @@ def add_address(request):
         form = AddressForm()
     return render(request, 'book_app/add_address.html', {'form': form})
     # ✅ Short cmd: 'Add new address'
+
+
+  # =========================
+# ORDER SUCCESS
+# =========================
+@login_required
+def order_success(request):
+    return render(request, 'book_app/payment_success.html')  
+    # ✅ Shows the success page after order
