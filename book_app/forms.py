@@ -1,16 +1,15 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Book, Address  # Address for checkout/profile
+from .models import Book, Address
+
 
 # =============================
 # USER SIGNUP FORM
 # =============================
 class SimpleUserCreationForm(UserCreationForm):
-    username = forms.CharField(max_length=150, help_text='')
-    password1 = forms.CharField(label='Password', widget=forms.PasswordInput, help_text='')
-    password2 = forms.CharField(label='Password confirmation', widget=forms.PasswordInput, help_text='')
-    email = forms.EmailField(required=True)  # ✅ Required email
+    # Email field with proper validation
+    email = forms.EmailField(required=True)
 
     class Meta:
         model = User
@@ -18,21 +17,43 @@ class SimpleUserCreationForm(UserCreationForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Add Bootstrap styling to all fields
+        # Add Bootstrap class + remove help text
         for field in self.fields.values():
             field.widget.attrs['class'] = 'form-control'
-            field.help_text = ''  # clean UI
+            field.help_text = ''
+
+    # -----------------------------
+    # Block duplicate email signup
+    # -----------------------------
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+
+        # Check if email already exists
+        if User.objects.filter(email=email).exists():
+            raise forms.ValidationError("This email is already registered.")
+
+        return email
+
 
 # =============================
-# BOOK FORM (STAFF)
+# BOOK FORM (STAFF ONLY)
 # =============================
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
-        fields = ['title', 'author', 'price', 'description', 'stock', 'is_active', 'published_date']
+        fields = [
+            'title',
+            'author',
+            'price',
+            'description',
+            'stock',
+            'is_active',
+            'published_date'
+        ]
         widgets = {
-            'published_date': forms.DateInput(attrs={'type': 'date'})  # date picker
+            'published_date': forms.DateInput(attrs={'type': 'date'})
         }
+
 
 # =============================
 # ADDRESS FORM (CHECKOUT / PROFILE)
@@ -44,7 +65,7 @@ class AddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # ✅ Make all fields required + Bootstrap styling
+        # Make all fields required + Bootstrap styling
         for field in self.fields.values():
             field.required = True
             field.widget.attrs['class'] = 'form-control'
