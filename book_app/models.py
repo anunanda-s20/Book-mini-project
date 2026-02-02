@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 
 # ================= USER PROFILE =================
-# Stores extra user info (NOT address, NOT email)
+# Stores extra user info (not email, not address)
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     phone = models.CharField(max_length=15, blank=True)
@@ -14,18 +14,27 @@ class UserProfile(models.Model):
 
 # ================= BOOK =================
 class Book(models.Model):
-    title = models.CharField(max_length=200)
-    author = models.CharField(max_length=100)
+    title = models.CharField(max_length=200)          # Book name
+    author = models.CharField(max_length=100)         # Author name
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField(blank=True)
-    stock = models.PositiveIntegerField(default=0)
-    is_active = models.BooleanField(default=True)
+    stock = models.PositiveIntegerField(default=0)    # Stock count (0 allowed)
+    is_active = models.BooleanField(default=True)     # Show / hide book
     published_date = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return self.title
+
+    @property
+    def availability_status(self):
+        """
+        Returns stock status for templates, admin, dashboard
+        """
+        if self.stock > 0:
+            return "In Stock"
+        return "Out of Stock"
 
 
 # ================= BOOK IMAGE =================
@@ -40,17 +49,17 @@ class BookImage(models.Model):
 # ================= ADDRESS =================
 # One user can have multiple addresses
 class Address(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)  # ✅ Link to user
-    full_name = models.CharField(max_length=100)             # ✅ Required
-    phone = models.CharField(max_length=15)                  # ✅ Required
-    street = models.CharField(max_length=255)                # ✅ Required, use CharField for short input
-    city = models.CharField(max_length=50)                   # ✅ Required
-    state = models.CharField(max_length=50)                  # ✅ Required
-    pincode = models.CharField(max_length=10)                # ✅ Required
-    created_at = models.DateTimeField(auto_now_add=True)     # ✅ Auto timestamp
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    full_name = models.CharField(max_length=100)
+    phone = models.CharField(max_length=15)
+    street = models.CharField(max_length=255)
+    city = models.CharField(max_length=50)
+    state = models.CharField(max_length=50)
+    pincode = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
-        return f"{self.full_name} - {self.city}"            # ✅ Friendly display
+        return f"{self.full_name} - {self.city}"
 
 
 # ================= ORDER =================
@@ -111,7 +120,7 @@ class Wishlist(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'book')
+        unique_together = ('user', 'book')  # Prevent duplicates
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title}"

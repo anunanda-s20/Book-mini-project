@@ -5,59 +5,55 @@
 <section class="new-arrival">
     <div class="container">
 
-        <!-- 🔍 FILTER BAR: Search left, filters right -->
+        <!-- Search & Filters -->
         <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
 
-            <!-- Search form (left) -->
             <form method="get" class="d-flex mb-2">
-                <input type="text" name="q" class="form-control me-2" placeholder="Search books" value="{{ query|default:'' }}">
+                <input type="text" name="q" class="form-control me-2"
+                       placeholder="Search books" value="{{ query|default:'' }}">
                 <button type="submit" class="btn btn-primary">Search</button>
             </form>
 
-            <!-- Filters (right) with light background -->
             <div class="filter-bar-container mb-2">
-                <span>Sort: </span>
-                <a href="?{% if query %}q={{ query }}&{% endif %}{% if availability %}availability={{ availability }}&{% endif %}order=latest"
-                   class="filter-link {% if order == 'latest' %}active{% endif %} ms-2">Latest</a> |
-                <a href="?{% if query %}q={{ query }}&{% endif %}{% if availability %}availability={{ availability }}&{% endif %}order=price_low"
-                   class="filter-link {% if order == 'price_low' %}active{% endif %} ms-2">Price</a> |
-                <a href="?{% if query %}q={{ query }}&{% endif %}{% if availability %}availability={{ availability }}&{% endif %}order=alpha"
-                   class="filter-link {% if order == 'alpha' %}active{% endif %} ms-2">A–Z</a> |
-                <a href="?{% if query %}q={{ query }}&{% endif %}{% if order %}order={{ order }}&{% endif %}availability=in_stock"
-                   class="filter-link {% if availability == 'in_stock' %}active{% endif %} ms-2">In Stock</a>
+                <span>Sort:</span>
+                <a href="?order=latest" class="ms-2">Latest</a> |
+                <a href="?order=price_low" class="ms-2">Price</a> |
+                <a href="?order=alpha" class="ms-2">A–Z</a>
             </div>
-
         </div>
 
-        <!-- 🔢 RESULT COUNT -->
         <p class="text-muted">Showing {{ page_obj.paginator.count }} books</p>
 
-        <!-- 📚 BOOK LIST -->
         <div class="row">
             {% for book in page_obj %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
                 <div class="card h-100 text-center shadow-sm position-relative">
 
-                    {% if book.stock > 0 %}
-                    <span class="badge bg-success position-absolute top-0 end-0 m-2">In Stock</span>
-                    {% endif %}
+                    <!-- ✅ Stock status from backend -->
+                    <span class="badge 
+                        {% if book.availability_status == 'In Stock' %}
+                            bg-success
+                        {% else %}
+                            bg-danger
+                        {% endif %}
+                        position-absolute top-0 end-0 m-2">
+                        {{ book.availability_status }}
+                    </span>
 
                     <a href="{% url 'book_detail' book.id %}">
                         {% with book.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ book.title }}">
+                                <img src="{{ img.image.url }}" class="card-img-top">
                             {% else %}
-                                <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top" alt="No image">
+                                <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top">
                             {% endif %}
                         {% endwith %}
                     </a>
 
                     <div class="card-body">
-                        <h5 class="card-title">
-                            <a href="{% url 'book_detail' book.id %}" class="text-decoration-none text-dark">{{ book.title }}</a>
-                        </h5>
-                        <p class="card-text text-muted">{{ book.author }}</p>
-                        <p class="fw-bold mt-2">₹ {{ book.price }}</p>
+                        <h5 class="card-title">{{ book.title }}</h5>
+                        <p class="text-muted">{{ book.author }}</p>
+                        <p class="fw-bold">₹ {{ book.price }}</p>
                     </div>
 
                 </div>
@@ -66,25 +62,6 @@
             <p class="text-center text-muted">No books found.</p>
             {% endfor %}
         </div>
-
-        <!-- 📄 PAGINATION -->
-        <nav>
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if query %}&q={{ query }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if availability %}&availability={{ availability }}{% endif %}">Previous</a>
-                </li>
-                {% endif %}
-                <li class="page-item disabled">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </li>
-                {% if page_obj.has_next %}
-                <li class="page-item">
-                    <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if query %}&q={{ query }}{% endif %}{% if order %}&order={{ order }}{% endif %}{% if availability %}&availability={{ availability }}{% endif %}">Next</a>
-                </li>
-                {% endif %}
-            </ul>
-        </nav>
 
     </div>
 </section>
