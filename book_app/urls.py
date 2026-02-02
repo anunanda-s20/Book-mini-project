@@ -52,11 +52,8 @@ urlpatterns = [
     # CHECKOUT & USER ORDERS
     # =========================
     path('checkout/', views.checkout, name='checkout'),  # Checkout page
-    path('order-success/', views.order_success, name='order_success'),#order success
-
-    # USER ORDERS
+    path('order-success/', views.order_success, name='order_success'),  # Order success
     path('my-orders/', views.my_orders, name='my_orders'),  # User's orders
-    path('order/<int:order_id>/', views.order_detail, name='order_detail'),  # Order detail for user
     path('cancel-order/<int:order_id>/', views.cancel_order, name='cancel_order'),  # Cancel order
 
     # =========================

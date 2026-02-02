@@ -15,26 +15,24 @@
                 <!-- Header: Order ID + Status -->
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <!-- Order ID clickable for order summary -->
+                        <!-- Plain text Order ID -->
                         <h6 class="fw-bold mb-1">
-                            <a href="{% url 'order_detail' order.id %}" class="order-link">
-                                ORDER #{{ order.id }}
-                            </a>
+                            ORDER #{{ order.id }}
                         </h6>
                         <small class="text-muted">Placed on {{ order.created_at|date:"F d, Y" }}</small>
                     </div>
 
                     <!-- Status with soft pastel colors -->
                     {% if order.status == 'pending' %}
-                        <span class="badge badge-pending px-3 py-2">Pending</span>
+                        <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
                     {% elif order.status == 'paid' %}
-                        <span class="badge badge-paid px-3 py-2">Paid</span>
+                        <span class="badge bg-primary px-3 py-2">Paid</span>
                     {% elif order.status == 'shipped' %}
-                        <span class="badge badge-shipped px-3 py-2">Shipped</span>
+                        <span class="badge bg-info text-dark px-3 py-2">Shipped</span>
                     {% elif order.status == 'delivered' %}
-                        <span class="badge badge-delivered px-3 py-2">Delivered</span>
+                        <span class="badge bg-success px-3 py-2">Delivered</span>
                     {% elif order.status == 'cancelled' %}
-                        <span class="badge badge-cancelled px-3 py-2">Cancelled</span>
+                        <span class="badge bg-danger px-3 py-2">Cancelled</span>
                     {% endif %}
                 </div>
 
