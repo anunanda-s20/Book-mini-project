@@ -1,11 +1,11 @@
-{% extends 'base.html' %} <!-- Use main layout -->
+{% extends 'base.html' %}  <!-- Use main layout -->
 
 {% block content %}
 <div class="container mt-4">
 
     <h2 class="mb-4">Your Cart</h2>
 
-    {% if items %} <!-- Cart has items -->
+    {% if items %}  <!-- Cart has items -->
 
     <div class="table-responsive">
         <table class="table table-bordered align-middle text-center">
@@ -23,32 +23,56 @@
 
             <tbody>
             {% for item in items %}
-                {# ✅ Only highlight row if stock is low: 1, 2, 3 #}
-                <tr {% if item.book.stock > 0 and item.book.stock <= 3 %}class="table-warning"{% endif %}> 
+                <!-- Highlight row if stock is low -->
+                <tr {% if item.book.stock > 0 and item.book.stock <= 3 %}class="table-warning"{% endif %}>
 
-                    <!-- Book title & author -->
+                    <!-- Book image + title + author -->
                     <td class="text-start">
-                        <strong>{{ item.book.title }}</strong><br>
-                        <small class="text-muted">by {{ item.book.author }}</small><br>
-                        {# 🔴 Optional: show low stock message #}
-                        {% if item.book.stock > 0 and item.book.stock <= 3 %}
-                            <small class="text-danger">Only {{ item.book.stock }} left!</small>
-                        {% endif %}
+                        <div class="d-flex align-items-center">
+
+                            <!-- Book thumbnail -->
+                            {% if item.book.image %}
+                                <img src="{{ item.book.image.url }}"
+                                     alt="{{ item.book.title }}"
+                                     style="width: 60px; height: auto;"
+                                     class="me-3 rounded">
+                            {% endif %}
+
+                            <div>
+                                <!-- Clickable book title -->
+                                <a href="{% url 'book_detail' item.book.id %}"
+                                   class="fw-bold text-decoration-none text-dark">
+                                    {{ item.book.title }}
+                                </a><br>
+
+                                <small class="text-muted">
+                                    by {{ item.book.author }}
+                                </small><br>
+
+                                <!-- Low stock warning -->
+                                {% if item.book.stock > 0 and item.book.stock <= 3 %}
+                                    <small class="text-danger">
+                                        Only {{ item.book.stock }} left!
+                                    </small>
+                                {% endif %}
+                            </div>
+
+                        </div>
                     </td>
 
                     <!-- Single book price -->
                     <td>₹{{ item.book.price|floatformat:2 }}</td>
 
-                    <!-- Quantity buttons -->
+                    <!-- Quantity controls -->
                     <td>
-                        <!-- Decrease quantity -->
-                        <a href="{% url 'decrease_quantity' item.id %}" 
+                        <!-- Decrease -->
+                        <a href="{% url 'decrease_quantity' item.id %}"
                            class="btn btn-sm btn-outline-secondary">−</a>
 
                         <span class="mx-2">{{ item.quantity }}</span>
 
-                        <!-- Increase quantity (disabled if max stock reached) -->
-                        <a href="{% url 'increase_quantity' item.id %}" 
+                        <!-- Increase (disabled if stock reached) -->
+                        <a href="{% url 'increase_quantity' item.id %}"
                            class="btn btn-sm btn-outline-secondary"
                            {% if item.quantity >= item.book.stock %}
                                disabled title="Max stock reached"
@@ -56,12 +80,14 @@
                     </td>
 
                     <!-- Subtotal -->
-                    <td>₹{{ item.book.price|floatformat:2 }} × {{ item.quantity }}</td>
+                    <td>
+                        ₹{{ item.book.price|floatformat:2 }} × {{ item.quantity }}
+                    </td>
 
                     <!-- Remove item -->
                     <td>
-                        <a href="{% url 'remove_from_cart' item.id %}" 
-                           class="btn btn-sm btn-outline-danger" 
+                        <a href="{% url 'remove_from_cart' item.id %}"
+                           class="btn btn-sm btn-outline-danger"
                            title="Remove from cart">
                             <i class="fa fa-trash"></i>
                         </a>
@@ -73,19 +99,39 @@
         </table>
     </div>
 
-    <!-- Total & Checkout -->
-    <div class="d-flex justify-content-end mt-4">
+    <!-- Total + buttons -->
+    <div class="d-flex justify-content-between align-items-center mt-4">
+
+        <!-- Continue shopping -->
+        <a href="{% url 'book_list' %}" class="btn btn-outline-primary">
+            ← Continue Shopping
+        </a>
+
+        <!-- Total + checkout -->
         <div class="card p-3" style="min-width: 250px;">
-            <h5>Total: <strong>₹{{ total|floatformat:2 }}</strong></h5>
-            <a href="{% url 'checkout' %}" class="btn btn-success mt-2 w-100">Proceed to Checkout</a>
+            <h5>
+                Total:
+                <strong>₹{{ total|floatformat:2 }}</strong>
+            </h5>
+
+            <a href="{% url 'checkout' %}"
+               class="btn btn-success mt-2 w-100">
+                Proceed to Checkout
+            </a>
         </div>
+
     </div>
 
-    {% else %} <!-- Cart empty -->
+    {% else %}  <!-- Cart empty -->
+
     <div class="text-center mt-5">
         <h4>Your cart is empty 🛒</h4>
-        <a href="{% url 'book_list' %}" class="btn btn-primary mt-3">Browse Books</a>
+        <a href="{% url 'book_list' %}"
+           class="btn btn-primary mt-3">
+            Browse Books
+        </a>
     </div>
+
     {% endif %}
 
 </div>
