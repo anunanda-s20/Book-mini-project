@@ -20,16 +20,20 @@ def home(request):
 
 
 def book_list(request):
-    books = Book.objects.all()
+    # ✅ Only fetch active books
+    books = Book.objects.filter(is_active=True)
 
+    # Search by title or author
     query = request.GET.get("q", "")
     if query:
         books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
 
+    # Filter by stock
     availability = request.GET.get("availability", "")
     if availability == "in_stock":
-        books = books.filter(stock__gt=0)
+        books = books.filter(stock__gt=0)  # Only books with stock > 0
 
+    # Sort books
     order = request.GET.get("order", "")
     if order == "price_low":
         books = books.order_by("price")
@@ -38,6 +42,7 @@ def book_list(request):
     elif order == "alpha":
         books = books.order_by("title")
 
+    # Pagination
     paginator = Paginator(books, 8)
     page_obj = paginator.get_page(request.GET.get("page"))
 
@@ -50,14 +55,20 @@ def book_list(request):
 
 
 def book_detail(request, id):
-    book = get_object_or_404(Book, id=id)
+    # ✅ Only fetch active books
+    book = get_object_or_404(Book, id=id, is_active=True)
+
+    # Check if book is in wishlist
     is_wishlisted = False
     if request.user.is_authenticated:
         is_wishlisted = Wishlist.objects.filter(user=request.user, book=book).exists()
+
+    # Render book detail page
     return render(request, 'book_app/book_detail.html', {
         'book': book,
         'is_wishlisted': is_wishlisted
     })
+
 
 
 # =========================
