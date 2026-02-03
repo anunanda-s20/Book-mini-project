@@ -45,26 +45,33 @@
 
                 <div class="card h-100 text-center shadow-sm position-relative">
 
-                    <span class="badge
-                        {% if book.availability_status == 'In Stock' %}
-                            bg-success
-                        {% else %}
-                            bg-danger
-                        {% endif %}
-                        position-absolute top-0 end-0 m-2">
-                        {{ book.availability_status }}
-                    </span>
+                    <!-- Stock status badge (aesthetic, matching detail page) -->
+                    {% if book.stock == 0 %}
+                        <span class="badge stock out-stock position-absolute top-0 end-0 m-2">
+                            Out of Stock
+                        </span>
+                    {% elif book.stock <= 3 %}
+                        <span class="badge stock low-stock position-absolute top-0 end-0 m-2">
+                            Few Left
+                        </span>
+                    {% else %}
+                        <span class="badge stock in-stock position-absolute top-0 end-0 m-2">
+                            In Stock
+                        </span>
+                    {% endif %}
 
+                    <!-- Book image -->
                     <a href="{% url 'book_detail' book.id %}">
                         {% with book.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}" class="card-img-top">
+                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ book.title }}">
                             {% else %}
-                                <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top">
+                                <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top" alt="No image">
                             {% endif %}
                         {% endwith %}
                     </a>
 
+                    <!-- Book details -->
                     <div class="card-body">
                         <h5 class="card-title">{{ book.title }}</h5>
                         <p class="text-muted">{{ book.author }}</p>
@@ -82,46 +89,62 @@
 </section>
 
 <!-- ========================= -->
-<!-- FILTER STYLES (REFINED) -->
+<!-- FILTER & STOCK STYLES -->
 <!-- ========================= -->
 <style>
-    /* Background */
+    /* FILTER BAR */
     .filter-wrapper {
         background-color: #faf9fd;
         border: 1px solid #ebe7f2;
     }
 
-    /* Label */
     .filter-label {
         color: #6f6285;
         font-weight: 500;
     }
 
-    /* Filter links (default) */
     .filter-link {
         margin-right: 18px;
-        color: #66527f; /* slightly darker than before */
+        color: #66527f;
         text-decoration: none;
         font-weight: 500;
         transition: color 0.2s ease, font-weight 0.2s ease;
     }
 
-    /* Hover → darker, NO underline */
     .filter-link:hover {
         color: #56406f;
         text-decoration: none;
     }
 
-    /* Active (selected filter) */
     .filter-link.active {
-        color: #4b2f6f; /* deeper purple */
+        color: #4b2f6f;
         font-weight: 700;
     }
 
-    /* Book count */
     .book-count {
         color: #6f6285;
         font-size: 14px;
+    }
+
+    /* STOCK BADGES (aesthetic, matching detail page) */
+    .stock {
+        font-weight: 600;
+        font-size: 0.85rem;
+        padding: 0.35rem 0.6rem;
+        border-radius: 0.5rem;
+        color: #fff;
+    }
+
+    .in-stock {
+        background-color: #4CAF7F; /* soft green */
+    }
+
+    .low-stock {
+        background-color: #F7B267; /* soft yellow-orange */
+    }
+
+    .out-stock {
+        background-color: #F25F5C; /* soft red/pink */
     }
 </style>
 
