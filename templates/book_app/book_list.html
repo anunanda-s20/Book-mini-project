@@ -3,34 +3,49 @@
 
 {% block content %}
 <section class="new-arrival">
-    <div class="container">
+    <div class="container my-4">
 
-        <!-- Search & Filters -->
-        <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+        <!-- ========================= -->
+        <!-- FILTER BAR (SOFT PURPLE) -->
+        <!-- ========================= -->
+        <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded filter-wrapper">
 
-            <form method="get" class="d-flex mb-2">
-                <input type="text" name="q" class="form-control me-2"
-                       placeholder="Search books" value="{{ query|default:'' }}">
-                <button type="submit" class="btn btn-primary">Search</button>
-            </form>
+            <!-- Sort filters -->
+            <div>
+                <span class="filter-label me-3">Sort:</span>
 
-            <div class="filter-bar-container mb-2">
-                <span>Sort:</span>
-                <a href="?order=latest" class="ms-2">Latest</a> |
-                <a href="?order=price_low" class="ms-2">Price</a> |
-                <a href="?order=alpha" class="ms-2">A–Z</a>
+                <a href="?order=latest"
+                   class="filter-link {% if order == 'latest' %}active{% endif %}">
+                    Latest
+                </a>
+
+                <a href="?order=price_low"
+                   class="filter-link {% if order == 'price_low' %}active{% endif %}">
+                    Price
+                </a>
+
+                <a href="?order=alpha"
+                   class="filter-link {% if order == 'alpha' %}active{% endif %}">
+                    A–Z
+                </a>
             </div>
+
+            <!-- Book count -->
+            <p class="mb-0 book-count">
+                Showing {{ page_obj.paginator.count }} books
+            </p>
         </div>
 
-        <p class="text-muted">Showing {{ page_obj.paginator.count }} books</p>
-
+        <!-- ========================= -->
+        <!-- BOOK LIST -->
+        <!-- ========================= -->
         <div class="row">
             {% for book in page_obj %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+
                 <div class="card h-100 text-center shadow-sm position-relative">
 
-                    <!-- ✅ Stock status from backend -->
-                    <span class="badge 
+                    <span class="badge
                         {% if book.availability_status == 'In Stock' %}
                             bg-success
                         {% else %}
@@ -65,4 +80,49 @@
 
     </div>
 </section>
+
+<!-- ========================= -->
+<!-- FILTER STYLES (REFINED) -->
+<!-- ========================= -->
+<style>
+    /* Background */
+    .filter-wrapper {
+        background-color: #faf9fd;
+        border: 1px solid #ebe7f2;
+    }
+
+    /* Label */
+    .filter-label {
+        color: #6f6285;
+        font-weight: 500;
+    }
+
+    /* Filter links (default) */
+    .filter-link {
+        margin-right: 18px;
+        color: #66527f; /* slightly darker than before */
+        text-decoration: none;
+        font-weight: 500;
+        transition: color 0.2s ease, font-weight 0.2s ease;
+    }
+
+    /* Hover → darker, NO underline */
+    .filter-link:hover {
+        color: #56406f;
+        text-decoration: none;
+    }
+
+    /* Active (selected filter) */
+    .filter-link.active {
+        color: #4b2f6f; /* deeper purple */
+        font-weight: 700;
+    }
+
+    /* Book count */
+    .book-count {
+        color: #6f6285;
+        font-size: 14px;
+    }
+</style>
+
 {% endblock %}
