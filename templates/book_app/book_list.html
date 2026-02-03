@@ -5,59 +5,31 @@
 <section class="new-arrival">
     <div class="container my-4">
 
-        <!-- ========================= -->
-        <!-- FILTER BAR (SOFT PURPLE) -->
-        <!-- ========================= -->
+        <!-- FILTER BAR -->
         <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded filter-wrapper">
-
-            <!-- Sort filters -->
             <div>
                 <span class="filter-label me-3">Sort:</span>
 
-                <a href="?order=latest"
-                   class="filter-link {% if order == 'latest' %}active{% endif %}">
-                    Latest
-                </a>
-
-                <a href="?order=price_low"
-                   class="filter-link {% if order == 'price_low' %}active{% endif %}">
-                    Price
-                </a>
-
-                <a href="?order=alpha"
-                   class="filter-link {% if order == 'alpha' %}active{% endif %}">
-                    A–Z
-                </a>
+                <a href="?order=latest" class="filter-link {% if order == 'latest' %}active{% endif %}">Latest</a>
+                <a href="?order=price_low" class="filter-link {% if order == 'price_low' %}active{% endif %}">Price</a>
+                <a href="?order=alpha" class="filter-link {% if order == 'alpha' %}active{% endif %}">A–Z</a>
             </div>
-
-            <!-- Book count -->
-            <p class="mb-0 book-count">
-                Showing {{ page_obj.paginator.count }} books
-            </p>
+            <p class="mb-0 book-count">Showing {{ page_obj.paginator.count }} books</p>
         </div>
 
-        <!-- ========================= -->
         <!-- BOOK LIST -->
-        <!-- ========================= -->
         <div class="row">
             {% for book in page_obj %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-
                 <div class="card h-100 text-center shadow-sm position-relative">
 
-                    <!-- Stock status badge (aesthetic, matching detail page) -->
+                    <!-- Stock status badge -->
                     {% if book.stock == 0 %}
-                        <span class="badge stock out-stock position-absolute top-0 end-0 m-2">
-                            Out of Stock
-                        </span>
+                        <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
                     {% elif book.stock <= 3 %}
-                        <span class="badge stock low-stock position-absolute top-0 end-0 m-2">
-                            Few Left
-                        </span>
+                        <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
                     {% else %}
-                        <span class="badge stock in-stock position-absolute top-0 end-0 m-2">
-                            In Stock
-                        </span>
+                        <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
                     {% endif %}
 
                     <!-- Book image -->
@@ -88,9 +60,7 @@
     </div>
 </section>
 
-<!-- ========================= -->
-<!-- FILTER & STOCK STYLES -->
-<!-- ========================= -->
+<!-- STYLES -->
 <style>
     /* FILTER BAR */
     .filter-wrapper {
@@ -126,25 +96,30 @@
         font-size: 14px;
     }
 
-    /* STOCK BADGES (aesthetic, matching detail page) */
+    /* STOCK BADGES (premium, aesthetic) */
     .stock {
         font-weight: 600;
         font-size: 0.85rem;
-        padding: 0.35rem 0.6rem;
-        border-radius: 0.5rem;
-        color: #fff;
+        padding: 0.35rem 0.7rem;
+        border-radius: 0.6rem;
+        font-family: 'Segoe UI', sans-serif;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 
+    /* Backgrounds + Font Colors */
     .in-stock {
-        background-color: #4CAF7F; /* soft green */
+        background-color: #27ae60; /* fresh emerald */
+        color: #ffffff; /* white text */
     }
 
     .low-stock {
-        background-color: #F7B267; /* soft yellow-orange */
+        background-color: #f1c40f; /* rich golden yellow */
+        color: #3e3e3e; /* dark text for readability */
     }
 
     .out-stock {
-        background-color: #F25F5C; /* soft red/pink */
+        background-color: #e74c3c; /* soft red */
+        color: #ffffff; /* white text */
     }
 </style>
 
