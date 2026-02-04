@@ -171,6 +171,19 @@ def manage_books(request):
 @user_passes_test(staff_required)
 def dashboard_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
+
+    # ==========================
+    # ✅ Prepare items with subtotal (Qty × Price)
+    # ==========================
+    order_items = []
+    for item in order.items.all():  # Loop through each book in order
+        order_items.append({
+            'book': item.book,          # Book object
+            'quantity': item.quantity,  # Quantity ordered
+            'price': item.price,        # Price per book
+            'subtotal': item.quantity * item.price  # Total for this book
+        })
+
     if request.method == "POST":
         new_status = request.POST.get('status')
         if new_status in dict(Order.STATUS_CHOICES):
@@ -178,7 +191,13 @@ def dashboard_order_detail(request, order_id):
             order.save()
             messages.success(request, "Order status updated")
         return redirect('dashboard')
-    return render(request, 'dashboard/order_detail.html', {'order': order})
+
+    context = {
+        'order': order,        # Order info
+        'order_items': order_items  # Items with subtotal
+    }
+    return render(request, 'dashboard/order_detail.html', context)
+
 
 
 # =========================

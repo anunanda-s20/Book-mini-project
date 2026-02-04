@@ -1,10 +1,8 @@
 {% extends 'base.html' %}
 
 {% block content %}
-
 <h2>Order Details</h2>
 <p class="text-muted">View and update order information</p>
-
 <hr>
 
 <!-- ================= BASIC INFO ================= -->
@@ -13,60 +11,47 @@
 <p><strong>Total Price:</strong> ₹{{ order.total_price }}</p>
 <p><strong>Address:</strong> {{ order.address.address_line1 }}, {{ order.address.city }}, {{ order.address.state }}, {{ order.address.pincode }}</p>
 <p><strong>Placed on:</strong> {{ order.created_at|date:"d M, Y H:i" }}</p>
-<!-- ✅ Short Command: 'Show basic order info and date' -->
-
 <hr>
 
 <!-- ================= ITEMS IN ORDER ================= -->
 <h4>Books in this order</h4>
-
 <table class="table table-bordered table-hover">
     <thead class="table-light">
         <tr>
             <th>Book</th>
             <th>Quantity</th>
             <th>Price</th>
+            <th>Subtotal</th> <!-- Qty × Price -->
         </tr>
     </thead>
     <tbody>
-        {% for item in order.items.all %}
+        {% for item in order_items %}
         <tr>
-            <td>{{ item.book.title }}</td>
-            <td>{{ item.quantity }}</td>
-            <td>₹{{ item.price }}</td>
+            <td>{{ item.book.title }}</td>  <!-- Book title -->
+            <td>{{ item.quantity }}</td>    <!-- Quantity ordered -->
+            <td>₹{{ item.price }}</td>      <!-- Price per book -->
+            <td>₹{{ item.subtotal }}</td>   <!-- Subtotal -->
         </tr>
         {% empty %}
         <tr>
-            <td colspan="3" class="text-center text-muted">No items in this order.</td>
+            <td colspan="4" class="text-center text-muted">No items in this order.</td>
         </tr>
         {% endfor %}
     </tbody>
 </table>
-<!-- ✅ Short Command: 'List all books in order with quantity and price' -->
-
 <hr>
 
 <!-- ================= STATUS UPDATE ================= -->
 <h4>Update Order Status</h4>
-
 <form method="post" class="d-flex align-items-center gap-2">
     {% csrf_token %}
-
     <select name="status" class="form-select w-auto">
         {% for key, value in order.STATUS_CHOICES %}
         <option value="{{ key }}" {% if order.status == key %}selected{% endif %}>{{ value }}</option>
         {% endfor %}
     </select>
-
-    <button type="submit" class="btn btn-success">
-        Update
-    </button>
-    <!-- ✅ Short Command: 'Change status and click Update' -->
+    <button type="submit" class="btn btn-success">Update</button>
 </form>
 
-<a href="{% url 'dashboard' %}" class="btn btn-secondary mt-4">
-    ← Back to Dashboard
-</a>
-<!-- ✅ Short Command: 'Return to dashboard' -->
-
+<a href="{% url 'dashboard' %}" class="btn btn-secondary mt-4">← Back to Dashboard</a>
 {% endblock %}
