@@ -17,6 +17,18 @@
         border-radius: 5px;
         font-weight: 500;
     }
+
+    /* Smaller buttons inside modal footer */
+    .modal-footer .btn {
+        padding: 12px 12px;
+        font-size: 12px;
+        border-radius: 5px;
+    }
+
+    /* Add small space between Cancel and Delete buttons */
+    .modal-footer .btn + .btn {
+        margin-left: 8px; /* Space between buttons */
+    }
 </style>
 
 <div class="container my-4" style="max-width: 1000px;">
@@ -24,12 +36,12 @@
     <!-- Page title -->
     <h2 class="mb-4">Manage Books</h2>
     <p class="text-muted">View, edit, or delete books</p>
-    <a href="{% url 'add_book' %}" class="btn btn-sm btn-success mb-3">+ Add Book</a> <!-- Short: Add new book -->
+    <a href="{% url 'add_book' %}" class="btn btn-sm btn-success mb-3">+ Add Book</a>
 
     <!-- Search form -->
     <form method="get" class="mb-3 d-flex">
         <input type="text" name="q" value="{{ query }}" class="form-control me-2" placeholder="Search by title or author">
-        <button type="submit" class="btn btn-primary">Search</button> <!-- Short: Search books -->
+        <button type="submit" class="btn btn-primary">Search</button>
     </form>
 
     {% if books %}
@@ -38,7 +50,7 @@
             <tr>
                 <th>Title</th>
                 <th>Author</th>
-                <th>Status</th> <!-- Badge shows stock/status -->
+                <th>Status</th>
                 <th>Price</th>
                 <th>Actions</th>
             </tr>
@@ -52,11 +64,11 @@
                 <!-- ================= STATUS BADGE ================= -->
                 <td>
                     {% if not book.is_active %}
-                        <span class="status-badge text-danger" style="background:#F8D7DA;">Inactive</span> <!-- Red: Inactive -->
+                        <span class="status-badge text-danger" style="background:#F8D7DA;">Inactive</span>
                     {% elif book.stock == 0 %}
-                        <span class="status-badge text-danger" style="background:#F8D7DA;">Out of Stock</span> <!-- Red: Out of Stock -->
+                        <span class="status-badge text-danger" style="background:#F8D7DA;">Out of Stock</span>
                     {% else %}
-                        <span class="status-badge text-success" style="background:#E6F4EA;">Active</span> <!-- Green: Available -->
+                        <span class="status-badge text-success" style="background:#E6F4EA;">Active</span>
                     {% endif %}
                 </td>
 
@@ -65,7 +77,31 @@
                 <!-- ================= ACTIONS ================= -->
                 <td>
                     <a href="{% url 'edit_book' book.id %}" class="btn btn-sm btn-outline-secondary action-btn">Edit</a>
-                    <a href="{% url 'delete_book' book.id %}" class="btn btn-sm btn-outline-danger action-btn">Delete</a>
+
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-sm btn-outline-danger action-btn" data-bs-toggle="modal" data-bs-target="#deleteModal{{ book.id }}">
+                        Delete
+                    </button>
+
+                    <!-- ================= DELETE MODAL ================= -->
+                    <div class="modal fade" id="deleteModal{{ book.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ book.id }}" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="deleteModalLabel{{ book.id }}">Confirm Delete</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          </div>
+                          <div class="modal-body">
+                            Are you sure you want to delete "<strong>{{ book.title }}</strong>"?
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <a href="{% url 'delete_book' book.id %}" class="btn btn-danger">Delete</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                 </td>
             </tr>
             {% endfor %}
@@ -74,7 +110,7 @@
 
     {% else %}
     <div class="alert alert-info">
-        No books found. <!-- Short: No books available -->
+        No books found.
     </div>
     {% endif %}
 
