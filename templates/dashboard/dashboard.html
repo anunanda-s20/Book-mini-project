@@ -4,41 +4,55 @@
 
 <h2>Dashboard</h2>
 <p class="text-muted">Welcome, {{ request.user.username }}</p>
-
 <hr>
 
 <!-- ================= SUMMARY CARDS ================= -->
 <div class="row mb-4">
 
     <!-- TOTAL BOOKS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body text-center">
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
                 <h5 class="card-title text-uppercase">Total Books</h5>
-                <h3>{{ books.count }}</h3>
+                <h3>{{ total_books }}</h3>
                 <a href="{% url 'manage_books' %}" class="btn btn-sm btn-primary mt-2">
                     Manage Books
-                </a>
-                <!-- ✅ Short Command: 'Manage Books here' -->
+                </a> <!-- Short: Click to manage all books -->
                 <br>
                 <a href="{% url 'add_book' %}" class="btn btn-sm btn-success mt-1">
                     + Add Book
-                </a>
-                <!-- ✅ Short Command: 'Add new book here' -->
+                </a> <!-- Short: Click to add new book -->
             </div>
         </div>
     </div>
 
     <!-- TOTAL ORDERS -->
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-body text-center">
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
                 <h5 class="card-title text-uppercase">Total Orders</h5>
-                <h3>{{ orders.count }}</h3>
-                <p class="text-muted mt-2 mb-0">
-                    Orders listed below ↓
-                </p>
-                <!-- ✅ Short Command: 'Orders reminder, not button' -->
+                <h3>{{ total_orders }}</h3>
+                <p class="text-muted mt-2 mb-0">Listed below ↓</p> <!-- Short: Orders table below -->
+            </div>
+        </div>
+    </div>
+
+    <!-- TOTAL REVENUE -->
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h5 class="card-title text-uppercase">Total Revenue</h5>
+                <h3>₹{{ total_revenue }}</h3> <!-- Short: Revenue from completed orders -->
+            </div>
+        </div>
+    </div>
+
+    <!-- PENDING ORDERS -->
+    <div class="col-md-3">
+        <div class="card shadow-sm text-center">
+            <div class="card-body">
+                <h5 class="card-title text-uppercase">Pending Orders</h5>
+                <h3>{{ pending_orders }}</h3> <!-- Short: Number of pending orders -->
             </div>
         </div>
     </div>
@@ -48,9 +62,9 @@
 <hr>
 
 <!-- ================= ORDERS TABLE ================= -->
-<h4>Orders</h4>
+<h4>Recent Orders</h4>
 
-<table class="table table-bordered">
+<table class="table table-bordered table-hover">
     <thead class="table-light">
         <tr>
             <th>Order ID</th>
@@ -67,13 +81,24 @@
             <td>#{{ order.id }}</td>
             <td>{{ order.user.username }}</td>
             <td>₹{{ order.total_price }}</td>
-            <td>{{ order.get_status_display }}</td>
             <td>
-                <a href="{% url 'dashboard_order_detail' order.id %}"
-                   class="btn btn-sm btn-outline-secondary">
+                {% comment %} Custom status colors like My Orders page {% endcomment %}
+                {% if order.status == 'pending' %}
+                    <span class="badge px-3 py-2 text-dark" style="background:#FFF3CD;">Pending</span>
+                {% elif order.status == 'paid' %}
+                    <span class="badge px-3 py-2 text-primary" style="background:#E7F1FF;">Paid</span>
+                {% elif order.status == 'shipped' %}
+                    <span class="badge px-3 py-2 text-dark" style="background:#E0F7FA;">Shipped</span>
+                {% elif order.status == 'delivered' %}
+                    <span class="badge px-3 py-2 text-success" style="background:#E6F4EA;">Delivered</span>
+                {% elif order.status == 'cancelled' %}
+                    <span class="badge px-3 py-2 text-danger" style="background:#F8D7DA;">Cancelled</span>
+                {% endif %} <!-- Short: Color-coded badge -->
+            </td>
+            <td>
+                <a href="{% url 'dashboard_order_detail' order.id %}" class="btn btn-sm btn-outline-secondary">
                     Details
-                </a>
-                <!-- ✅ Short Command: 'View order details' -->
+                </a> <!-- Short: View order details -->
             </td>
         </tr>
         {% empty %}
@@ -85,5 +110,36 @@
         {% endfor %}
     </tbody>
 </table>
+
+<!-- ================= PAGINATION ================= -->
+{% if orders.has_other_pages %}
+<nav aria-label="Page navigation">
+    <ul class="pagination justify-content-center">
+        {% if orders.has_previous %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ orders.previous_page_number }}">Previous</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Previous</span></li>
+        {% endif %}
+
+        {% for num in orders.paginator.page_range %}
+            {% if orders.number == num %}
+                <li class="page-item active"><span class="page-link">{{ num }}</span></li>
+            {% else %}
+                <li class="page-item"><a class="page-link" href="?page={{ num }}">{{ num }}</a></li>
+            {% endif %}
+        {% endfor %}
+
+        {% if orders.has_next %}
+        <li class="page-item">
+            <a class="page-link" href="?page={{ orders.next_page_number }}">Next</a>
+        </li>
+        {% else %}
+        <li class="page-item disabled"><span class="page-link">Next</span></li>
+        {% endif %}
+    </ul>
+</nav> <!-- Short: Paginate orders for easy navigation -->
+{% endif %}
 
 {% endblock %}

@@ -8,7 +8,6 @@ from django.db.models import Q
 from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address, UserProfile
 from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileForm
 
-
 # =========================
 # 1️⃣ PUBLIC PAGES
 # =========================
@@ -17,19 +16,28 @@ def home(request):
 
 
 def book_list(request):
-    books = Book.objects.filter(is_active=True)  # only active books
+    books = Book.objects.filter(is_active=True)
+
+    # Search by title/author
     query = request.GET.get("q", "")
     if query:
         books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
+
+    # Filter by availability
     availability = request.GET.get("availability")
     if availability == "in_stock":
         books = books.filter(stock__gt=0)
+
+    # Sorting
     order = request.GET.get("order")
     if order == "price_low": books = books.order_by("price")
     elif order == "latest": books = books.order_by("-created_at")
     elif order == "alpha": books = books.order_by("title")
+
+    # Pagination (8 per page)
     paginator = Paginator(books, 8)
     page_obj = paginator.get_page(request.GET.get("page"))
+
     return render(request, "book_app/book_list.html", {
         "page_obj": page_obj, "query": query, "order": order, "availability": availability
     })
@@ -61,7 +69,7 @@ def custom_login(request):
             username=request.POST.get('username'),
             password=request.POST.get('password')
         )
-        if user: 
+        if user:
             login(request, user)
             return redirect('home')
         messages.error(request, "Invalid username or password")
@@ -78,7 +86,10 @@ def custom_logout(request):
 # 3️⃣ STAFF CHECK
 # =========================
 def staff_required(user):
-    return user.is_staff
+    if user.is_staff:
+        return True
+    messages.error(user, "You must be staff to access this page.")
+    return False
 
 
 # =========================
@@ -88,9 +99,9 @@ def staff_required(user):
 @user_passes_test(staff_required)
 def add_book(request):
     form = BookForm(request.POST or None)
-    if form.is_valid(): 
+    if form.is_valid():
         form.save()
-        return redirect('book_list')
+        return redirect('manage_books')
     return render(request, 'book_app/add_book.html', {'form': form})
 
 
@@ -109,6 +120,7 @@ def edit_book(request, id):
 @user_passes_test(staff_required)
 def delete_book(request, id):
     get_object_or_404(Book, id=id).delete()
+    messages.success(request, "Book deleted successfully")
     return redirect('manage_books')
 
 
@@ -118,16 +130,41 @@ def delete_book(request, id):
 @login_required
 @user_passes_test(staff_required)
 def dashboard(request):
-    return render(request, 'dashboard/dashboard.html', {
-        'books': Book.objects.all(),
-        'orders': Order.objects.all().order_by('-created_at')
-    })
+    books = Book.objects.all()
+    orders_list = Order.objects.all().order_by('-created_at')
+
+    # Pagination for orders (10 per page)
+    paginator = Paginator(orders_list, 10)
+    page_number = request.GET.get('page')
+    orders = paginator.get_page(page_number)
+
+    # Stats
+    total_books = books.count()
+    total_orders = orders_list.count()
+    total_revenue = sum(o.total_price for o in orders_list if o.status in ['paid','shipped','delivered'])
+    pending_orders = orders_list.filter(status='pending').count()
+    delivered_orders = orders_list.filter(status='delivered').count()
+
+    context = {
+        'books': books,
+        'orders': orders,
+        'total_books': total_books,
+        'total_orders': total_orders,
+        'total_revenue': total_revenue,
+        'pending_orders': pending_orders,
+        'delivered_orders': delivered_orders,
+    }
+    return render(request, 'dashboard/dashboard.html', context)
 
 
 @login_required
 @user_passes_test(staff_required)
 def manage_books(request):
-    return render(request, 'dashboard/manage_books.html', {'books': Book.objects.all()})
+    query = request.GET.get('q')
+    books = Book.objects.all()
+    if query:
+        books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
+    return render(request, 'dashboard/manage_books.html', {'books': books, 'query': query})
 
 
 @login_required
@@ -269,7 +306,7 @@ def remove_from_wishlist(request, book_id):
 
 
 # =========================
-#  🔟 PROFILE & ADDRESS
+# 🔟 PROFILE & ADDRESS
 # =========================
 @login_required
 def my_profile(request):
@@ -294,24 +331,23 @@ def add_address(request):
 
 
 # =========================
-# 1️⃣1️⃣ PROFILE EDIT (USING FORM VALIDATION)
+# 1️⃣1️⃣ PROFILE EDIT
 # =========================
 @login_required
 def edit_profile(request):
     user = request.user
     profile, _ = UserProfile.objects.get_or_create(user=user)
-    from .forms import EditProfileForm  # import here to avoid circular
 
     if request.method == 'POST':
         form = EditProfileForm(request.POST, instance=profile)
         if form.is_valid():
             form.save()
-            # Also update User fields
             username = request.POST.get('username')
             email = request.POST.get('email')
             if username: user.username = username
             if email: user.email = email
             user.save()
+            messages.success(request, "Profile updated")
             return redirect('my_profile')
     else:
         form = EditProfileForm(instance=profile)
