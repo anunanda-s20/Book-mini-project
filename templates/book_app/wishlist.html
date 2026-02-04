@@ -4,83 +4,108 @@
 {% block content %}
 <div class="container mt-4">
 
-    <!-- Wishlist heading with heart icon -->
-    <h2 class="mb-3">
+    <!-- Wishlist heading -->
+    <h2 class="mb-2">
         <i class="fas fa-heart text-danger me-2"></i> My Wishlist
     </h2>
 
     {% if items %}
         <!-- Wishlist count -->
-        <p class="text-muted">
-            You have {{ items|length }} {{ items|length|pluralize:"book,books" }} in your wishlist.
+        <p class="text-muted mb-4">
+            You have {{ items|length }} {{ items|length|pluralize:"book,books" }} saved.
         </p>
 
-        <div class="row">
+        <!-- Wishlist items: compact list -->
+        <div class="list-group">
             {% for item in items %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-                <div class="card h-100 shadow-sm hover-shadow position-relative">
+            <div class="list-group-item mb-3 shadow-sm rounded wishlist-item">
 
-                    <!-- Stock badge -->
-                    {% if item.book.stock > 0 %}
-                        <span class="badge bg-success position-absolute top-0 end-0 m-2">In Stock</span>
-                    {% else %}
-                        <span class="badge bg-secondary position-absolute top-0 end-0 m-2">Out of Stock</span>
-                    {% endif %}
+                <div class="row align-items-center">
 
-                    <!-- Book Image -->
-                    <a href="{% url 'book_detail' item.book.id %}">
-                        {% with item.book.images.first as img %}
-                            {% if img %}
-                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.book.title }}">
-                            {% else %}
-                                <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top" alt="No Image">
-                            {% endif %}
-                        {% endwith %}
-                    </a>
+                    <!-- Book image -->
+                    <div class="col-md-2 col-4">
+                        <a href="{% url 'book_detail' item.book.id %}">
+                            {% with item.book.images.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.image.url }}" class="img-fluid rounded" alt="{{ item.book.title }}">
+                                {% else %}
+                                    <img src="{% static 'book_app/images/default-book.png' %}" class="img-fluid rounded" alt="No Image">
+                                {% endif %}
+                            {% endwith %}
+                        </a>
+                    </div>
 
-                    <div class="card-body d-flex flex-column">
-
-                        <!-- Book Title -->
-                        <h5 class="card-title" style="font-size: 0.95rem; min-height: 3rem;">
+                    <!-- Book details -->
+                    <div class="col-md-6 col-8">
+                        <h5 class="mb-1">
                             <a href="{% url 'book_detail' item.book.id %}" class="text-decoration-none text-dark">
                                 {{ item.book.title }}
                             </a>
                         </h5>
 
-                        <!-- Author -->
-                        <p class="card-text text-muted mb-1">{{ item.book.author }}</p>
+                        <p class="text-muted mb-1">{{ item.book.author }}</p>
+                        <p class="fw-bold mb-1">₹{{ item.book.price }}</p>
 
-                        <!-- Price -->
-                        <p class="card-text fw-bold mb-3">₹{{ item.book.price }}</p>
+                        <!-- Stock badge: styled like Book List -->
+                        {% if item.book.stock|default:0 == 0 %}
+                            <span class="badge out-stock">Out of Stock</span>
+                        {% elif item.book.stock|default:0 <= 3 %}
+                            <span class="badge low-stock">Few Left</span>
+                        {% else %}
+                            <span class="badge in-stock">In Stock</span>
+                        {% endif %}
+                    </div>
 
-                        <!-- Buttons stacked neatly -->
-                        <div class="mt-auto d-flex flex-column gap-2">
-                            <a href="{% url 'add_to_cart' item.book.id %}" class="btn btn-primary btn-sm w-100">
+                    <!-- Action buttons -->
+                    <div class="col-md-4 text-md-end mt-3 mt-md-0">
+                        {% if item.book.stock|default:0 > 0 %}
+                            <a href="{% url 'add_to_cart' item.book.id %}" class="btn btn-sm btn-primary mb-2 w-100 w-md-auto">
                                 Move to Cart
                             </a>
-                            <a href="{% url 'remove_from_wishlist' item.book.id %}" class="btn btn-outline-danger btn-sm w-100">
-                                Remove
-                            </a>
-                        </div>
+                        {% else %}
+                            <button class="btn btn-sm btn-secondary mb-2 w-100 w-md-auto" disabled>
+                                Out of Stock
+                            </button>
+                        {% endif %}
 
+                        <a href="{% url 'remove_from_wishlist' item.book.id %}" class="btn btn-sm btn-outline-danger w-100 w-md-auto">
+                            Remove
+                        </a>
                     </div>
+
                 </div>
             </div>
             {% endfor %}
         </div>
 
     {% else %}
+        <!-- Empty wishlist -->
         <p class="text-center text-muted">
             Your wishlist is empty. <a href="{% url 'book_list' %}">Browse books →</a>
         </p>
     {% endif %}
+
 </div>
 
-<!-- Hover effect for card -->
+<!-- Hover effect & stock badge styles -->
 <style>
-.hover-shadow:hover {
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    transition: box-shadow 0.3s ease-in-out;
+.wishlist-item:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Stock badges matching Book List page */
+.badge.in-stock {
+    background-color: #27ae60; /* green */
+    color: #ffffff;
+}
+.badge.low-stock {
+    background-color: #f1c40f; /* yellow */
+    color: #3e3e3e;
+}
+.badge.out-stock {
+    background-color: #e74c3c; /* red */
+    color: #ffffff;
 }
 </style>
 {% endblock %}
