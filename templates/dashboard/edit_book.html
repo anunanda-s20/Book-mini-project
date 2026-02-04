@@ -1,22 +1,69 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Edit Book</h2>
+<div class="container my-4">
+    <h2 class="mb-4">Edit Book</h2>
 
-<!-- Form to edit book -->
-<form method="post" class="mt-3">
-    {% csrf_token %}  <!-- security token -->
+    <!-- Success / Error messages -->
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
 
-    {{ form.as_p }}  <!-- auto-render all BookForm fields -->
+    <!-- Form to edit book -->
+    <form method="post" class="mt-3">
+        {% csrf_token %}
 
-    <!-- Submit button -->
-    <button type="submit" class="btn btn-success">
-        Update Book
-    </button>
+        <!-- Title -->
+        <div class="mb-3">
+            <label for="id_title" class="form-label">Title</label>
+            {{ form.title }}
+        </div>
 
-    <!-- Cancel button -->
-    <a href="{% url 'manage_books' %}" class="btn btn-secondary">
-        Cancel
-    </a>
-</form>
+        <!-- Author -->
+        <div class="mb-3">
+            <label for="id_author" class="form-label">Author</label>
+            {{ form.author }}
+        </div>
+
+        <!-- Price -->
+        <div class="mb-3">
+            <label for="id_price" class="form-label">Price (₹)</label>
+            {{ form.price }}
+        </div>
+
+        <!-- Stock -->
+        <div class="mb-3">
+            <label for="id_stock" class="form-label">Stock</label>
+            {{ form.stock }}
+        </div>
+
+        <!-- Description -->
+        <div class="mb-3">
+            <label for="id_description" class="form-label">Description</label>
+            {{ form.description }}
+        </div>
+
+        <!-- Is Active -->
+        <div class="form-check mb-3">
+            {{ form.is_active }}
+            <label class="form-check-label" for="id_is_active">Is Active</label>
+        </div>
+
+        <!-- Published Date -->
+        <div class="mb-3">
+            <label for="id_published_date" class="form-label">Published Date</label>
+            {{ form.published_date }}
+        </div>
+
+        <!-- Buttons -->
+        <div class="d-flex gap-2">
+            <button type="submit" class="btn btn-success">Update Book</button>
+            <a href="{% url 'manage_books' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
 {% endblock %}
