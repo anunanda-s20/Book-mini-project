@@ -1,81 +1,93 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<div class="container mt-5" style="max-width: 1050px;">
 
-<div class="container mt-5">
+    <h2 class="text-center mb-2">Checkout</h2>
+    <p class="text-center text-muted mb-4">
+        Please review your order before confirming.
+    </p>
 
-    <div class="card shadow-sm p-4">
+    {% if cart_items %}
 
-        <!-- Page Title -->
-        <h2 class="text-center mb-2">Checkout</h2>
+    <!-- ================= ORDER SUMMARY ================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="mb-3">Order Summary</h2>
 
-        <!-- Info Text -->
-        <p class="text-center text-muted mb-4">
-            Please review your order before confirming.
-        </p>
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Book</th>
+                        <th class="text-center">Qty</th>
+                        <th class="text-end">Price</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in cart_items %}
+                    <tr>
+                        <td>{{ item.book.title }}</td>
+                        <td class="text-center">
+                            <span class="badge bg-secondary">
+                                {{ item.quantity }}
+                            </span>
+                        </td>
+                        <td class="text-end">₹{{ item.book.price }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
 
-        {% if cart_items %}  <!-- ✅ Check if cart has items -->
-
-        <!-- Order Summary -->
-        <h5 class="mb-3">Order Summary</h5>
-        <hr>
-
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Book</th>
-                    <th>Quantity</th>
-                    <th class="text-end">Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for item in cart_items %}  <!-- Loop through cart items -->
-                <tr>
-                    <td>{{ item.book.title }}</td>
-                    <td>{{ item.quantity }}</td>
-                    <td class="text-end">₹{{ item.book.price }}</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Total Amount -->
-        <div class="d-flex justify-content-between bg-light p-3 rounded mt-3">
-            <strong>Total Amount</strong>
-            <strong>₹{{ total }}</strong>
+            <div class="d-flex justify-content-between bg-light p-3 rounded">
+                <strong>Total Amount</strong>
+                <strong>₹{{ total }}</strong>
+            </div>
         </div>
+    </div>
 
-        <!-- Shipping Address (from user profile) -->
-        <h5 class="mt-4 mb-2">Shipping Address</h5>
-        <hr>
-        {% if address %}
-        <p class="border p-3 rounded bg-light" style="color: #000;">
-            {{ address.full_name }}<br>   <!-- Name -->
-            {{ address.phone }}<br>       <!-- Phone -->
-            {{ address.street }}, {{ address.city }}, {{ address.state }} - {{ address.pincode }} <!-- Full address -->
-        </p>
-        {% else %}
-        <p class="text-danger">No address found. Please add an address in your profile.</p>
-        {% endif %}
+    <!-- ================= SHIPPING ADDRESS ================= -->
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h2 class="mb-3">Shipping Address</h2>
 
-        <!-- Confirm Order Button -->
-        <form method="post" class="mt-3 text-center">
-            {% csrf_token %}  <!-- Security token -->
-            <button type="submit" class="btn btn-primary px-5">
+            {% if address %}
+            <div class="border rounded p-3 bg-light">
+                <strong>{{ address.full_name }}</strong><br>
+                {{ address.phone }}<br><br>
+                {{ address.street }}<br>
+                {{ address.city }}, {{ address.state }}<br>
+                PIN: {{ address.pincode }}
+            </div>
+            {% else %}
+            <p class="text-danger">
+                No address found. Please add one in your profile.
+            </p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- ================= ACTION BUTTONS ================= -->
+    <div class="d-flex justify-content-between align-items-center">
+
+        <a href="{% url 'view_cart' %}" class="btn btn-outline-secondary">
+            ← Back to Cart
+        </a>
+
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-success px-5">
                 Confirm Order
             </button>
         </form>
-
-        <!-- Footer Info -->
-        <p class="text-center text-muted mt-3" style="font-size: 14px;">
-            You can review your order again before payment.
-        </p>
-
-        {% else %}  <!-- ❌ Cart empty -->
-        <p class="text-center">Your cart is empty.</p>
-        {% endif %}
-
     </div>
-</div>
 
+    <p class="text-center text-muted mt-3" style="font-size: 14px;">
+        You can review your order again before payment.
+    </p>
+
+    {% else %}
+    <p class="text-center">Your cart is empty.</p>
+    {% endif %}
+
+</div>
 {% endblock %}
