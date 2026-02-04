@@ -31,9 +31,9 @@ urlpatterns = [
     # USER PROFILE & ADDRESSES
     # =========================
     path('profile/', views.my_profile, name='my_profile'),  # My profile
-    path('addresses/', views.address_list, name='address_list'),       # List all addresses
-    path('addresses/add/', views.add_address, name='add_address'),    # Add new address
-
+    path('profile/edit/', views.edit_profile, name='edit_profile'),  # Edit profile
+    path('addresses/', views.address_list, name='address_list'),  # List all addresses
+    path('addresses/add/', views.add_address, name='add_address'),  # Add address
     # =========================
     # STAFF BOOK MANAGEMENT
     # =========================

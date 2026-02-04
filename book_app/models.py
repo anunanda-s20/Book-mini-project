@@ -124,3 +124,21 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title}"
+
+# =========================
+# AUTOMATIC USERPROFILE CREATION
+# =========================
+from django.db.models.signals import post_save
+from django.dispatch import receiver
+
+# 1️⃣ When a new User is created, create a UserProfile
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        UserProfile.objects.create(user=instance)
+
+# 2️⃣ When a User is saved, save the related UserProfile too
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    if hasattr(instance, 'userprofile'):
+        instance.userprofile.save()

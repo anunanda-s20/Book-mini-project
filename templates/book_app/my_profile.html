@@ -1,23 +1,64 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block content %}
-<div class="container">
-    <h2>My Profile</h2>
-    <hr>
+<div class="container mt-4">
+    <h2 class="mb-4"><i class="fas fa-user me-2"></i>My Profile</h2>
 
-    <!-- User Info -->
-    <p><strong>Name:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Phone:</strong> {{ profile.phone|default:"Not added" }}</p>
+    <div class="row">
+        <!-- ===================== USER INFO CARD ===================== -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm p-3">
+                <h5 class="card-title">Account Information</h5>
 
-    <hr>
+                <!-- Username -->
+                <p><strong>Name:</strong> {{ user.username }}</p>
 
-    <!-- Account Links -->
-    <h3>My Account</h3>
-    <ul>
-        <li><a href="{% url 'my_orders' %}">📦 My Orders</a></li>
-        <li><a href="{% url 'address_list' %}">📍 My Addresses</a></li>
-        <li><a href="{% url 'wishlist' %}">❤️ My Wishlist</a></li>
-    </ul>
+                <!-- Email -->
+                <p><strong>Email:</strong> {{ user.email }}</p>
+
+                <!-- Phone from UserProfile -->
+                <p>
+                    <strong>Phone:</strong>
+                    {% if profile.phone %}
+                        {{ profile.phone }}
+                    {% else %}
+                        Not added
+                    {% endif %}
+                </p>
+
+                <!-- Edit Profile Button -->
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary btn-sm mt-2">Edit Profile</a>
+            </div>
+        </div>
+
+        <!-- ===================== ACCOUNT LINKS CARD ===================== -->
+        <div class="col-md-6 mb-4">
+            <div class="card shadow-sm p-3">
+                <h5 class="card-title">My Account</h5>
+                <ul class="list-unstyled mb-0">
+                    <li><a href="{% url 'my_orders' %}" class="text-decoration-none">My Orders</a></li>
+                    <li><a href="{% url 'wishlist' %}" class="text-decoration-none">My Wishlist</a></li>
+                    <li><a href="{% url 'address_list' %}" class="text-decoration-none">My Addresses</a></li>
+                    <li><a href="{% url 'logout' %}" class="text-decoration-none text-danger">Logout</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
+
+<!-- Optional styling -->
+<style>
+.card-title {
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+.card p, .card a {
+    font-size: 0.95rem;
+}
+.card a:hover {
+    text-decoration: underline;
+}
+</style>
+
 {% endblock %}

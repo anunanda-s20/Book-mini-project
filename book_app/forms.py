@@ -1,10 +1,11 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Book, Address
+from .models import Book, Address, UserProfile
+
 
 # =============================
-# USER SIGNUP FORM
+# 1️⃣ USER SIGNUP FORM
 # =============================
 class SimpleUserCreationForm(UserCreationForm):
     email = forms.EmailField(
@@ -23,53 +24,44 @@ class SimpleUserCreationForm(UserCreationForm):
             field.widget.attrs['class'] = 'form-control'
             field.help_text = ''
 
-    # -----------------------------
-    # Validate email: duplicates + allowed domains
-    # -----------------------------
     def clean_email(self):
         email = self.cleaned_data.get('email')
-
-        # ✅ Block duplicate email
         if User.objects.filter(email=email).exists():
             raise forms.ValidationError("This email is already registered.")
-
-        # ✅ Only allow specific email domains
         allowed_domains = ['gmail.com', 'yahoo.com', 'outlook.com', 'hotmail.com']
         try:
             domain = email.split('@')[1]
         except IndexError:
             raise forms.ValidationError("Enter a valid email address.")
-        
         if domain not in allowed_domains:
             raise forms.ValidationError(
                 "Please use a valid email address from Gmail, Yahoo, Outlook, or Hotmail."
             )
-
         return email
 
 
 # =============================
-# BOOK FORM (STAFF ONLY)
+# 2️⃣ BOOK FORM (STAFF ONLY)
 # =============================
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = [
-            'title',
-            'author',
-            'price',
-            'description',
-            'stock',
-            'is_active',
-            'published_date'
+            'title', 'author', 'price', 'description', 'stock', 'is_active', 'published_date'
         ]
         widgets = {
-            'published_date': forms.DateInput(attrs={'type': 'date'})
+            'published_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'})
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Add Bootstrap class for all fields
+        for field in self.fields.values():
+            field.widget.attrs['class'] = 'form-control'
 
 
 # =============================
-# ADDRESS FORM (CHECKOUT / PROFILE)
+# 3️⃣ ADDRESS FORM
 # =============================
 class AddressForm(forms.ModelForm):
     class Meta:
@@ -78,25 +70,53 @@ class AddressForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # ✅ Make all fields required + Bootstrap styling
+        # Make all fields required + add Bootstrap styling
         for field in self.fields.values():
             field.required = True
             field.widget.attrs['class'] = 'form-control'
 
-    # -----------------------------
-    # Validate phone number
-    # -----------------------------
+    # Phone validation
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
         if not phone.isdigit() or len(phone) not in [10, 11, 12]:
             raise forms.ValidationError("Enter a valid phone number")
         return phone
 
-    # -----------------------------
-    # Validate pincode
-    # -----------------------------
+    # Pincode validation
     def clean_pincode(self):
         pincode = self.cleaned_data.get('pincode')
         if not pincode.isdigit() or len(pincode) != 6:
             raise forms.ValidationError("Enter a valid 6-digit pincode")
         return pincode
+
+
+# =============================
+# 4️⃣ PROFILE EDIT FORM
+# =============================
+class EditProfileForm(forms.ModelForm):
+    username = forms.CharField(
+        required=True,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label="Username"
+    )
+    email = forms.EmailField(
+        required=True,
+        widget=forms.EmailInput(attrs={'class': 'form-control'}),
+        label="Email"
+    )
+    phone = forms.CharField(
+        required=False,
+        widget=forms.TextInput(attrs={'class': 'form-control'}),
+        label="Phone",
+        help_text="Optional, digits only"
+    )
+
+    class Meta:
+        model = UserProfile
+        fields = ['phone']
+
+    def clean_phone(self):
+        phone = self.cleaned_data.get('phone')
+        if phone and (not phone.isdigit() or len(phone) not in [10, 11, 12]):
+            raise forms.ValidationError("Enter a valid phone number")
+        return phone
