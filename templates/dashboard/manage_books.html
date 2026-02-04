@@ -4,31 +4,10 @@
 
 <!-- ================= COMMON BUTTON STYLE ================= -->
 <style>
-    /* ONE place to edit all action buttons */
-    .action-btn {
-        padding: 14px 14px;
-        font-size: 14px;
-        border-radius: 6px;
-    }
-
-    /* Status badge style for books */
-    .status-badge {
-        padding: 4px 10px;
-        border-radius: 5px;
-        font-weight: 500;
-    }
-
-    /* Smaller buttons inside modal footer */
-    .modal-footer .btn {
-        padding: 12px 12px;
-        font-size: 12px;
-        border-radius: 5px;
-    }
-
-    /* Add small space between Cancel and Delete buttons */
-    .modal-footer .btn + .btn {
-        margin-left: 8px; /* Space between buttons */
-    }
+    .action-btn { padding: 14px 14px; font-size: 14px; border-radius: 6px; }
+    .status-badge { padding: 4px 10px; border-radius: 5px; font-weight: 500; }
+    .modal-footer .btn { padding: 12px 12px; font-size: 12px; border-radius: 5px; }
+    .modal-footer .btn + .btn { margin-left: 8px; }
 </style>
 
 <div class="container my-4" style="max-width: 1000px;">
@@ -60,8 +39,6 @@
             <tr>
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
-
-                <!-- ================= STATUS BADGE ================= -->
                 <td>
                     {% if not book.is_active %}
                         <span class="status-badge text-danger" style="background:#F8D7DA;">Inactive</span>
@@ -71,19 +48,15 @@
                         <span class="status-badge text-success" style="background:#E6F4EA;">Active</span>
                     {% endif %}
                 </td>
-
                 <td>₹{{ book.price }}</td>
-
-                <!-- ================= ACTIONS ================= -->
                 <td>
                     <a href="{% url 'edit_book' book.id %}" class="btn btn-sm btn-outline-secondary action-btn">Edit</a>
 
-                    <!-- Button trigger modal -->
                     <button type="button" class="btn btn-sm btn-outline-danger action-btn" data-bs-toggle="modal" data-bs-target="#deleteModal{{ book.id }}">
                         Delete
                     </button>
 
-                    <!-- ================= DELETE MODAL ================= -->
+                    <!-- DELETE MODAL -->
                     <div class="modal fade" id="deleteModal{{ book.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ book.id }}" aria-hidden="true">
                       <div class="modal-dialog modal-dialog-centered">
                         <div class="modal-content">
@@ -107,7 +80,6 @@
             {% endfor %}
         </tbody>
     </table>
-
     {% else %}
     <div class="alert alert-info">
         No books found.
@@ -115,5 +87,10 @@
     {% endif %}
 
 </div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center mt-4 mb-2" style="color: #fff;">
+    © 2025 Book Mini Project <!-- Short: Invisible footer text to align page -->
+</footer>
 
 {% endblock %}
