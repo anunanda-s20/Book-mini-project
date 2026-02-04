@@ -1,71 +1,141 @@
 {% extends 'base.html' %}
-<!-- Use main layout -->
+<!-- My Orders Page -->
 
 {% block content %}
+
+<!-- ================= COMMON BUTTON STYLE ================= -->
+<style>
+    /* ONE place to edit all action buttons */
+    .action-btn {
+        padding: 14px 14px;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+</style>
+
 <div class="container my-4" style="max-width: 900px;">
-    <!-- Page heading -->
+
+    <!-- Page title -->
     <h2 class="mb-4">My Orders</h2>
 
     {% if orders %}
         {% for order in orders %}
-        <!-- Single order card -->
-        <div class="card mb-4 border-0 shadow-sm rounded-3 order-card">
+        <!-- ================= ORDER CARD ================= -->
+        <div class="card mb-4 border-0 shadow-sm rounded-3">
             <div class="card-body">
 
-                <!-- Header: Order ID + Status -->
+                <!-- Header -->
                 <div class="d-flex justify-content-between align-items-start">
                     <div>
-                        <!-- Plain text Order ID -->
-                        <h6 class="fw-bold mb-1">
-                            ORDER #{{ order.id }}
-                        </h6>
-                        <small class="text-muted">Placed on {{ order.created_at|date:"F d, Y" }}</small>
+                        <h6 class="fw-bold mb-1">ORDER #{{ order.id }}</h6>
+                        <small class="text-muted">
+                            Placed on {{ order.created_at|date:"F d, Y" }}
+                        </small>
                     </div>
 
-                    <!-- Status with soft pastel colors -->
+                    <!-- Status badge -->
                     {% if order.status == 'pending' %}
-                        <span class="badge bg-warning text-dark px-3 py-2">Pending</span>
+                        <span class="badge px-3 py-2 text-dark" style="background:#FFF3CD;">Pending</span>
                     {% elif order.status == 'paid' %}
-                        <span class="badge bg-primary px-3 py-2">Paid</span>
+                        <span class="badge px-3 py-2 text-primary" style="background:#E7F1FF;">Paid</span>
                     {% elif order.status == 'shipped' %}
-                        <span class="badge bg-info text-dark px-3 py-2">Shipped</span>
+                        <span class="badge px-3 py-2 text-dark" style="background:#E0F7FA;">Shipped</span>
                     {% elif order.status == 'delivered' %}
-                        <span class="badge bg-success px-3 py-2">Delivered</span>
+                        <span class="badge px-3 py-2 text-success" style="background:#E6F4EA;">Delivered</span>
                     {% elif order.status == 'cancelled' %}
-                        <span class="badge bg-danger px-3 py-2">Cancelled</span>
+                        <span class="badge px-3 py-2 text-danger" style="background:#F8D7DA;">Cancelled</span>
                     {% endif %}
                 </div>
 
                 <hr class="my-3">
 
-                <!-- Order Items -->
+                <!-- Order items -->
                 {% for item in order.items.all %}
-                    <div class="d-flex justify-content-between">
-                        <span>{{ item.book.title }}</span>
-                        <span class="text-muted">× {{ item.quantity }}</span>
-                    </div>
+                <div class="d-flex justify-content-between mb-1">
+                    <span>{{ item.book.title }}</span>
+                    <span class="text-muted">× {{ item.quantity }}</span>
+                </div>
                 {% endfor %}
 
                 <hr class="my-3">
 
-                <!-- Total + Cancel Button -->
+                <!-- Total + Cancel button -->
                 <div class="d-flex justify-content-between align-items-center">
-                    <div class="fw-bold mb-1">Total: ₹{{ order.total_price }}</div>
+                    <div class="fw-bold">
+                        Total: ₹{{ order.total_price }}
+                    </div>
 
-                    {% if order.status in 'pending paid' %}
-                        <a href="{% url 'cancel_order' order.id %}" class="btn btn-danger cancel-btn">
-                            Cancel Order
-                        </a>
+                    {% if order.status == 'pending' or order.status == 'paid' %}
+                    <!-- Cancel Order button -->
+                    <button
+                        class="btn btn-outline-danger action-btn"
+                        data-bs-toggle="modal"
+                        data-bs-target="#cancelModal"
+                        data-cancel-url="{% url 'cancel_order' order.id %}">
+                        Cancel Order
+                    </button>
                     {% endif %}
                 </div>
 
             </div>
         </div>
         {% endfor %}
-
     {% else %}
-        <div class="alert alert-info">You haven’t placed any orders yet.</div>
+        <div class="alert alert-info">
+            You haven’t placed any orders yet.
+        </div>
     {% endif %}
 
 </div>
+
+<!-- ================= CLEAN CONFIRM MODAL ================= -->
+<div class="modal fade" id="cancelModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal header -->
+            <div class="modal-header">
+                <h6 class="modal-title">Cancel Order</h6>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+
+            <!-- Modal body -->
+            <div class="modal-body text-center">
+                <p class="mb-0">Are you sure you want to cancel this order?</p>
+            </div>
+
+            <!-- Modal footer -->
+            <div class="modal-footer justify-content-center gap-2">
+                <!-- No button -->
+                <button
+                    class="btn btn-outline-secondary action-btn"
+                    data-bs-dismiss="modal">
+                    No
+                </button>
+
+                <!-- Yes Cancel button -->
+                <a
+                    id="confirmCancelBtn"
+                    href="#"
+                    class="btn btn-outline-danger action-btn">
+                    Yes, Cancel
+                </a>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- ================= JS: SET CANCEL URL ================= -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const modal = document.getElementById('cancelModal');
+    const confirmBtn = document.getElementById('confirmCancelBtn');
+
+    modal.addEventListener('show.bs.modal', function (event) {
+        confirmBtn.href = event.relatedTarget.getAttribute('data-cancel-url');
+    });
+});
+</script>
+
 {% endblock %}
