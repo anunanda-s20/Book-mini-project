@@ -1,7 +1,8 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Book, Address, UserProfile
+from .models import Book, Address, UserProfile, Category
+
 
 # ==============================
 # 1️⃣ USER SIGNUP FORM
@@ -38,11 +39,14 @@ class SimpleUserCreationForm(UserCreationForm):
 # ==============================
 # 2️⃣ BOOK FORM (STAFF ONLY)
 # ==============================
+
+
 class BookForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = [
-            'title', 'author', 'price', 'description', 'stock', 'is_active', 'published_date'
+            'title', 'author', 'price', 'description', 'stock', 
+            'is_active', 'published_date', 'category'  # added category
         ]
         widgets = {
             'title': forms.TextInput(attrs={'placeholder': 'Enter book title'}),
@@ -52,6 +56,7 @@ class BookForm(forms.ModelForm):
             'stock': forms.NumberInput(attrs={'placeholder': 'Available quantity', 'min': '0'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'published_date': forms.DateInput(attrs={'type': 'date'}),
+            'category': forms.Select(attrs={'class': 'form-control'})  # dropdown for category
         }
 
     def __init__(self, *args, **kwargs):

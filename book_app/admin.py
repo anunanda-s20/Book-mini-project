@@ -8,7 +8,8 @@ from .models import (
     OrderItem,
     Cart,
     CartItem,
-    Wishlist
+    Wishlist,
+    Category  # Added Category
 )
 
 # ================= USER PROFILE =================
@@ -21,8 +22,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 # ================= BOOK =================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'price', 'stock', 'is_active')
-    list_filter = ('is_active',)
+    list_display = ('title', 'author', 'price', 'stock', 'is_active', 'category')  # Show category
+    list_filter = ('is_active', 'category')  # Filter by category
     search_fields = ('title', 'author')
     ordering = ('title',)
 
@@ -31,6 +32,13 @@ class BookAdmin(admin.ModelAdmin):
 @admin.register(BookImage)
 class BookImageAdmin(admin.ModelAdmin):
     list_display = ('book',)
+
+
+# ================= CATEGORY =================
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ('name',)
+    search_fields = ('name',)
 
 
 # ================= ADDRESS =================

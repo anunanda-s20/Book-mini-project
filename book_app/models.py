@@ -18,23 +18,36 @@ class Book(models.Model):
     author = models.CharField(max_length=100)         # Author name
     price = models.DecimalField(max_digits=6, decimal_places=2)
     description = models.TextField(blank=True)
-    stock = models.PositiveIntegerField(default=0)    # Stock count (0 allowed)
+    stock = models.PositiveIntegerField(default=0)    # Stock count
     is_active = models.BooleanField(default=True)     # Show / hide book
     published_date = models.DateField(blank=True, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    # New field: category
+    category = models.ForeignKey(
+        'Category', 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True
+    )  # Book category
 
     def __str__(self):
         return self.title
 
     @property
     def availability_status(self):
-        """
-        Returns stock status for templates, admin, dashboard
-        """
-        if self.stock > 0:
-            return "In Stock"
-        return "Out of Stock"
+        """Returns stock status"""
+        return "In Stock" if self.stock > 0 else "Out of Stock"
+
+
+# ================= CATEGORY =================
+class Category(models.Model):
+    name = models.CharField(max_length=100)          # Category name
+
+    def __str__(self):
+        return self.name
+
 
 
 # ================= BOOK IMAGE =================

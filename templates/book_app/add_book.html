@@ -1,11 +1,26 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>Add Book</h2>
+<div class="container mt-4">
+    <h2>Add Book</h2>
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Add Book</button>
-</form>
+        <!-- Loop through fields -->
+        {% for field in form %}
+            <div class="mb-3">
+                {{ field.label_tag }}<br>
+                {{ field }}
+                {% if field.help_text %}
+                    <small class="text-muted">{{ field.help_text }}</small>
+                {% endif %}
+                {% for error in field.errors %}
+                    <div class="text-danger">{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endfor %}
+
+        <button type="submit" class="btn btn-primary">Add Book</button>
+    </form>
+</div>
 {% endblock %}
