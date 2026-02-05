@@ -2,13 +2,9 @@
 
 {% block content %}
 
-<!-- Flex wrapper to center card vertically + horizontally -->
 <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
-
-    <!-- Fixed width column -->
     <div class="col-md-5 col-lg-4">
 
-        <!-- Login Card -->
         <div class="card shadow-sm">
 
             <!-- Card Header -->
@@ -22,39 +18,22 @@
             <!-- Card Body -->
             <div class="card-body">
 
-                <!-- Django messages (success/error) -->
-                {% if messages %}
-                    {% for message in messages %}
-                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                            {{ message }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    {% endfor %}
-                {% endif %}
-
                 <!-- Login Form -->
                 <form method="post">
                     {% csrf_token %}
 
-                    <!-- Username -->
                     <div class="mb-3">
                         <label class="form-label">Username</label>
-                        <input type="text" id="id_username" name="username" class="form-control" required autofocus>
-                        {% if form.username.errors %}
-                            <div class="text-danger small">{{ form.username.errors.0 }}</div>
-                        {% endif %}
+                        <input type="text" id="id_username" name="username"
+                               class="form-control" required autofocus>
                     </div>
 
-                    <!-- Password -->
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" name="password" class="form-control" required>
-                        {% if form.password.errors %}
-                            <div class="text-danger small">{{ form.password.errors.0 }}</div>
-                        {% endif %}
+                        <input type="password" name="password"
+                               class="form-control" required>
                     </div>
 
-                    <!-- Login Button -->
                     <button type="submit" class="btn btn-dark w-100">
                         Login
                     </button>

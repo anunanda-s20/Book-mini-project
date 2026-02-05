@@ -3,11 +3,9 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-
     <title>Luna Books</title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
     <link rel="icon" href="{% static 'book_app/img/favicon.ico' %}">
 
     <!-- Bootstrap -->
@@ -19,11 +17,11 @@
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'book_app/style.css' %}">
 
-    <!-- Special font for headings and book titles -->
+    <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
-        /* ================= NAVBAR ================= */
+        /* ================= BRAND / NAV ================= */
         .navbar {
             padding-top: 0.8rem;
             padding-bottom: 0.8rem;
@@ -55,21 +53,47 @@
             margin-top: -2px;
         }
 
-        .brand-logo:hover .brand-name {
-            color: #6f42c1;
-        }
-
-        /* ================= SPECIAL FONT ONLY FOR MAIN HEADINGS & BOOK TITLES ================= */
         .main-heading, .book-title {
-            font-family: 'Playfair Display', serif; /* only these elements */
+            font-family: 'Playfair Display', serif;
             font-weight: 600;
             color: #2c3e50;
-            letter-spacing: 0.5px;
         }
 
-        .book-title:hover {
-            color: #6f42c1;
-            cursor: pointer;
+        /* ================= MESSAGE STYLING ================= */
+        .custom-alert {
+            font-size: 0.95rem;
+            font-weight: 600;
+            border-radius: 8px;
+            padding: 14px 18px;
+            border-left: 5px solid;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+            max-width: 600px;
+            margin: 0 auto 10px;
+        }
+
+        .alert-success {
+            background-color: #eefaf3;
+            color: #1e7e34;
+            border-left-color: #28a745;
+        }
+
+        .alert-danger,
+        .alert-error {
+            background-color: #fdeeee;
+            color: #842029;
+            border-left-color: #dc3545;
+        }
+
+        .alert-warning {
+            background-color: #fff7e6;
+            color: #664d03;
+            border-left-color: #ffc107;
+        }
+
+        .alert-info {
+            background-color: #eef5ff;
+            color: #084298;
+            border-left-color: #0d6efd;
         }
     </style>
 </head>
@@ -82,7 +106,7 @@
         <a class="navbar-brand d-flex align-items-center brand-logo" href="{% url 'home' %}">
             <i class="fa-solid fa-moon"></i>
             <i class="fa-solid fa-book-open"></i>
-            <div class="d-flex flex-column justify-content-center">
+            <div class="d-flex flex-column">
                 <span class="brand-name">Luna</span>
                 <span class="brand-sub">Books</span>
             </div>
@@ -95,14 +119,11 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
 
             {% if request.path != '/login/' and request.path != '/signup/' %}
-            
-            <!-- Search -->
             <form class="d-flex ms-auto me-3" method="get" action="{% url 'book_list' %}">
-                <input class="form-control me-2" type="text" name="q" placeholder="Search books" value="{{ request.GET.q }}">
+                <input class="form-control me-2" type="text" name="q" placeholder="Search books">
                 <button class="btn btn-outline-primary">Search</button>
             </form>
 
-            <!-- Links -->
             <ul class="navbar-nav align-items-center">
                 <li class="nav-item"><a class="nav-link" href="{% url 'home' %}">Home</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'book_list' %}">Books</a></li>
@@ -113,7 +134,9 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'my_orders' %}">My Orders</a></li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ user.username }}</a>
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                            {{ user.username }}
+                        </a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{% url 'my_profile' %}">My Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -135,12 +158,24 @@
     </div>
 </nav>
 
-<!-- CONTENT -->
+<!-- ================= GLOBAL MESSAGES ================= -->
+{% if messages %}
+<div class="container mt-3">
+    {% for message in messages %}
+        <div class="alert custom-alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    {% endfor %}
+</div>
+{% endif %}
+
+<!-- ================= CONTENT ================= -->
 <div class="container mt-4 mb-5">
     {% block content %}{% endblock %}
 </div>
 
-<!-- FOOTER -->
+<!-- ================= FOOTER ================= -->
 <footer class="bg-dark text-light text-center py-3">
     <p class="mb-0">&copy; 2025 Luna Books</p>
 </footer>
