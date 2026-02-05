@@ -16,52 +16,60 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-    <!-- Zapfino-style font -->
-    <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap" rel="stylesheet">
-
     <!-- Main CSS -->
     <link rel="stylesheet" href="{% static 'book_app/style.css' %}">
 
+    <!-- Special font for headings and book titles -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
+
     <style>
-        /* Navbar height */
+        /* ================= NAVBAR ================= */
         .navbar {
             padding-top: 0.8rem;
             padding-bottom: 0.8rem;
         }
 
-        /* Brand container */
         .brand-logo {
             text-decoration: none;
             gap: 0.6rem;
         }
 
-        /* Icons size */
         .brand-logo i {
             font-size: 1.6rem;
             color: #6f42c1;
         }
 
-        /* LUNA text */
         .brand-name {
             font-family: "Times New Roman", Times, serif;
-            font-size: 2rem;          /* bigger */
+            font-size: 2rem;
             font-weight: bold;
             color: #2c2c2c;
             line-height: 1;
         }
 
-        /* BOOKS text */
         .brand-sub {
             font-family: 'Great Vibes', cursive;
-            font-size: 1.5rem;        /* balanced */
+            font-size: 1.5rem;
             color: #6f42c1;
             line-height: 1;
             margin-top: -2px;
         }
 
-        /* Hover */
         .brand-logo:hover .brand-name {
             color: #6f42c1;
+        }
+
+        /* ================= SPECIAL FONT ONLY FOR MAIN HEADINGS & BOOK TITLES ================= */
+        .main-heading, .book-title {
+            font-family: 'Playfair Display', serif; /* only these elements */
+            font-weight: 600;
+            color: #2c3e50;
+            letter-spacing: 0.5px;
+        }
+
+        .book-title:hover {
+            color: #6f42c1;
+            cursor: pointer;
         }
     </style>
 </head>
@@ -71,19 +79,15 @@
 <!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
-
-        <!-- 🌙📚 BRAND -->
         <a class="navbar-brand d-flex align-items-center brand-logo" href="{% url 'home' %}">
             <i class="fa-solid fa-moon"></i>
             <i class="fa-solid fa-book-open"></i>
-
             <div class="d-flex flex-column justify-content-center">
                 <span class="brand-name">Luna</span>
                 <span class="brand-sub">Books</span>
             </div>
         </a>
 
-        <!-- Mobile toggle -->
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
             <span class="navbar-toggler-icon"></span>
         </button>
@@ -91,11 +95,10 @@
         <div class="collapse navbar-collapse" id="mainNavbar">
 
             {% if request.path != '/login/' and request.path != '/signup/' %}
-
+            
             <!-- Search -->
             <form class="d-flex ms-auto me-3" method="get" action="{% url 'book_list' %}">
-                <input class="form-control me-2" type="text" name="q"
-                       placeholder="Search books" value="{{ request.GET.q }}">
+                <input class="form-control me-2" type="text" name="q" placeholder="Search books" value="{{ request.GET.q }}">
                 <button class="btn btn-outline-primary">Search</button>
             </form>
 
@@ -110,9 +113,7 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'my_orders' %}">My Orders</a></li>
 
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            {{ user.username }}
-                        </a>
+                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">{{ user.username }}</a>
                         <ul class="dropdown-menu dropdown-menu-end">
                             <li><a class="dropdown-item" href="{% url 'my_profile' %}">My Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
