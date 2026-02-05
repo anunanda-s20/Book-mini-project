@@ -10,9 +10,8 @@
         <!-- Signup Card -->
         <div class="card shadow-sm">
 
-            <!-- Card Header -->
+            <!-- Card Header (UNCHANGED) -->
             <div class="card-header text-center">
-                <!-- Optional project touch -->
                 <strong>📘 BookStore</strong>
 
                 <h4 class="mt-2 mb-1">Create Your Account</h4>
@@ -26,22 +25,21 @@
 
                 <!-- General form error -->
                 {% if form.errors %}
-                    <div class="alert alert-danger">
+                    <div class="alert alert-danger py-2 small">
                         Please fix the errors below.
                     </div>
                 {% endif %}
 
                 <!-- Signup Form -->
-                <form method="post">
+                <form method="post" novalidate>
                     {% csrf_token %}
 
                     <!-- Username -->
                     <div class="mb-3">
-                        <label class="form-label">Username</label>
+                        <label class="form-label" for="id_username">Username</label>
                         {{ form.username }}
-                        <!-- Field error -->
                         {% if form.username.errors %}
-                            <div class="text-danger small">
+                            <div class="text-danger small mt-1">
                                 {{ form.username.errors.0 }}
                             </div>
                         {% endif %}
@@ -49,11 +47,10 @@
 
                     <!-- Email -->
                     <div class="mb-3">
-                        <label class="form-label">Email</label>
+                        <label class="form-label" for="id_email">Email</label>
                         {{ form.email }}
-                        <!-- Field error -->
                         {% if form.email.errors %}
-                            <div class="text-danger small">
+                            <div class="text-danger small mt-1">
                                 {{ form.email.errors.0 }}
                             </div>
                         {% endif %}
@@ -61,23 +58,21 @@
 
                     <!-- Password -->
                     <div class="mb-3">
-                        <label class="form-label">Password</label>
+                        <label class="form-label" for="id_password1">Password</label>
                         {{ form.password1 }}
-                        <!-- Field error -->
                         {% if form.password1.errors %}
-                            <div class="text-danger small">
+                            <div class="text-danger small mt-1">
                                 {{ form.password1.errors.0 }}
                             </div>
                         {% endif %}
                     </div>
 
                     <!-- Confirm Password -->
-                    <div class="mb-3">
-                        <label class="form-label">Confirm Password</label>
+                    <div class="mb-4">
+                        <label class="form-label" for="id_password2">Confirm Password</label>
                         {{ form.password2 }}
-                        <!-- Field error -->
                         {% if form.password2.errors %}
-                            <div class="text-danger small">
+                            <div class="text-danger small mt-1">
                                 {{ form.password2.errors.0 }}
                             </div>
                         {% endif %}
@@ -90,11 +85,13 @@
                 </form>
             </div>
 
-            <!-- Card Footer -->
+            <!-- Card Footer (UNCHANGED) -->
             <div class="card-footer text-center">
                 <small>
                     Already have an account?
-                    <a href="{% url 'login' %}">Login</a>
+                    <a href="{% url 'login' %}" class="text-decoration-underline">
+                        Login
+                    </a>
                 </small>
             </div>
 
