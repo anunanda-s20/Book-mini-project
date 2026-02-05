@@ -13,7 +13,7 @@
 
             <!-- Card Header -->
             <div class="card-header text-center">
-                <h4 class="mb-1">🔑Login to BookStore</h4>
+                <h4 class="mb-1">🔑 Login to BookStore</h4>
                 <small class="text-muted">
                     Welcome back. Please login to continue.
                 </small>
@@ -22,11 +22,12 @@
             <!-- Card Body -->
             <div class="card-body">
 
-                <!-- Django messages (error/info) -->
+                <!-- Django messages (success/error) -->
                 {% if messages %}
                     {% for message in messages %}
-                        <div class="alert alert-danger">
+                        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
                             {{ message }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
                         </div>
                     {% endfor %}
                 {% endif %}
@@ -39,7 +40,6 @@
                     <div class="mb-3">
                         <label class="form-label">Username</label>
                         <input type="text" id="id_username" name="username" class="form-control" required autofocus>
-                        <!-- Optional: field-specific errors -->
                         {% if form.username.errors %}
                             <div class="text-danger small">{{ form.username.errors.0 }}</div>
                         {% endif %}
@@ -49,7 +49,6 @@
                     <div class="mb-3">
                         <label class="form-label">Password</label>
                         <input type="password" name="password" class="form-control" required>
-                        <!-- Optional: field-specific errors -->
                         {% if form.password.errors %}
                             <div class="text-danger small">{{ form.password.errors.0 }}</div>
                         {% endif %}
