@@ -32,6 +32,13 @@
                         <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
                     {% endif %}
 
+                    <!-- Kitabay-style Cart Icon top-left -->
+                    <a href="{% url 'add_to_cart' book.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                        </svg>
+                    </a>
+
                     <!-- Book image -->
                     <a href="{% url 'book_detail' book.id %}">
                         {% with book.images.first as img %}
@@ -60,67 +67,53 @@
     </div>
 </section>
 
-<!-- STYLES -->
+<!-- ================= STYLES ================= -->
 <style>
-    /* FILTER BAR */
-    .filter-wrapper {
-        background-color: #faf9fd;
-        border: 1px solid #ebe7f2;
-    }
+/* FILTER BAR */
+.filter-wrapper {
+    background-color: #faf9fd;
+    border: 1px solid #ebe7f2;
+}
+.filter-label {
+    color: #6f6285;
+    font-weight: 500;
+}
+.filter-link {
+    margin-right: 18px;
+    color: #66527f;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease, font-weight 0.2s ease;
+}
+.filter-link:hover { color: #56406f; text-decoration: none; }
+.filter-link.active { color: #4b2f6f; font-weight: 700; }
+.book-count { color: #6f6285; font-size: 14px; }
 
-    .filter-label {
-        color: #6f6285;
-        font-weight: 500;
-    }
+/* STOCK BADGES */
+.stock {
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.6rem;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.in-stock { background-color: #27ae60; color: #ffffff; }
+.low-stock { background-color: #f1c40f; color: #3e3e3e; }
+.out-stock { background-color: #e74c3c; color: #ffffff; }
 
-    .filter-link {
-        margin-right: 18px;
-        color: #66527f;
-        text-decoration: none;
-        font-weight: 500;
-        transition: color 0.2s ease, font-weight 0.2s ease;
-    }
-
-    .filter-link:hover {
-        color: #56406f;
-        text-decoration: none;
-    }
-
-    .filter-link.active {
-        color: #4b2f6f;
-        font-weight: 700;
-    }
-
-    .book-count {
-        color: #6f6285;
-        font-size: 14px;
-    }
-
-    /* STOCK BADGES (premium, aesthetic) */
-    .stock {
-        font-weight: 600;
-        font-size: 0.85rem;
-        padding: 0.35rem 0.7rem;
-        border-radius: 0.6rem;
-        font-family: 'Segoe UI', sans-serif;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-
-    /* Backgrounds + Font Colors */
-    .in-stock {
-        background-color: #27ae60; /* fresh emerald */
-        color: #ffffff; /* white text */
-    }
-
-    .low-stock {
-        background-color: #f1c40f; /* rich golden yellow */
-        color: #3e3e3e; /* dark text for readability */
-    }
-
-    .out-stock {
-        background-color: #e74c3c; /* soft red */
-        color: #ffffff; /* white text */
-    }
+/* Kitabay Cart Icon */
+.cart-icon-svg svg {
+    color: #6f4ceb;      /* primary purple */
+    background: #fff;    /* white bg */
+    border-radius: 50%;
+    padding: 4px;
+    transition: 0.3s;
+}
+.cart-icon-svg:hover svg {
+    color: #9253f1;
+    transform: scale(1.1);
+}
 </style>
 
 {% endblock %}
