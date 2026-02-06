@@ -5,54 +5,114 @@
 
 <!-- ================= HERO AREA ================= -->
 <style>
-    /* Remove extra margins/paddings and make hero full width & height */
-    #heroCarousel {
-        margin: 0;
-        padding: 0;
-    }
-
+    /* Hero carousel */
+    #heroCarousel { margin: 0; padding: 0; }
     #heroCarousel .carousel-inner,
     #heroCarousel .carousel-item {
-        height: 100vh; /* full viewport height */
+        height: 100vh;
         width: 100%;
-        position: relative;
         background-size: cover;
         background-position: center;
-        margin: 0;
-        padding: 0;
     }
-
-    /* Fixed caption overlay in front of images */
     #heroCarousel .hero-caption {
         position: absolute;
         top: 50%;
-        left: 5%; /* align left like Kitabay */
+        left: 5%;
         transform: translateY(-50%);
         z-index: 10;
         text-align: left;
     }
-
-    /* Hero text styling */
     #heroCarousel .hero-caption h1 {
         font-size: 3rem;
         font-weight: bold;
-        color: #ffffff; /* white text */
-        text-shadow: 2px 2px 8px rgba(128, 0, 128, 0.7); /* purple shadow for premium look */
+        color: #fff;
+        text-shadow: 2px 2px 8px rgba(101, 91, 237, 0.7);
         line-height: 1.2;
     }
-
-    /* Bigger Shop Now button without changing original color */
     #heroCarousel .hero-caption .btn {
-        padding: 0.9rem 2rem; /* slightly bigger button */
+        padding: 0.9rem 2rem;
         font-size: 1.4rem;
         margin-top: 1rem;
         font-weight: bold;
     }
-
-    /* Remove default carousel padding/margin in Bootstrap */
     #heroCarousel .carousel-control-prev,
-    #heroCarousel .carousel-control-next {
-        width: 5%;
+    #heroCarousel .carousel-control-next { width: 5%; }
+
+    /* ================= POPULAR ITEMS / CATEGORY POLISH ================= */
+    .single-popular-items {
+        position: relative;
+        overflow: hidden;
+        border-radius: 12px;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .single-popular-items:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        cursor: pointer;
+    }
+    .img-cap {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        padding: 5px 10px;
+        color: #fff;
+        font-weight: bold;
+        border-radius: 5px;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+    }
+
+    /* Shop Now button starts below card and rises upward on hover */
+    .favorit-items {
+        position: absolute;
+        bottom: -50px; /* hidden below card */
+        left: 50%;
+        transform: translateX(-50%);
+        z-index: 10;
+        transition: bottom 0.3s ease;
+    }
+    .single-popular-items:hover .favorit-items {
+        bottom: 10px; /* rises upward on hover */
+    }
+
+    /* Category filter buttons with light purple color */
+    .category-filter-btns {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    .category-filter-btns button {
+        margin: 5px;
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: 5px;
+        background-color: #6f4ceb; /* light purple */
+        color: #f5f3fe;
+        font-weight: bold;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+    .category-filter-btns button:hover {
+        background-color: #9253f1;
+    }
+
+    /* Shop Now button matches category filter colors */
+    .favorit-items .btn {
+        background-color: #6f4ceb;
+        color: #f5f3fe;
+        font-weight: bold;
+        transition: 0.3s;
+    }
+    .favorit-items .btn:hover {
+        background-color: #9253f1;
+        color: #fff;
+    }
+
+    /* Heading style */
+    .category-heading {
+        text-align: center;
+        font-weight: bold;
+        color: #654beb;
+        margin-bottom: 20px;
     }
 </style>
 
@@ -64,31 +124,41 @@
         </div>
         {% endfor %}
     </div>
-
-    <!-- Fixed caption overlay -->
     <div class="carousel-caption hero-caption">
         <h1>Discover<br>Your Next<br>Favorite Book</h1>
         <a href="{% url 'book_list' %}" class="btn btn-primary">Shop Now</a>
     </div>
-
-    <!-- Carousel controls -->
     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="carousel-control-prev-icon"></span>
         <span class="visually-hidden">Previous</span>
     </button>
     <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="carousel-control-next-icon"></span>
         <span class="visually-hidden">Next</span>
     </button>
 </div>
 <!-- ================= HERO END ================= -->
 
-<!-- ================= POPULAR ITEMS ================= -->
+<!-- ================= POPULAR ITEMS WITH CATEGORY FILTER ================= -->
 <div class="popular-items pt-50">
     <div class="container-fluid">
-        <div class="row">
+        
+        <!-- Heading -->
+        <div class="category-heading">
+            <h2>Explore by Category</h2>
+        </div>
+
+        <!-- Category Filter Buttons -->
+        <div class="category-filter-btns">
+            <button onclick="filterCategory('all')">All</button>
+            {% for cat in categories %}
+            <button onclick="filterCategory('{{ cat.title|slugify }}')">{{ cat.title }}</button>
+            {% endfor %}
+        </div>
+
+        <div class="row" id="popularItemsRow">
             {% for item in popular_items %}
-            <div class="col-lg-3 col-md-6 col-sm-6">
+            <div class="col-lg-3 col-md-6 col-sm-6 popular-item" data-category="{{ item.category|slugify }}">
                 <div class="single-popular-items mb-50 text-center">
                     <div class="popular-img">
                         {% if item.images.exists %}
@@ -98,7 +168,7 @@
                         {% endif %}
                         <div class="img-cap"><span>{{ item.category }}</span></div>
                         <div class="favorit-items">
-                            <a href="{% url 'book_detail' item.id %}" class="btn btn-sm btn-primary">Shop Now</a>
+                            <a href="{% url 'book_detail' item.id %}" class="btn">Shop Now</a>
                         </div>
                     </div>
                 </div>
@@ -151,26 +221,18 @@
 </div>
 <!-- ================= NEW ARRIVALS END ================= -->
 
-<!-- ================= CATEGORIES / SERVICES ================= -->
-<div class="categories-area section-padding40 gray-bg">
-    <div class="container-fluid">
-        <div class="row">
-            {% for service in services %}
-            <div class="col-lg-3 col-md-6 col-sm-6">
-                <div class="single-cat mb-50 text-center">
-                    <div class="cat-icon mb-3">
-                        <img src="{% static 'book_app/img/icon/' %}{{ service.icon }}" alt="{{ service.title }}" class="img-fluid">
-                    </div>
-                    <div class="cat-cap">
-                        <h5>{{ service.title }}</h5>
-                        <p>{{ service.description }}</p>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</div>
-<!-- ================= CATEGORIES END ================= -->
+<!-- ================= CATEGORY FILTER SCRIPT ================= -->
+<script>
+function filterCategory(category) {
+    const items = document.querySelectorAll('.popular-item');
+    items.forEach(item => {
+        if(category === 'all' || item.dataset.category === category) {
+            item.style.display = 'block';
+        } else {
+            item.style.display = 'none';
+        }
+    });
+}
+</script>
 
 {% endblock %}

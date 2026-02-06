@@ -68,6 +68,8 @@ urlpatterns = [
     # ABOUT PAGE
     # =========================
     path('about/', views.about, name='about'),  # ✅ Moved inside urlpatterns
+    #categories-home-page
+    path('category/<int:category_id>/', views.category_books, name='category_books'),
 ]
 
 # =========================

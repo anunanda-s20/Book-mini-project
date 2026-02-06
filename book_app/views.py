@@ -5,7 +5,7 @@ from django.contrib import messages
 from django.core.paginator import Paginator
 from django.db.models import Q
 
-from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address
+from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address, Category
 from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileForm
 
 
@@ -13,24 +13,26 @@ from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileFor
 # 1️⃣ PUBLIC PAGES
 # =========================
 def home(request):
-    """Home page: hero slider, popular books, new arrivals, services"""
-    hero_range = range(1, 4)  # 3 hero images
+    """Home page: hero slider, categories, popular books, new arrivals"""
+    hero_range = range(1, 4)  # For 3 hero images
+
+    # Fetch all categories (with images)
+    categories = Category.objects.all()
+
+    # Popular books (example: top 4 books)
     popular_items = Book.objects.filter(is_active=True)[:4]
+
+    # New arrivals (latest 4 books)
     new_arrivals = Book.objects.filter(is_active=True).order_by('-created_at')[:4]
 
-    services = [
-        {"icon": "delivery.png", "title": "Fast Delivery", "description": "Quick shipping to your door"},
-        {"icon": "quality.png", "title": "Top Quality", "description": "Premium books, every time"},
-        {"icon": "support.png", "title": "24/7 Support", "description": "Always here to help"},
-        {"icon": "gift.png", "title": "Gift Options", "description": "Send books as gifts easily"},
-    ]
-
-    return render(request, 'book_app/home.html', {
+    context = {
         "hero_range": hero_range,
+        "categories": categories,  # This contains the image field now
         "popular_items": popular_items,
         "new_arrivals": new_arrivals,
-        "services": services,
-    })
+    }
+
+    return render(request, 'book_app/home.html', context)
 
 
 def book_list(request):
@@ -386,3 +388,13 @@ def order_success(request):
 # =========================
 def about(request):
     return render(request, 'book_app/about.html')
+
+#categories-home page
+
+def category_books(request, category_id):
+    category = get_object_or_404(Category, id=category_id)
+    books = Book.objects.filter(category=category, is_active=True)
+    return render(request, 'book_app/category_books.html', {
+        'category': category,
+        'books': books
+    })

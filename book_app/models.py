@@ -6,29 +6,39 @@ from django.dispatch import receiver
 # ================= USER PROFILE =================
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15, blank=True)
+    phone = models.CharField(max_length=15, blank=True)  # optional phone
 
     def __str__(self):
         return self.user.username
 
-# Automatically create UserProfile when a new User is created
+# Automatically create UserProfile on new User
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
+# Save profile updates
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'userprofile'):
         instance.userprofile.save()
 
-# ================= BOOK =================
+
+# ================= CATEGORY =================
 class Category(models.Model):
-    name = models.CharField(max_length=100)
+    title = models.CharField(max_length=100)  # category name
+    description = models.TextField(blank=True)  # optional description
+    image = models.ImageField(
+        upload_to='category_images/',
+        blank=True,
+        default='category_images/default.png'  # default image
+    )
 
     def __str__(self):
-        return self.name
+        return self.title
 
+
+# ================= BOOK =================
 class Book(models.Model):
     title = models.CharField(max_length=200)
     author = models.CharField(max_length=100)
@@ -48,12 +58,15 @@ class Book(models.Model):
     def availability_status(self):
         return "In Stock" if self.stock > 0 else "Out of Stock"
 
+
+# ================= BOOK IMAGE =================
 class BookImage(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='images')
     image = models.ImageField(upload_to='book_images/')
 
     def __str__(self):
         return f"Image for {self.book.title}"
+
 
 # ================= ADDRESS =================
 class Address(models.Model):
@@ -68,6 +81,7 @@ class Address(models.Model):
 
     def __str__(self):
         return f"{self.full_name} - {self.city}"
+
 
 # ================= ORDER =================
 class Order(models.Model):
@@ -88,6 +102,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.user.username}"
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -97,6 +112,7 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.book.title} x {self.quantity}"
 
+
 # ================= CART =================
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -104,6 +120,7 @@ class Cart(models.Model):
 
     def __str__(self):
         return f"Cart of {self.user.username}"
+
 
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
@@ -113,6 +130,7 @@ class CartItem(models.Model):
     def __str__(self):
         return f"{self.book.title} x {self.quantity}"
 
+
 # ================= WISHLIST =================
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -120,7 +138,7 @@ class Wishlist(models.Model):
     added_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('user', 'book')  # Prevent duplicates
+        unique_together = ('user', 'book')  # prevent duplicates
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title}"

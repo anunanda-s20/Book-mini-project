@@ -9,7 +9,7 @@ from .models import (
     Cart,
     CartItem,
     Wishlist,
-    Category  # Added Category
+    Category
 )
 
 # ================= USER PROFILE =================
@@ -22,8 +22,8 @@ class UserProfileAdmin(admin.ModelAdmin):
 # ================= BOOK =================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    list_display = ('title', 'author', 'price', 'stock', 'is_active', 'category')  # Show category
-    list_filter = ('is_active', 'category')  # Filter by category
+    list_display = ('title', 'author', 'price', 'stock', 'is_active', 'category')
+    list_filter = ('is_active', 'category')
     search_fields = ('title', 'author')
     ordering = ('title',)
 
@@ -37,8 +37,8 @@ class BookImageAdmin(admin.ModelAdmin):
 # ================= CATEGORY =================
 @admin.register(Category)
 class CategoryAdmin(admin.ModelAdmin):
-    list_display = ('name',)
-    search_fields = ('name',)
+    list_display = ('title', 'description')  # fixed to use 'title' from model
+    search_fields = ('title',)
 
 
 # ================= ADDRESS =================
