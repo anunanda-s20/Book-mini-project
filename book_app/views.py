@@ -13,23 +13,25 @@ from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileFor
 # 1️⃣ PUBLIC PAGES
 # =========================
 def home(request):
-    """Home page: hero slider, categories, popular books, new arrivals"""
-    hero_range = range(1, 4)  # For 3 hero images
+    hero_range = range(1, 4)
 
-    # Fetch all categories (with images)
     categories = Category.objects.all()
 
-    # Popular books (example: top 4 books)
-    popular_items = Book.objects.filter(is_active=True)[:4]
+    new_arrivals = Book.objects.filter(
+        is_active=True
+    ).order_by('-created_at')[:4]
 
-    # New arrivals (latest 4 books)
-    new_arrivals = Book.objects.filter(is_active=True).order_by('-created_at')[:4]
+    # ✅ Book Accessories as a separate section
+    accessories = Book.objects.filter(
+        category__title__iexact="Book Accessories",
+        is_active=True
+    )[:4]
 
     context = {
         "hero_range": hero_range,
-        "categories": categories,  # This contains the image field now
-        "popular_items": popular_items,
+        "categories": categories,
         "new_arrivals": new_arrivals,
+        "accessories": accessories,
     }
 
     return render(request, 'book_app/home.html', context)

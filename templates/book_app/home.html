@@ -248,6 +248,70 @@
     </div>
 </section>
 
+<!-- ================= BOOK ACCESSORIES ================= -->
+<section class="new-arrival my-5" style="background:#faf8ff;">
+    <div class="container">
+
+        <div class="row justify-content-center mb-5">
+            <div class="col-xl-8 col-lg-10 text-center">
+                <h2 class="fw-bold display-5" style="color:#4b2f6f;">
+                    Reading Essentials
+                </h2>
+                <p class="text-muted">
+                    Bookish accessories to elevate your reading time
+                </p>
+            </div>
+        </div>
+
+        <div class="row">
+            {% for item in accessories %}
+            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+                <div class="card h-100 text-center position-relative">
+
+                    <!-- Cart icon -->
+                    <a href="{% url 'add_to_cart' item.id %}"
+                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                             fill="currentColor" viewBox="0 0 16 16">
+                          <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5z"/>
+                        </svg>
+                    </a>
+
+                    <a href="{% url 'book_detail' item.id %}">
+                        {% with item.images.first as img %}
+                            {% if img %}
+                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                            {% else %}
+                                <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top">
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+
+                    <div class="card-body">
+                        <h5 class="card-title">{{ item.title }}</h5>
+                        <p class="fw-bold">₹ {{ item.price }}</p>
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">
+                No accessories available yet.
+            </p>
+            {% endfor %}
+        </div>
+
+        <div class="text-center mt-4">
+            <a href="{% url 'book_list' %}?category=book-accessories"
+               class="btn btn-outline-primary">
+                View All Accessories
+            </a>
+        </div>
+
+    </div>
+</section>
+
+
 <script>
 function filterCategory(category) {
     const items = document.querySelectorAll('.popular-item');
