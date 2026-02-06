@@ -102,6 +102,9 @@ USE_TZ = True
 
 # ================= STATIC FILES =================
 STATIC_URL = "/static/"
+STATICFILES_DIRS = [
+    BASE_DIR / "book_app" / "static",  # <-- tells Django to look here for static files
+]
 
 
 # ================= MEDIA FILES =================

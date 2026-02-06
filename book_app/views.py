@@ -13,12 +13,29 @@ from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileFor
 # 1️⃣ PUBLIC PAGES
 # =========================
 def home(request):
-    return render(request, 'book_app/home.html')
+    """Home page: hero slider, popular books, new arrivals, services"""
+    hero_range = range(1, 4)  # 3 hero images
+    popular_items = Book.objects.filter(is_active=True)[:4]
+    new_arrivals = Book.objects.filter(is_active=True).order_by('-created_at')[:4]
+
+    services = [
+        {"icon": "delivery.png", "title": "Fast Delivery", "description": "Quick shipping to your door"},
+        {"icon": "quality.png", "title": "Top Quality", "description": "Premium books, every time"},
+        {"icon": "support.png", "title": "24/7 Support", "description": "Always here to help"},
+        {"icon": "gift.png", "title": "Gift Options", "description": "Send books as gifts easily"},
+    ]
+
+    return render(request, 'book_app/home.html', {
+        "hero_range": hero_range,
+        "popular_items": popular_items,
+        "new_arrivals": new_arrivals,
+        "services": services,
+    })
 
 
 def book_list(request):
+    """List books with search, filter, and pagination"""
     books = Book.objects.filter(is_active=True)
-
     query = request.GET.get("q", "")
     if query:
         books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
@@ -47,27 +64,20 @@ def book_list(request):
 
 
 def book_detail(request, id):
+    """Show single book details"""
     book = get_object_or_404(Book, id=id, is_active=True)
-    is_wishlisted = (
-        Wishlist.objects.filter(user=request.user, book=book).exists()
-        if request.user.is_authenticated else False
-    )
-    return render(request, 'book_app/book_detail.html', {
-        'book': book,
-        'is_wishlisted': is_wishlisted
-    })
+    is_wishlisted = Wishlist.objects.filter(user=request.user, book=book).exists() if request.user.is_authenticated else False
+    return render(request, 'book_app/book_detail.html', {'book': book, 'is_wishlisted': is_wishlisted})
 
 
 # =========================
 # 2️⃣ AUTHENTICATION
 # =========================
-
 def signup(request):
     if request.user.is_authenticated:
         return redirect('home')
 
     form = SimpleUserCreationForm(request.POST or None)
-
     if request.method == "POST" and form.is_valid():
         form.save()
         messages.success(request, "Account created successfully! Please login.")
@@ -83,18 +93,11 @@ def custom_login(request):
     if request.method == "POST":
         username = request.POST.get('username')
         password = request.POST.get('password')
-
         user = authenticate(request, username=username, password=password)
-
-        if user is not None:
+        if user:
             login(request, user)
-
-            # ✅ ADD THIS (MAIN FIX)
             messages.success(request, f"Welcome back, {user.username}!")
-
             return redirect('home')
-
-        # ❌ login failed
         messages.error(request, "Invalid username or password")
 
     return render(request, 'registration/login.html')
@@ -154,7 +157,6 @@ def delete_book(request, id):
 def dashboard(request):
     books = Book.objects.all()
     orders_list = Order.objects.all().order_by('-created_at')
-
     paginator = Paginator(orders_list, 10)
     orders = paginator.get_page(request.GET.get('page'))
 
@@ -163,14 +165,10 @@ def dashboard(request):
         'orders': orders,
         'total_books': books.count(),
         'total_orders': orders_list.count(),
-        'total_revenue': sum(
-            o.total_price for o in orders_list
-            if o.status in ['paid', 'shipped', 'delivered']
-        ),
+        'total_revenue': sum(o.total_price for o in orders_list if o.status in ['paid', 'shipped', 'delivered']),
         'pending_orders': orders_list.filter(status='pending').count(),
         'delivered_orders': orders_list.filter(status='delivered').count(),
     }
-
     return render(request, 'dashboard/dashboard.html', context)
 
 
@@ -179,31 +177,16 @@ def dashboard(request):
 def manage_books(request):
     query = request.GET.get('q')
     books = Book.objects.all()
-
     if query:
         books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
-
-    return render(request, 'dashboard/manage_books.html', {
-        'books': books,
-        'query': query
-    })
+    return render(request, 'dashboard/manage_books.html', {'books': books, 'query': query})
 
 
 @login_required
 @user_passes_test(staff_required)
 def dashboard_order_detail(request, order_id):
     order = get_object_or_404(Order, id=order_id)
-
-    order_items = [
-        {
-            'book': i.book,
-            'quantity': i.quantity,
-            'price': i.price,
-            'subtotal': i.quantity * i.price
-        }
-        for i in order.items.all()
-    ]
-
+    order_items = [{'book': i.book, 'quantity': i.quantity, 'price': i.price, 'subtotal': i.quantity*i.price} for i in order.items.all()]
     if request.method == "POST":
         new_status = request.POST.get('status')
         if new_status in dict(Order.STATUS_CHOICES):
@@ -211,11 +194,7 @@ def dashboard_order_detail(request, order_id):
             order.save()
             messages.success(request, "Order status updated")
         return redirect('dashboard')
-
-    return render(request, 'dashboard/order_detail.html', {
-        'order': order,
-        'order_items': order_items
-    })
+    return render(request, 'dashboard/order_detail.html', {'order': order, 'order_items': order_items})
 
 
 # =========================
@@ -224,18 +203,14 @@ def dashboard_order_detail(request, order_id):
 @login_required
 def add_to_cart(request, book_id):
     book = get_object_or_404(Book, id=book_id)
-
     if book.stock <= 0:
         messages.error(request, "Out of stock")
         return redirect('book_list')
-
     cart, _ = Cart.objects.get_or_create(user=request.user)
     item, created = CartItem.objects.get_or_create(cart=cart, book=book)
-
     if not created and item.quantity < book.stock:
         item.quantity += 1
         item.save()
-
     return redirect('view_cart')
 
 
@@ -243,12 +218,8 @@ def add_to_cart(request, book_id):
 def view_cart(request):
     cart = Cart.objects.filter(user=request.user).first()
     items = cart.items.all() if cart else []
-    total = sum(i.book.price * i.quantity for i in items)
-
-    return render(request, 'book_app/cart.html', {
-        'items': items,
-        'total': total
-    })
+    total = sum(i.book.price*i.quantity for i in items)
+    return render(request, 'book_app/cart.html', {'items': items, 'total': total})
 
 
 @login_required
@@ -287,39 +258,22 @@ def checkout(request):
         return redirect('view_cart')
 
     cart_items = cart.items.all()
-    total = sum(i.book.price * i.quantity for i in cart_items)
-
+    total = sum(i.book.price*i.quantity for i in cart_items)
     address = Address.objects.filter(user=request.user).first()
     if not address:
         messages.error(request, "Add address first")
         return redirect('my_profile')
 
-    if request.method == 'POST':
-        order = Order.objects.create(
-            user=request.user,
-            address=address,
-            total_price=total,
-            status='pending'
-        )
-
+    if request.method == "POST":
+        order = Order.objects.create(user=request.user, address=address, total_price=total, status='pending')
         for item in cart_items:
-            OrderItem.objects.create(
-                order=order,
-                book=item.book,
-                quantity=item.quantity,
-                price=item.book.price
-            )
+            OrderItem.objects.create(order=order, book=item.book, quantity=item.quantity, price=item.book.price)
             item.book.stock -= item.quantity
             item.book.save()
-
         cart_items.delete()
         return redirect('order_success')
 
-    return render(request, 'book_app/checkout.html', {
-        'cart_items': cart_items,
-        'total': total,
-        'address': address
-    })
+    return render(request, 'book_app/checkout.html', {'cart_items': cart_items, 'total': total, 'address': address})
 
 
 # =========================
@@ -340,18 +294,14 @@ def order_detail(request, order_id):
 @login_required
 def cancel_order(request, order_id):
     order = get_object_or_404(Order, id=order_id, user=request.user)
-
     if order.status not in ['pending', 'paid']:
         messages.error(request, "Cannot cancel now")
         return redirect('my_orders')
-
     order.status = 'cancelled'
     order.save()
-
     for item in order.items.all():
         item.book.stock += item.quantity
         item.book.save()
-
     messages.success(request, "Order cancelled")
     return redirect('my_orders')
 
@@ -367,10 +317,7 @@ def wishlist(request):
 
 @login_required
 def add_to_wishlist(request, book_id):
-    Wishlist.objects.get_or_create(
-        user=request.user,
-        book=get_object_or_404(Book, id=book_id)
-    )
+    Wishlist.objects.get_or_create(user=request.user, book=get_object_or_404(Book, id=book_id))
     return redirect('wishlist')
 
 
@@ -386,10 +333,7 @@ def remove_from_wishlist(request, book_id):
 @login_required
 def my_profile(request):
     profile = request.user.userprofile
-    return render(request, 'book_app/my_profile.html', {
-        'user': request.user,
-        'profile': profile
-    })
+    return render(request, 'book_app/my_profile.html', {'user': request.user, 'profile': profile})
 
 
 @login_required
@@ -416,25 +360,17 @@ def add_address(request):
 def edit_profile(request):
     user = request.user
     profile = user.userprofile
-
     form = EditProfileForm(request.POST or None, instance=profile)
-
     if request.method == "POST" and form.is_valid():
         form.save()
-
         if request.POST.get('username'):
             user.username = request.POST.get('username')
         if request.POST.get('email'):
             user.email = request.POST.get('email')
-
         user.save()
         messages.success(request, "Profile updated")
         return redirect('my_profile')
-
-    return render(request, 'book_app/edit_profile.html', {
-        'form': form,
-        'user': user
-    })
+    return render(request, 'book_app/edit_profile.html', {'form': form, 'user': user})
 
 
 # =========================
@@ -443,3 +379,10 @@ def edit_profile(request):
 @login_required
 def order_success(request):
     return render(request, 'book_app/order_success.html')
+
+
+# =========================
+# ABOUT PAGE
+# =========================
+def about(request):
+    return render(request, 'book_app/about.html')
