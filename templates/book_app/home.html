@@ -66,8 +66,8 @@
 
 /* Button */
 #heroCarousel .hero-caption .btn {
-    padding: 1rem 3rem;     /* ⬅️ bigger button */
-    font-size: 1.15rem;    /* ⬅️ bigger text */
+    padding: 1rem 3rem;
+    font-size: 1.15rem;
     font-weight: 700;
     border-radius: 6px;
     background-color: #7478fb;
@@ -76,116 +76,110 @@
     transition: all 0.25s ease;
 }
 
-
 /* Button hover */
 #heroCarousel .hero-caption .btn:hover {
     background-color: #6377f9;
     transform: translateY(-1px);
 }
 
+/* ================= USP / Services Section ================= */
+.categories-area {
+    background-color: #f8f9fa; /* light gray background */
+    padding: 50px 0;
+}
 
+.single-cat {
+    text-align: center;
+    padding: 20px;
+    transition: all 0.3s ease;
+}
+
+.single-cat .cat-icon img {
+    width: 60px;
+    margin-bottom: 15px;
+}
+
+.single-cat h5 {
+    font-size: 1.1rem;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.single-cat p {
+    font-size: 0.9rem;
+    color: #555;
+}
+
+.single-cat:hover {
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+
+</style>
 
 </style>
 
 <!-- ================= HERO SECTION ================= -->
 <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
-
     <div class="carousel-inner">
-
-        <!-- Loop hero images -->
         {% for i in hero_range %}
         <div class="carousel-item {% if forloop.first %}active{% endif %}"
              style="background:url('{% static 'book_app/img/hero/hero' %}{{ i }}.jpg') center/cover no-repeat;">
         </div>
         {% endfor %}
-
     </div>
 
-    <!-- ✅ ADDED: PREVIOUS ARROW -->
-    <button class="carousel-control-prev"
-            type="button"
-            data-bs-target="#heroCarousel"
-            data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
     </button>
 
-    <!-- ✅ ADDED: NEXT ARROW -->
-    <button class="carousel-control-next"
-            type="button"
-            data-bs-target="#heroCarousel"
-            data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
     </button>
 
-    <!-- Hero caption -->
     <div class="carousel-caption hero-caption text-start">
         <h1>Discover<br>Your Next<br>Favorite Book</h1>
         <a href="{% url 'book_list' %}" class="btn btn-primary">Shop Now</a>
     </div>
-
 </div>
 
 <!-- ================= CATEGORY SECTION ================= -->
 <div class="popular-items pt-50">
     <div class="container-fluid">
-
         <h2 class="text-center fw-bold mb-4">Explore by Category</h2>
-
-        <!-- Category filter buttons -->
         <div class="text-center mb-4">
-            <button onclick="filterCategory('all')" class="btn btn-primary btn-sm">
-                All
-            </button>
-
+            <button onclick="filterCategory('all')" class="btn btn-primary btn-sm">All</button>
             {% for cat in categories %}
-            <button onclick="filterCategory('{{ cat.title|slugify }}')"
-                    class="btn btn-outline-primary btn-sm">
+            <button onclick="filterCategory('{{ cat.title|slugify }}')" class="btn btn-outline-primary btn-sm">
                 {{ cat.title }}
             </button>
             {% endfor %}
         </div>
 
-        <!-- Books used ONLY for category filtering -->
         <div class="row" id="popularItemsRow">
-
             {% for item in popular_books %}
-            <div class="col-lg-3 col-md-6 mb-4 popular-item"
-                 data-category="{{ item.category.title|slugify }}">
-
+            <div class="col-lg-3 col-md-6 mb-4 popular-item" data-category="{{ item.category.title|slugify }}">
                 <div class="card h-100 text-center position-relative">
-
-                    <!-- Add to cart -->
-                    <a href="{% url 'add_to_cart' item.id %}"
-                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                        🛒
-                    </a>
-
-                    <!-- Book detail -->
+                    <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
                     <a href="{% url 'book_detail' item.id %}">
                         {% with item.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}"
-                                     class="card-img-top"
-                                     alt="{{ item.title }}">
+                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
                             {% else %}
-                                <img src="{% static 'book_app/img/default-book.png' %}"
-                                     class="card-img-top"
-                                     alt="No image">
+                                <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                             {% endif %}
                         {% endwith %}
                     </a>
-
                     <div class="card-body">
                         <h5>{{ item.title }}</h5>
                         <p class="fw-bold">₹ {{ item.price }}</p>
                     </div>
-
                 </div>
             </div>
             {% empty %}
             <p class="text-center text-muted">No books found.</p>
             {% endfor %}
-
         </div>
     </div>
 </div>
@@ -193,98 +187,117 @@
 <!-- ================= NEW ARRIVALS ================= -->
 <section class="new-arrival my-5">
     <div class="container">
-
         <h2 class="text-center fw-bold mb-3">New Arrivals</h2>
-
         <div class="row">
             {% for book in new_arrivals %}
             <div class="col-lg-3 col-md-6 mb-4">
-
                 <div class="card h-100 text-center position-relative">
-
-                    <a href="{% url 'add_to_cart' book.id %}"
-                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                        🛒
-                    </a>
-
+                    <a href="{% url 'add_to_cart' book.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
                     <a href="{% url 'book_detail' book.id %}">
                         {% with book.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}"
-                                     class="card-img-top"
-                                     alt="{{ book.title }}">
+                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ book.title }}">
                             {% else %}
-                                <img src="{% static 'book_app/img/default-book.png' %}"
-                                     class="card-img-top"
-                                     alt="No image">
+                                <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                             {% endif %}
                         {% endwith %}
                     </a>
-
                     <div class="card-body">
                         <h5>{{ book.title }}</h5>
                         <p class="fw-bold">₹ {{ book.price }}</p>
                     </div>
-
                 </div>
             </div>
             {% empty %}
             <p class="text-center text-muted">No new arrivals yet.</p>
             {% endfor %}
         </div>
-
         <div class="text-center">
-            <a href="{% url 'book_list' %}" class="btn btn-outline-primary">
-                Browse More
-            </a>
+            <a href="{% url 'book_list' %}" class="btn btn-outline-primary">Browse More</a>
         </div>
-
     </div>
 </section>
 
 <!-- ================= BOOK ESSENTIALS ================= -->
 <section class="my-5" style="background:#faf8ff;">
     <div class="container">
-
         <h2 class="text-center fw-bold mb-3">Reading Essentials</h2>
-
         <div class="row">
             {% for item in book_essentials %}
             <div class="col-lg-3 col-md-6 mb-4">
-
                 <div class="card h-100 text-center position-relative">
-
-                    <a href="{% url 'add_to_cart' item.id %}"
-                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                        🛒
-                    </a>
-
+                    <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
                     <a href="{% url 'book_detail' item.id %}">
                         {% with item.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}"
-                                     class="card-img-top"
-                                     alt="{{ item.title }}">
+                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
                             {% else %}
-                                <img src="{% static 'book_app/img/default-book.png' %}"
-                                     class="card-img-top"
-                                     alt="No image">
+                                <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                             {% endif %}
                         {% endwith %}
                     </a>
-
                     <div class="card-body">
                         <h5>{{ item.title }}</h5>
                         <p class="fw-bold">₹ {{ item.price }}</p>
                     </div>
-
                 </div>
             </div>
             {% empty %}
             <p class="text-center text-muted">No accessories available yet.</p>
             {% endfor %}
         </div>
+    </div>
+</section>
 
+<!-- ================= USP / SERVICES / VALUE BAR ================= -->
+<section id="usps" class="categories-area section-padding40 gray-bg">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-cat mb-50">
+                    <div class="cat-icon">
+                        <img src="{% static 'book_app/img/icon/services1.svg' %}" alt="Fast & Free Delivery">
+                    </div>
+                    <div class="cat-cap">
+                        <h5>Fast & Free Delivery</h5>
+                        <p>Free delivery on all orders</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-cat mb-50">
+                    <div class="cat-icon">
+                        <img src="{% static 'book_app/img/icon/services2.svg' %}" alt="24/7 Support">
+                    </div>
+                    <div class="cat-cap">
+                        <h5>24/7 Support</h5>
+                        <p>We are here to help</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-cat mb-50">
+                    <div class="cat-icon">
+                        <img src="{% static 'book_app/img/icon/services3.svg' %}" alt="Secure Payment">
+                    </div>
+                    <div class="cat-cap">
+                        <h5>Secure Payment</h5>
+                        <p>100% secure checkout</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="single-cat mb-50">
+                    <div class="cat-icon">
+                        <img src="{% static 'book_app/img/icon/services4.svg' %}" alt="Quality Guarantee">
+                    </div>
+                    <div class="cat-cap">
+                        <h5>Quality Guarantee</h5>
+                        <p>Top-quality books only</p>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </section>
 
