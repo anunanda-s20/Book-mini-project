@@ -107,24 +107,42 @@ def book_list(request):
 # =========================
 # 3️⃣ BOOK / ACCESSORY DETAIL
 # =========================
-
 def book_detail(request, id):
     """
     SINGLE PRODUCT PAGE
     👉 Works for BOTH books & accessories
     """
 
+    # Get the main book or accessory
     book = get_object_or_404(Book, id=id, is_active=True)
 
+    # Suggested books (you may like) - exclude current book
+    suggested_books = Book.objects.filter(
+        is_active=True,
+        product_type='book'  # only show books, not accessories
+    ).exclude(id=id)[:4]
+
+    # Book essentials → show accessories
+    book_essentials = Book.objects.filter(
+        is_active=True,
+        product_type='accessory'
+    )[:8]  # adjust the number as needed
+
+    # Check if the book is in user's wishlist
     is_wishlisted = (
         Wishlist.objects.filter(user=request.user, book=book).exists()
         if request.user.is_authenticated else False
     )
 
-    return render(request, 'book_app/book_detail.html', {
+    # Context to send to template
+    context = {
         'book': book,
-        'is_wishlisted': is_wishlisted
-    })
+        'is_wishlisted': is_wishlisted,
+        'suggested_books': suggested_books,
+        'book_essentials': book_essentials,
+    }
+
+    return render(request, 'book_app/book_detail.html', context)
 
 
 # =========================

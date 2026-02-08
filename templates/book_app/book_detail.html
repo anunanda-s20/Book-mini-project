@@ -34,25 +34,16 @@
 
         <!-- RIGHT: BOOK DETAILS -->
         <div class="col-md-7">
-            <!-- Title & Author -->
             <h2 class="mb-2">{{ book.title }}</h2>
             <p class="text-muted mb-2">by {{ book.author }}</p>
 
-            <!-- Dynamic Rating -->
             <p class="mb-2">
-                {% for i in "12345"|slice:":book.rating"|make_list %}
-                    ⭐
-                {% endfor %}
-                {% for i in "12345"|slice:"book.rating:"|make_list %}
-                    
-                {% endfor %}
-                <small class="text-muted">({{ book.rating }}/5)</small>
+                {% for i in "12345"|slice:":book.rating"|make_list %}⭐{% endfor %}
+                <small class="text-muted">{{ book.rating }}</small>
             </p>
 
-            <!-- Price (special font kept) -->
             <h4 class="mb-2">₹{{ book.price }}</h4>
 
-            <!-- Stock status -->
             {% if book.stock == 0 %}
                 <p class="stock out-stock mb-2">Out of stock</p>
             {% elif book.stock <= 3 %}
@@ -61,10 +52,8 @@
                 <p class="stock in-stock mb-2">In stock</p>
             {% endif %}
 
-            <!-- Delivery info -->
             <p class="text-success mt-2 mb-3">✔ Delivery within 4–6 business days</p>
 
-            <!-- ===== ACTION BUTTONS ===== -->
             {% if user.is_authenticated %}
                 <a href="{% url 'add_to_cart' book.id %}" class="btn btn-primary me-2 mb-2">Add to Cart</a>
 
@@ -77,7 +66,6 @@
                 <p class="mt-2 mb-2"><a href="{% url 'login' %}">Login</a> to buy or save this book.</p>
             {% endif %}
 
-            <!-- Other Details -->
             <div class="mt-4">
                 <h4 class="mb-2">Other Details</h4>
                 <div class="border rounded p-3 bg-light">
@@ -87,7 +75,6 @@
                     <p class="mb-1"><strong>Condition:</strong> Gently Used</p>
                 </div>
             </div>
-
         </div>
     </div>
 
@@ -113,7 +100,6 @@
         {% for other_book in suggested_books %}
         <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
             <div class="card h-100 text-center shadow-sm position-relative">
-                <!-- Stock badge -->
                 {% if other_book.stock == 0 %}
                     <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of stock</span>
                 {% elif other_book.stock <= 3 %}
@@ -122,7 +108,6 @@
                     <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
                 {% endif %}
 
-                <!-- Book image -->
                 <a href="{% url 'book_detail' other_book.id %}">
                     {% with other_book.images.first as img %}
                         {% if img %}
@@ -133,7 +118,6 @@
                     {% endwith %}
                 </a>
 
-                <!-- Book details -->
                 <div class="card-body">
                     <h5 class="card-title">{{ other_book.title }}</h5>
                     <p class="text-muted">{{ other_book.author }}</p>
@@ -148,33 +132,63 @@
 
 </div>
 
+<!-- ================= BOOK ESSENTIALS ON BOOK DETAIL ================= -->
+<section class="my-5" style="background:#faf8ff;">
+    <div class="container">
+
+        <h2 class="text-center fw-bold mb-3">Reading Essentials</h2>
+
+        <div class="row">
+            {% for item in book_essentials %}
+                <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
+                    <div class="card h-100 text-center shadow-sm position-relative">
+
+                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
+
+                        <a href="{% url 'book_detail' item.id %}">
+                            {% with item.images.first as img %}
+                                {% if img %}
+                                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                                {% else %}
+                                    <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
+                                {% endif %}
+                            {% endwith %}
+                        </a>
+
+                        <div class="card-body">
+                            <h5 class="card-title">{{ item.title }}</h5>
+                            <p class="text-muted">{{ item.author }}</p>
+                            <p class="fw-bold">₹ {{ item.price }}</p>
+                        </div>
+
+                    </div>
+                </div>
+            {% empty %}
+                <p class="text-center text-muted">No accessories available yet.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
 <!-- ========================= -->
 <!-- STYLES -->
 <!-- ========================= -->
 <style>
-/* Hover effect for carousel images */
-.carousel-hover {
-    transition: transform 0.3s ease;
-}
-.carousel-hover:hover {
-    transform: scale(1.03);
-}
+.carousel-hover { transition: transform 0.3s ease; }
+.carousel-hover:hover { transform: scale(1.03); }
 
-/* Stock badges */
 .stock { font-weight: 600; font-size: 0.85rem; padding: 0.35rem 0.6rem; border-radius: 0.5rem; color: #fff; }
 .in-stock { background-color: #7AD1A0; }
 .low-stock { background-color: #F7B267; }
 .out-stock { background-color: #FF7F7F; }
 
-/* Card styling */
 .card-body h5 { font-size: 1rem; font-weight: 600; }
 .card-body p.text-muted { font-size: 0.85rem; }
 
-/* Buttons hover */
 .btn-primary:hover { background-color: #3a6e59; }
 .btn-outline-danger:hover { background-color: #f7b267; color: #fff; border-color: #f7b267; }
 
-/* Carousel arrows - ultra-light grey, no background */
 .carousel-control-prev, .carousel-control-next { width: 5%; opacity: 1 !important; z-index: 10; }
 .carousel-control-prev-icon, .carousel-control-next-icon {
     background-image: none;
