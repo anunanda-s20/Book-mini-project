@@ -28,6 +28,63 @@
 .cart-icon-svg {
     font-size: 20px;
 }
+
+/* ================= HERO BASE ================= */
+#heroCarousel {
+    position: relative;
+}
+
+#heroCarousel .carousel-inner,
+#heroCarousel .carousel-item {
+    height: 100vh;
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+}
+
+/* ================= HERO TEXT – EDITORIAL ================= */
+#heroCarousel .hero-caption {
+    position: absolute;
+    top: 50%;
+    left: 10%;
+    transform: translateY(-50%);
+    z-index: 5;
+    max-width: 520px;
+    text-align: left;
+}
+
+/* Heading */
+#heroCarousel .hero-caption h1 {
+    font-size: 3.4rem;
+    font-weight: 1000;
+    line-height: 1.1;
+    letter-spacing: 1px;
+    color: #ffffff;
+    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
+    margin-bottom: 24px;
+}
+
+/* Button */
+#heroCarousel .hero-caption .btn {
+    padding: 1rem 3rem;     /* ⬅️ bigger button */
+    font-size: 1.15rem;    /* ⬅️ bigger text */
+    font-weight: 700;
+    border-radius: 6px;
+    background-color: #4d52f7;
+    color: #ffffff;
+    border: none;
+    transition: all 0.25s ease;
+}
+
+
+/* Button hover */
+#heroCarousel .hero-caption .btn:hover {
+    background-color: #6377f9;
+    transform: translateY(-1px);
+}
+
+
+
 </style>
 
 <!-- ================= HERO SECTION ================= -->
