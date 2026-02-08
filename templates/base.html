@@ -41,7 +41,7 @@
             font-family: "Times New Roman", Times, serif;
             font-size: 2rem;
             font-weight: bold;
-            color: #2c2c2c;
+            color: #003772;
             line-height: 1;
         }
 
@@ -95,6 +95,39 @@
             color: #084298;
             border-left-color: #0d6efd;
         }
+
+        /* ================= FOOTER ================= */
+        .footer-area {
+            background: #001c4a;
+        padding: 60px 0 20px;
+        color: #676767;
+        }
+
+        .footer-tittle h4 {
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .footer-tittle ul li {
+            list-style: none;
+            margin-bottom: 10px;
+        }
+
+        .footer-tittle ul li a {
+            color: #884b4b;
+        }
+
+        .footer-tittle ul li a:hover {
+            color: #769af5;
+        }
+
+        .footer-bottom-area {
+            background: #e5e5e5;
+            padding: 15px 0;
+            font-size: 14px;
+        }
+
+
     </style>
 </head>
 
@@ -171,6 +204,86 @@
 
 <!-- ================= CONTENT ================= -->
 {% block content %}{% endblock %}
+
+<!-- ================= FOOTER ================= -->
+<footer>
+    <div class="footer-area footer-padding">
+        <div class="container-fluid">
+            <div class="row d-flex justify-content-between">
+
+                <!-- Logo & description -->
+                <div class="col-xl-3 col-lg-3 col-md-8 col-sm-8">
+                    <div class="single-footer-caption mb-50">
+                        <div class="footer-logo mb-35">
+                            <a href="{% url 'home' %}" style="font-size:24px; font-weight:bold; color:#769af5; text-decoration:none;">
+                                Luna Books
+                            </a>
+                        </div>
+                        <div class="footer-tittle">
+                            <p>Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>
+                        </div>
+                        <div class="footer-social">
+                            <a href="#"><i class="fab fa-twitter"></i></a>
+                            <a href="https://bit.ly/sai4ull"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-pinterest-p"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Quick links -->
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                    <div class="single-footer-caption mb-50">
+                        <h4>Quick links</h4>
+                        <ul>
+                            <li><a href="#">Image Licensin</a></li>
+                            <li><a href="#">Style Guide</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Shop Category -->
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                    <div class="single-footer-caption mb-50">
+                        <h4>Shop Category</h4>
+                        <ul>
+                            <li><a href="#">Image Licensin</a></li>
+                            <li><a href="#">Style Guide</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Partners -->
+                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                    <div class="single-footer-caption mb-50">
+                        <h4>Partners</h4>
+                        <ul>
+                            <li><a href="#">Image Licensin</a></li>
+                            <li><a href="#">Style Guide</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4">
+                    <div class="single-footer-caption mb-50">
+                        <h4>Get in touch</h4>
+                        <ul>
+                            <li><a href="#">(89) 982-278 356</a></li>
+                            <li><a href="#">demo@colorlib.com</a></li>
+                            <li><a href="#">67/A, Colorlib, Green road, NYC</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</footer>
+
+
 
 <!-- ================= FOOTER ================= -->
 <footer class="bg-dark text-light text-center py-3">
