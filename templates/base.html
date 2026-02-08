@@ -22,112 +22,36 @@
 
     <style>
         /* ================= BRAND / NAV ================= */
-        .navbar {
-            padding-top: 0.8rem;
-            padding-bottom: 0.8rem;
-        }
+        .navbar { padding-top: 0.8rem; padding-bottom: 0.8rem; }
+        .brand-logo { text-decoration: none; gap: 0.6rem; }
+        .brand-logo i { font-size: 1.6rem; color: #6f42c1; }
+        .brand-logo .moon-icon { color: #0050a7 !important; }
+        .brand-name { font-family: "Times New Roman", Times, serif; font-size: 2rem; font-weight: bold; color: #0050a7; line-height: 1; }
+        .brand-sub { font-family: 'Great Vibes', cursive; font-size: 1.5rem; color: #6f42c1; line-height: 1; margin-top: -2px; }
+        .main-heading, .book-title { font-family: 'Playfair Display', serif; font-weight: 600; color: #2c3e50; }
 
-        .brand-logo {
-            text-decoration: none;
-            gap: 0.6rem;
+        /* Profile icon adjustments */
+        .profile-icon {
+            font-size: 1.5rem; /* increased size */
+            color: #0050a7; /* same as moon icon */
+            cursor: pointer;
         }
-
-        .brand-logo i {
-            font-size: 1.6rem;
-            color: #6f42c1;
-        }
-
-        .brand-name {
-            font-family: "Times New Roman", Times, serif;
-            font-size: 2rem;
-            font-weight: bold;
-            color: #003772;
-            line-height: 1;
-        }
-
-        .brand-sub {
-            font-family: 'Great Vibes', cursive;
-            font-size: 1.5rem;
-            color: #6f42c1;
-            line-height: 1;
-            margin-top: -2px;
-        }
-
-        .main-heading, .book-title {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            color: #2c3e50;
-        }
+        .dropdown-toggle::after { display: none; } /* remove arrow */
 
         /* ================= MESSAGE STYLING ================= */
-        .custom-alert {
-            font-size: 0.95rem;
-            font-weight: 600;
-            border-radius: 8px;
-            padding: 14px 18px;
-            border-left: 5px solid;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.06);
-            max-width: 600px;
-            margin: 0 auto 10px;
-        }
-
-        .alert-success {
-            background-color: #eefaf3;
-            color: #1e7e34;
-            border-left-color: #28a745;
-        }
-
-        .alert-danger,
-        .alert-error {
-            background-color: #fdeeee;
-            color: #842029;
-            border-left-color: #dc3545;
-        }
-
-        .alert-warning {
-            background-color: #fff7e6;
-            color: #664d03;
-            border-left-color: #ffc107;
-        }
-
-        .alert-info {
-            background-color: #eef5ff;
-            color: #084298;
-            border-left-color: #0d6efd;
-        }
+        .custom-alert { font-size: 0.95rem; font-weight: 600; border-radius: 8px; padding: 14px 18px; border-left: 5px solid; box-shadow: 0 4px 12px rgba(0,0,0,0.06); max-width: 600px; margin: 0 auto 10px; }
+        .alert-success { background-color: #eefaf3; color: #1e7e34; border-left-color: #28a745; }
+        .alert-danger, .alert-error { background-color: #fdeeee; color: #842029; border-left-color: #dc3545; }
+        .alert-warning { background-color: #fff7e6; color: #664d03; border-left-color: #ffc107; }
+        .alert-info { background-color: #eef5ff; color: #084298; border-left-color: #0d6efd; }
 
         /* ================= FOOTER ================= */
-        .footer-area {
-            background: #001c4a;
-        padding: 60px 0 20px;
-        color: #676767;
-        }
-
-        .footer-tittle h4 {
-            font-weight: 600;
-            margin-bottom: 20px;
-        }
-
-        .footer-tittle ul li {
-            list-style: none;
-            margin-bottom: 10px;
-        }
-
-        .footer-tittle ul li a {
-            color: #884b4b;
-        }
-
-        .footer-tittle ul li a:hover {
-            color: #769af5;
-        }
-
-        .footer-bottom-area {
-            background: #e5e5e5;
-            padding: 15px 0;
-            font-size: 14px;
-        }
-
-
+        .footer-area { background: #001c4a; padding: 60px 0 20px; color: #676767; }
+        .footer-tittle h4 { font-weight: 600; margin-bottom: 20px; }
+        .footer-tittle ul li { list-style: none; margin-bottom: 10px; }
+        .footer-tittle ul li a { color: #884b4b; }
+        .footer-tittle ul li a:hover { color: #769af5; }
+        .footer-bottom-area { background: #e5e5e5; padding: 15px 0; font-size: 14px; }
     </style>
 </head>
 
@@ -137,7 +61,7 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
     <div class="container">
         <a class="navbar-brand d-flex align-items-center brand-logo" href="{% url 'home' %}">
-            <i class="fa-solid fa-moon"></i>
+            <i class="fa-solid fa-moon moon-icon"></i>
             <i class="fa-solid fa-book-open"></i>
             <div class="d-flex flex-column">
                 <span class="brand-name">Luna</span>
@@ -165,11 +89,13 @@
                     <li class="nav-item"><a class="nav-link" href="{% url 'wishlist' %}">Wishlist</a></li>
                     <li class="nav-item"><a class="nav-link" href="{% url 'my_orders' %}">My Orders</a></li>
 
+                    <!-- Profile Icon Only, bigger, same color, no arrow -->
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
-                            {{ user.username }}
+                        <a class="nav-link d-flex align-items-center profile-icon" data-bs-toggle="dropdown" href="#" role="button" aria-expanded="false">
+                            <i class="fa-solid fa-user"></i>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end">
+                            <li class="dropdown-item-text"><strong>{{ user.username }}</strong></li>
                             <li><a class="dropdown-item" href="{% url 'my_profile' %}">My Profile</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>
@@ -283,9 +209,6 @@
     </div>
 </footer>
 
-
-
-<!-- ================= FOOTER ================= -->
 <footer class="bg-dark text-light text-center py-3">
     <p class="mb-0">&copy; 2025 Luna Books</p>
 </footer>
