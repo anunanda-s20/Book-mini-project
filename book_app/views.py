@@ -14,10 +14,11 @@ from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileFor
 # =========================
 
 def home(request):
+    
     """
     HOME PAGE SECTIONS:
     1. Hero section (static)
-    2. Categories
+    2. Categories (books only)
     3. Popular Books (used for category-style UI)
     4. New Arrivals → ONLY books
     5. Book Essentials → ONLY accessories
@@ -25,7 +26,8 @@ def home(request):
 
     hero_range = range(1, 4)  # hero slider
 
-    categories = Category.objects.all()
+    # Categories → exclude accessories from filter buttons
+    categories = Category.objects.exclude(title__iexact="Book Accessories")
 
     # Popular Books (for your working category-style section)
     popular_books = Book.objects.filter(
@@ -52,7 +54,6 @@ def home(request):
         "new_arrivals": new_arrivals,
         "book_essentials": book_essentials,
     })
-
 
 
 # =========================
