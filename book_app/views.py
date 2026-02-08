@@ -10,44 +10,80 @@ from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileFor
 
 
 # =========================
-# 1️⃣ PUBLIC PAGES
+# 1️⃣ HOME PAGE
 # =========================
+
 def home(request):
-    hero_range = range(1, 4)
+    """
+    HOME PAGE SECTIONS:
+    1. Hero section (static)
+    2. Categories
+    3. Popular Books (used for category-style UI)
+    4. New Arrivals → ONLY books
+    5. Book Essentials → ONLY accessories
+    """
+
+    hero_range = range(1, 4)  # hero slider
 
     categories = Category.objects.all()
 
+    # Popular Books (for your working category-style section)
+    popular_books = Book.objects.filter(
+        is_active=True,
+        product_type='book'
+    )[:8]
+
+    # New Arrivals → ONLY BOOKS
     new_arrivals = Book.objects.filter(
-        is_active=True
+        is_active=True,
+        product_type='book'
     ).order_by('-created_at')[:4]
 
-    # ✅ Book Accessories as a separate section
-    accessories = Book.objects.filter(
-        category__title__iexact="Book Accessories",
-        is_active=True
-    )[:4]
+    # Book Essentials → ONLY ACCESSORIES
+    book_essentials = Book.objects.filter(
+        is_active=True,
+        product_type='accessory'
+    ).order_by('-created_at')[:4]
 
-    context = {
+    return render(request, 'book_app/home.html', {
         "hero_range": hero_range,
         "categories": categories,
+        "popular_books": popular_books,
         "new_arrivals": new_arrivals,
-        "accessories": accessories,
-    }
+        "book_essentials": book_essentials,
+    })
 
-    return render(request, 'book_app/home.html', context)
 
+
+# =========================
+# 2️⃣ BOOK LIST PAGE
+# =========================
 
 def book_list(request):
-    """List books with search, filter, and pagination"""
-    books = Book.objects.filter(is_active=True)
+    """
+    BOOK LIST PAGE
+    👉 Shows ONLY BOOKS
+    """
+
+    books = Book.objects.filter(
+        is_active=True,
+        product_type='book'
+    )
+
+    # Search
     query = request.GET.get("q", "")
     if query:
-        books = books.filter(Q(title__icontains=query) | Q(author__icontains=query))
+        books = books.filter(
+            Q(title__icontains=query) |
+            Q(author__icontains=query)
+        )
 
+    # Stock filter
     availability = request.GET.get("availability")
     if availability == "in_stock":
         books = books.filter(stock__gt=0)
 
+    # Sorting
     order = request.GET.get("order")
     if order == "price_low":
         books = books.order_by("price")
@@ -56,6 +92,7 @@ def book_list(request):
     elif order == "alpha":
         books = books.order_by("title")
 
+    # Pagination
     paginator = Paginator(books, 8)
     page_obj = paginator.get_page(request.GET.get("page"))
 
@@ -67,11 +104,27 @@ def book_list(request):
     })
 
 
+# =========================
+# 3️⃣ BOOK / ACCESSORY DETAIL
+# =========================
+
 def book_detail(request, id):
-    """Show single book details"""
+    """
+    SINGLE PRODUCT PAGE
+    👉 Works for BOTH books & accessories
+    """
+
     book = get_object_or_404(Book, id=id, is_active=True)
-    is_wishlisted = Wishlist.objects.filter(user=request.user, book=book).exists() if request.user.is_authenticated else False
-    return render(request, 'book_app/book_detail.html', {'book': book, 'is_wishlisted': is_wishlisted})
+
+    is_wishlisted = (
+        Wishlist.objects.filter(user=request.user, book=book).exists()
+        if request.user.is_authenticated else False
+    )
+
+    return render(request, 'book_app/book_detail.html', {
+        'book': book,
+        'is_wishlisted': is_wishlisted
+    })
 
 
 # =========================
@@ -202,20 +255,32 @@ def dashboard_order_detail(request, order_id):
 
 
 # =========================
-# 6️⃣ CART
+# 4️⃣ CART
 # =========================
+
 @login_required
 def add_to_cart(request, book_id):
+    """
+    ADD TO CART
+    👉 Allows BOTH books & accessories
+    """
+
     book = get_object_or_404(Book, id=book_id)
+
     if book.stock <= 0:
         messages.error(request, "Out of stock")
-        return redirect('book_list')
+        return redirect(request.META.get('HTTP_REFERER', 'home'))
+
     cart, _ = Cart.objects.get_or_create(user=request.user)
     item, created = CartItem.objects.get_or_create(cart=cart, book=book)
+
     if not created and item.quantity < book.stock:
         item.quantity += 1
         item.save()
+
     return redirect('view_cart')
+
+
 
 
 @login_required
@@ -391,11 +456,25 @@ def order_success(request):
 def about(request):
     return render(request, 'book_app/about.html')
 
-#categories-home page
+
+# =========================
+# 5️⃣ CATEGORY PAGE
+# =========================
 
 def category_books(request, category_id):
+    """
+    CATEGORY PAGE
+    👉 Shows ONLY BOOKS
+    """
+
     category = get_object_or_404(Category, id=category_id)
-    books = Book.objects.filter(category=category, is_active=True)
+
+    books = Book.objects.filter(
+        category=category,
+        is_active=True,
+        product_type='book'
+    )
+
     return render(request, 'book_app/category_books.html', {
         'category': category,
         'books': books

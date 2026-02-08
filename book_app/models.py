@@ -6,20 +6,23 @@ from django.dispatch import receiver
 # ================= USER PROFILE =================
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    phone = models.CharField(max_length=15, blank=True)  # optional phone
+    phone = models.CharField(max_length=15, blank=True)
 
     def __str__(self):
         return self.user.username
+
 
 @receiver(post_save, sender=User)
 def create_user_profile(sender, instance, created, **kwargs):
     if created:
         UserProfile.objects.create(user=instance)
 
+
 @receiver(post_save, sender=User)
 def save_user_profile(sender, instance, **kwargs):
     if hasattr(instance, 'userprofile'):
         instance.userprofile.save()
+
 
 # ================= CATEGORY =================
 class Category(models.Model):
@@ -34,18 +37,48 @@ class Category(models.Model):
     def __str__(self):
         return self.title
 
+
+# ================= BOOK =================
 # ================= BOOK =================
 class Book(models.Model):
+
+    # 🔹 Distinguish Books vs Accessories
+    PRODUCT_TYPE_CHOICES = (
+        ('book', 'Book'),
+        ('accessory', 'Accessory'),
+    )
+
+    product_type = models.CharField(
+        max_length=20,
+        choices=PRODUCT_TYPE_CHOICES,
+        default='book'
+    )
+
+    category = models.ForeignKey(
+        Category,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True
+    )
+
     title = models.CharField(max_length=200)
-    author = models.CharField(max_length=100)
-    price = models.DecimalField(max_digits=6, decimal_places=2)
+
+    # Author is required ONLY for books, optional for accessories
+    author = models.CharField(
+        max_length=100,
+        blank=True
+    )
+
+    price = models.DecimalField(max_digits=8, decimal_places=2)
     description = models.TextField(blank=True)
+
     stock = models.PositiveIntegerField(default=0)
     is_active = models.BooleanField(default=True)
-    published_date = models.DateField(blank=True, null=True)
+
+    published_date = models.DateField(null=True, blank=True)
+
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    category = models.ForeignKey(Category, on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.title
@@ -54,13 +87,19 @@ class Book(models.Model):
     def availability_status(self):
         return "In Stock" if self.stock > 0 else "Out of Stock"
 
+
 # ================= BOOK IMAGE =================
 class BookImage(models.Model):
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, related_name='images')
+    book = models.ForeignKey(
+        Book,
+        on_delete=models.CASCADE,
+        related_name='images'
+    )
     image = models.ImageField(upload_to='book_images/')
 
     def __str__(self):
         return f"Image for {self.book.title}"
+
 
 # ================= ADDRESS =================
 class Address(models.Model):
@@ -76,6 +115,7 @@ class Address(models.Model):
     def __str__(self):
         return f"{self.full_name} - {self.city}"
 
+
 # ================= ORDER =================
 class Order(models.Model):
     STATUS_CHOICES = [
@@ -85,6 +125,7 @@ class Order(models.Model):
         ('delivered', 'Delivered'),
         ('cancelled', 'Cancelled'),
     ]
+
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)
     total_price = models.DecimalField(max_digits=8, decimal_places=2)
@@ -95,6 +136,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.user.username}"
 
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -104,6 +146,7 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.book.title} x {self.quantity}"
 
+
 # ================= CART =================
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -112,6 +155,7 @@ class Cart(models.Model):
     def __str__(self):
         return f"Cart of {self.user.username}"
 
+
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')
     book = models.ForeignKey(Book, on_delete=models.CASCADE)
@@ -119,6 +163,7 @@ class CartItem(models.Model):
 
     def __str__(self):
         return f"{self.book.title} x {self.quantity}"
+
 
 # ================= WISHLIST =================
 class Wishlist(models.Model):
@@ -131,14 +176,3 @@ class Wishlist(models.Model):
 
     def __str__(self):
         return f"{self.user.username} - {self.book.title}"
-
-# ================= RELATED ITEMS (New Section) =================
-class RelatedItem(models.Model):
-    name = models.CharField(max_length=100)  # e.g., Candle, Bookmark
-    price = models.DecimalField(max_digits=8, decimal_places=2)
-    image = models.ImageField(upload_to='related_items/')
-    description = models.TextField(blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.name

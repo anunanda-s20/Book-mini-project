@@ -5,7 +5,7 @@
 
 <!-- ================= HERO AREA ================= -->
 <style>
-/* Hero carousel */
+/* Hero slider layout */
 #heroCarousel { margin: 0; padding: 0; }
 #heroCarousel .carousel-inner,
 #heroCarousel .carousel-item {
@@ -14,177 +14,121 @@
     background-size: cover;
     background-position: center;
 }
+
+/* Hero text positioning */
 #heroCarousel .hero-caption {
     position: absolute;
     top: 50%;
     left: 5%;
     transform: translateY(-50%);
     z-index: 10;
-    text-align: left;
 }
-#heroCarousel .hero-caption h1 {
-    font-size: 3rem;
-    font-weight: bold;
-    color: #fff;
-    text-shadow: 2px 2px 8px rgba(101, 91, 237, 0.7);
-    line-height: 1.2;
-}
-#heroCarousel .hero-caption .btn {
-    padding: 0.9rem 2rem;
-    font-size: 1.4rem;
-    margin-top: 1rem;
-    font-weight: bold;
-}
-#heroCarousel .carousel-control-prev,
-#heroCarousel .carousel-control-next { width: 5%; }
 
-/* Popular Items */
-.single-popular-items {
-    position: relative;
-    overflow: hidden;
-    border-radius: 12px;
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-.single-popular-items:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    cursor: pointer;
-}
-.img-cap {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 5px 10px;
-    color: #fff;
-    font-weight: bold;
-    border-radius: 5px;
-    font-size: 0.85rem;
-    text-transform: uppercase;
-}
-.favorit-items {
-    position: absolute;
-    bottom: -50px; 
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-    transition: bottom 0.3s ease;
-}
-.single-popular-items:hover .favorit-items { bottom: 10px; }
-.category-filter-btns {
-    text-align: center;
-    margin-bottom: 30px;
-}
-.category-filter-btns button {
-    margin: 5px;
-    padding: 0.5rem 1rem;
-    border: none;
-    border-radius: 5px;
-    background-color: #6f4ceb;
-    color: #f5f3fe;
-    font-weight: bold;
-    cursor: pointer;
-    transition: 0.3s;
-}
-.category-filter-btns button:hover { background-color: #9253f1; }
-.favorit-items .btn {
-    background-color: #6f4ceb;
-    color: #f5f3fe;
-    font-weight: bold;
-    transition: 0.3s;
-}
-.favorit-items .btn:hover { background-color: #9253f1; color: #fff; }
-.category-heading { text-align: center; font-weight: bold; color: #654beb; margin-bottom: 20px; }
-
-/* New Arrivals (book_list style) */
-.new-arrival .card {
-    position: relative;
-    border-radius: 12px;
-    overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-.new-arrival .stock {
-    font-weight: 600; font-size: 0.85rem; padding: 0.35rem 0.7rem; border-radius: 0.6rem;
-    font-family: 'Segoe UI', sans-serif; position: absolute; top: 10px; right: 10px; z-index: 5;
-}
-.in-stock { background-color: #27ae60; color: #fff; }
-.low-stock { background-color: #f1c40f; color: #3e3e3e; }
-.out-stock { background-color: #e74c3c; color: #fff; }
-.card-body h5 { font-size: 1.1rem; font-weight: 600; margin-bottom: 0.2rem; }
-.card-body p { margin-bottom: 0.3rem; }
-.card-body .price { font-weight: 700; color: #4b2f6f; }
-
-/* Kitabay-style Cart Icon */
-.cart-icon-svg svg {
-    color: #6f4ceb;      /* main theme color */
-    background: #fff;    /* white bg */
-    border-radius: 50%;
-    padding: 4px;
-    transition: 0.3s;
-}
-.cart-icon-svg:hover svg {
-    color: #9253f1;
-    transform: scale(1.1);
+/* Cart icon size */
+.cart-icon-svg {
+    font-size: 20px;
 }
 </style>
 
-<!-- ================= HERO ================= -->
+<!-- ================= HERO SECTION ================= -->
 <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
+
     <div class="carousel-inner">
+
+        <!-- Loop hero images -->
         {% for i in hero_range %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}" 
-             style="background: url('{% static 'book_app/img/hero/hero' %}{{ i }}.jpg') center/cover no-repeat;">
+        <div class="carousel-item {% if forloop.first %}active{% endif %}"
+             style="background:url('{% static 'book_app/img/hero/hero' %}{{ i }}.jpg') center/cover no-repeat;">
         </div>
         {% endfor %}
+
     </div>
-    <div class="carousel-caption hero-caption">
+
+    <!-- ✅ ADDED: PREVIOUS ARROW -->
+    <button class="carousel-control-prev"
+            type="button"
+            data-bs-target="#heroCarousel"
+            data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+    </button>
+
+    <!-- ✅ ADDED: NEXT ARROW -->
+    <button class="carousel-control-next"
+            type="button"
+            data-bs-target="#heroCarousel"
+            data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+    </button>
+
+    <!-- Hero caption -->
+    <div class="carousel-caption hero-caption text-start">
         <h1>Discover<br>Your Next<br>Favorite Book</h1>
         <a href="{% url 'book_list' %}" class="btn btn-primary">Shop Now</a>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-        <span class="visually-hidden">Previous</span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-        <span class="visually-hidden">Next</span>
-    </button>
+
 </div>
 
-<!-- ================= POPULAR ITEMS ================= -->
+<!-- ================= CATEGORY SECTION ================= -->
 <div class="popular-items pt-50">
     <div class="container-fluid">
-        <div class="category-heading"><h2>Explore by Category</h2></div>
-        <div class="category-filter-btns">
-            <button onclick="filterCategory('all')">All</button>
+
+        <h2 class="text-center fw-bold mb-4">Explore by Category</h2>
+
+        <!-- Category filter buttons -->
+        <div class="text-center mb-4">
+            <button onclick="filterCategory('all')" class="btn btn-primary btn-sm">
+                All
+            </button>
+
             {% for cat in categories %}
-            <button onclick="filterCategory('{{ cat.title|slugify }}')">{{ cat.title }}</button>
+            <button onclick="filterCategory('{{ cat.title|slugify }}')"
+                    class="btn btn-outline-primary btn-sm">
+                {{ cat.title }}
+            </button>
             {% endfor %}
         </div>
+
+        <!-- Books used ONLY for category filtering -->
         <div class="row" id="popularItemsRow">
-            {% for item in popular_items %}
-            <div class="col-lg-3 col-md-6 col-sm-6 popular-item" data-category="{{ item.category|slugify }}">
-                <div class="single-popular-items mb-50 text-center position-relative">
-                    <div class="popular-img position-relative">
-                        {% if item.images.exists %}
-                            <img src="{{ item.images.first.image.url }}" alt="{{ item.title }}" class="img-fluid">
-                        {% else %}
-                            <img src="{% static 'book_app/img/default-book.png' %}" alt="{{ item.title }}" class="img-fluid">
-                        {% endif %}
-                        <!-- Category badge -->
-                        <div class="img-cap"><span>{{ item.category }}</span></div>
-                        <!-- Kitabay cart icon -->
-                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                            </svg>
-                        </a>
-                        <div class="favorit-items">
-                            <a href="{% url 'book_detail' item.id %}" class="btn">Shop Now</a>
-                        </div>
+
+            {% for item in popular_books %}
+            <div class="col-lg-3 col-md-6 mb-4 popular-item"
+                 data-category="{{ item.category.title|slugify }}">
+
+                <div class="card h-100 text-center position-relative">
+
+                    <!-- Add to cart -->
+                    <a href="{% url 'add_to_cart' item.id %}"
+                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                        🛒
+                    </a>
+
+                    <!-- Book detail -->
+                    <a href="{% url 'book_detail' item.id %}">
+                        {% with item.images.first as img %}
+                            {% if img %}
+                                <img src="{{ img.image.url }}"
+                                     class="card-img-top"
+                                     alt="{{ item.title }}">
+                            {% else %}
+                                <img src="{% static 'book_app/img/default-book.png' %}"
+                                     class="card-img-top"
+                                     alt="No image">
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+
+                    <div class="card-body">
+                        <h5>{{ item.title }}</h5>
+                        <p class="fw-bold">₹ {{ item.price }}</p>
                     </div>
+
                 </div>
             </div>
+            {% empty %}
+            <p class="text-center text-muted">No books found.</p>
             {% endfor %}
+
         </div>
     </div>
 </div>
@@ -192,49 +136,39 @@
 <!-- ================= NEW ARRIVALS ================= -->
 <section class="new-arrival my-5">
     <div class="container">
-        <div class="row justify-content-center mb-5">
-            <div class="col-xl-8 col-lg-10 text-center">
-                <h2 class="fw-bold display-5" style="color: #4b2f6f; line-height: 1.2;">New Arrivals</h2>
-                <p class="text-muted" style="font-size: 1rem; margin-top: 0.5rem;">
-                    Discover the latest books just added to our collection
-                </p>
-            </div>
-        </div>
+
+        <h2 class="text-center fw-bold mb-3">New Arrivals</h2>
 
         <div class="row">
             {% for book in new_arrivals %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-                <div class="card h-100 text-center position-relative">
-                    {% if book.stock == 0 %}
-                        <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
-                    {% elif book.stock <= 3 %}
-                        <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
-                    {% else %}
-                        <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
-                    {% endif %}
+            <div class="col-lg-3 col-md-6 mb-4">
 
-                    <!-- Kitabay cart icon top-left -->
-                    <a href="{% url 'add_to_cart' book.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                          <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                        </svg>
+                <div class="card h-100 text-center position-relative">
+
+                    <a href="{% url 'add_to_cart' book.id %}"
+                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                        🛒
                     </a>
 
                     <a href="{% url 'book_detail' book.id %}">
                         {% with book.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ book.title }}">
+                                <img src="{{ img.image.url }}"
+                                     class="card-img-top"
+                                     alt="{{ book.title }}">
                             {% else %}
-                                <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
+                                <img src="{% static 'book_app/img/default-book.png' %}"
+                                     class="card-img-top"
+                                     alt="No image">
                             {% endif %}
                         {% endwith %}
                     </a>
 
                     <div class="card-body">
-                        <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="text-muted">{{ book.author }}</p>
+                        <h5>{{ book.title }}</h5>
                         <p class="fw-bold">₹ {{ book.price }}</p>
                     </div>
+
                 </div>
             </div>
             {% empty %}
@@ -242,81 +176,69 @@
             {% endfor %}
         </div>
 
-        <div class="text-center mt-4">
-            <a href="{% url 'book_list' %}" class="btn btn-outline-primary">Browse More</a>
-        </div>
-    </div>
-</section>
-
-<!-- ================= BOOK ACCESSORIES ================= -->
-<section class="new-arrival my-5" style="background:#faf8ff;">
-    <div class="container">
-
-        <div class="row justify-content-center mb-5">
-            <div class="col-xl-8 col-lg-10 text-center">
-                <h2 class="fw-bold display-5" style="color:#4b2f6f;">
-                    Reading Essentials
-                </h2>
-                <p class="text-muted">
-                    Bookish accessories to elevate your reading time
-                </p>
-            </div>
-        </div>
-
-        <div class="row">
-            {% for item in accessories %}
-            <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-                <div class="card h-100 text-center position-relative">
-
-                    <!-- Cart icon -->
-                    <a href="{% url 'add_to_cart' item.id %}"
-                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                             fill="currentColor" viewBox="0 0 16 16">
-                          <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5z"/>
-                        </svg>
-                    </a>
-
-                    <a href="{% url 'book_detail' item.id %}">
-                        {% with item.images.first as img %}
-                            {% if img %}
-                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
-                            {% else %}
-                                <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top">
-                            {% endif %}
-                        {% endwith %}
-                    </a>
-
-                    <div class="card-body">
-                        <h5 class="card-title">{{ item.title }}</h5>
-                        <p class="fw-bold">₹ {{ item.price }}</p>
-                    </div>
-
-                </div>
-            </div>
-            {% empty %}
-            <p class="text-center text-muted">
-                No accessories available yet.
-            </p>
-            {% endfor %}
-        </div>
-
-        <div class="text-center mt-4">
-            <a href="{% url 'book_list' %}?category=book-accessories"
-               class="btn btn-outline-primary">
-                View All Accessories
+        <div class="text-center">
+            <a href="{% url 'book_list' %}" class="btn btn-outline-primary">
+                Browse More
             </a>
         </div>
 
     </div>
 </section>
 
+<!-- ================= BOOK ESSENTIALS ================= -->
+<section class="my-5" style="background:#faf8ff;">
+    <div class="container">
 
+        <h2 class="text-center fw-bold mb-3">Reading Essentials</h2>
+
+        <div class="row">
+            {% for item in book_essentials %}
+            <div class="col-lg-3 col-md-6 mb-4">
+
+                <div class="card h-100 text-center position-relative">
+
+                    <a href="{% url 'add_to_cart' item.id %}"
+                       class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                        🛒
+                    </a>
+
+                    <a href="{% url 'book_detail' item.id %}">
+                        {% with item.images.first as img %}
+                            {% if img %}
+                                <img src="{{ img.image.url }}"
+                                     class="card-img-top"
+                                     alt="{{ item.title }}">
+                            {% else %}
+                                <img src="{% static 'book_app/img/default-book.png' %}"
+                                     class="card-img-top"
+                                     alt="No image">
+                            {% endif %}
+                        {% endwith %}
+                    </a>
+
+                    <div class="card-body">
+                        <h5>{{ item.title }}</h5>
+                        <p class="fw-bold">₹ {{ item.price }}</p>
+                    </div>
+
+                </div>
+            </div>
+            {% empty %}
+            <p class="text-center text-muted">No accessories available yet.</p>
+            {% endfor %}
+        </div>
+
+    </div>
+</section>
+
+<!-- ================= CATEGORY FILTER SCRIPT ================= -->
 <script>
 function filterCategory(category) {
-    const items = document.querySelectorAll('.popular-item');
-    items.forEach(item => {
-        item.style.display = (category === 'all' || item.dataset.category === category) ? 'block' : 'none';
+    document.querySelectorAll('.popular-item').forEach(item => {
+        item.style.display =
+            (category === 'all' || item.dataset.category === category)
+            ? 'block'
+            : 'none';
     });
 }
 </script>
