@@ -140,11 +140,11 @@ img {
         </div>
 
         <div class="row" id="popularItemsRow">
-            {% for item in popular_books %}
+            {% comment %} Show only first 8 books initially {% endcomment %}
+            {% for item in popular_books|slice:":8" %}
                 <div class="col-lg-3 col-md-6 mb-4 popular-item" data-category="{{ item.category.title|slugify }}">
                     <div class="card h-100 text-center position-relative">
 
-                        <!-- Stock -->
                         {% if item.stock == 0 %}
                             <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
                         {% elif item.stock <= 3 %}
@@ -153,7 +153,6 @@ img {
                             <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
                         {% endif %}
 
-                        <!-- Cart Icon -->
                         <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
                               <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
@@ -175,13 +174,19 @@ img {
                         </div>
                     </div>
                 </div>
-            {% empty %}
-                <p class="text-center text-muted">No books found.</p>
             {% endfor %}
         </div>
+
+        <!-- ================= VIEW MORE BUTTON ================= -->
+        {% if popular_books|length > 8 %}
+        <div class="text-center">
+            <a href="{% url 'book_list' %}" class="btn btn-outline-primary">View More</a>
+        </div>
+        {% endif %}
     </div>
 </div>
 
+<!-- ================= NEW ARRIVALS / BOOK ESSENTIALS / USP ================= -->
 <!-- ================= NEW ARRIVALS ================= -->
 <section class="new-arrival my-5">
     <div class="container">
@@ -288,13 +293,13 @@ img {
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="single-cat mb-50">
                     <div class="cat-icon"><img src="{% static 'book_app/img/icon/services2.svg' %}" alt="24/7 Support"></div>
-                    <div class="cat-cap"><h5>24/7 Support</h5><p>We are here to help</p></div>
+                    <div class="cat-cap"><h5>Secure Payment</h5><p>100% secure checkout</p></div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
                 <div class="single-cat mb-50">
                     <div class="cat-icon"><img src="{% static 'book_app/img/icon/services3.svg' %}" alt="Secure Payment"></div>
-                    <div class="cat-cap"><h5>Secure Payment</h5><p>100% secure checkout</p></div>
+                    <div class="cat-cap"><h5>24/7 Support</h5><p>We are here to help</p></div>
                 </div>
             </div>
             <div class="col-lg-3 col-md-6 col-sm-6">
@@ -306,6 +311,7 @@ img {
         </div>
     </div>
 </section>
+
 
 <!-- ================= CATEGORY FILTER SCRIPT ================= -->
 <script>
