@@ -28,7 +28,7 @@
 
 /* Hero heading */
 #heroCarousel .hero-caption h1 {
-    font-size: 3.3rem;  /* slightly bigger for homepage */
+    font-size: 3.3rem;
     font-weight: 1000;
     line-height: 1.1;
     letter-spacing: 1px;
@@ -55,13 +55,37 @@
 
 /* ================= CATEGORY / NEW ARRIVALS / BOOK ESSENTIALS HEADINGS ================= */
 h2.text-center.fw-bold {
-    font-size: 2.4rem;  /* bigger, homepage friendly */
+    font-size: 2.4rem;
     letter-spacing: 1px;
     margin-bottom: 30px;
 }
 
-/* Cart icon size */
+/* Cart icon and Stock */
 .cart-icon-svg { font-size: 20px; }
+.stock {
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.6rem;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.in-stock { background-color: #27ae60; color: #ffffff; }
+.low-stock { background-color: #f1c40f; color: #3e3e3e; }
+.out-stock { background-color: #e74c3c; color: #ffffff; }
+
+/* Kitabay Cart Icon */
+.cart-icon-svg svg {
+    color: #6f4ceb;
+    background: #fff;
+    border-radius: 50%;
+    padding: 4px;
+    transition: 0.3s;
+}
+.cart-icon-svg:hover svg {
+    color: #9253f1;
+    transform: scale(1.1);
+}
 
 /* USP / Services Section - keep unchanged */
 .categories-area { background-color: #f8f9fa; padding: 50px 0; }
@@ -119,7 +143,23 @@ img {
             {% for item in popular_books %}
                 <div class="col-lg-3 col-md-6 mb-4 popular-item" data-category="{{ item.category.title|slugify }}">
                     <div class="card h-100 text-center position-relative">
-                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
+
+                        <!-- Stock -->
+                        {% if item.stock == 0 %}
+                            <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
+                        {% elif item.stock <= 3 %}
+                            <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
+                        {% else %}
+                            <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
+                        {% endif %}
+
+                        <!-- Cart Icon -->
+                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </a>
+
                         <a href="{% url 'book_detail' item.id %}">
                             {% with item.images.first as img %}
                                 {% if img %}
@@ -150,7 +190,21 @@ img {
             {% for book in new_arrivals %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card h-100 text-center position-relative">
-                        <a href="{% url 'add_to_cart' book.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
+
+                        {% if book.stock == 0 %}
+                            <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
+                        {% elif book.stock <= 3 %}
+                            <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
+                        {% else %}
+                            <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
+                        {% endif %}
+
+                        <a href="{% url 'add_to_cart' book.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </a>
+
                         <a href="{% url 'book_detail' book.id %}">
                             {% with book.images.first as img %}
                                 {% if img %}
@@ -184,7 +238,21 @@ img {
             {% for item in book_essentials %}
                 <div class="col-lg-3 col-md-6 mb-4">
                     <div class="card h-100 text-center position-relative">
-                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
+
+                        {% if item.stock == 0 %}
+                            <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
+                        {% elif item.stock <= 3 %}
+                            <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
+                        {% else %}
+                            <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
+                        {% endif %}
+
+                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                              <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </a>
+
                         <a href="{% url 'book_detail' item.id %}">
                             {% with item.images.first as img %}
                                 {% if img %}
