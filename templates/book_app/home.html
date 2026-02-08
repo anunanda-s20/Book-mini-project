@@ -116,18 +116,34 @@
 }
 
 
+img {
+    user-select: none;       /* Prevent text selection */
+    pointer-events: auto;    /* Allow clicks only if needed */
+    -webkit-user-drag: none; /* Prevent drag on Chrome/Safari */
+    -khtml-user-drag: none;  /* Older browsers */
+    -moz-user-drag: none;    /* Firefox */
+    -o-user-drag: none;      /* Opera */
+    user-drag: none;         /* Standard property */
+}
+
 </style>
 
 </style>
+
 
 <!-- ================= HERO SECTION ================= -->
+ 
 <div id="heroCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        {% for i in hero_range %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}"
-             style="background:url('{% static 'book_app/img/hero/hero' %}{{ i }}.jpg') center/cover no-repeat;">
+        <div class="carousel-item active" 
+             style="background:url('{% static 'book_app/img/hero/newhero1.jpg' %}') center/cover no-repeat;">
         </div>
-        {% endfor %}
+        <div class="carousel-item" 
+             style="background:url('{% static 'book_app/img/hero/newhero2.jpg' %}') center/cover no-repeat;">
+        </div>
+        <div class="carousel-item" 
+             style="background:url('{% static 'book_app/img/hero/newhero3.jpg' %}') center/cover no-repeat;">
+        </div>
     </div>
 
     <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
