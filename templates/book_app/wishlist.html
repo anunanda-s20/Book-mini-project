@@ -46,7 +46,7 @@
                         <p class="text-muted mb-1">{{ item.book.author }}</p>
                         <p class="fw-bold mb-1">₹{{ item.book.price }}</p>
 
-                        <!-- Stock badge: styled like Book List -->
+                        <!-- Stock badge -->
                         {% if item.book.stock|default:0 == 0 %}
                             <span class="badge out-stock">Out of Stock</span>
                         {% elif item.book.stock|default:0 <= 3 %}
@@ -79,33 +79,59 @@
         </div>
 
     {% else %}
-        <!-- Empty wishlist -->
-        <p class="text-center text-muted">
-            Your wishlist is empty. <a href="{% url 'book_list' %}">Browse books →</a>
-        </p>
+        <!-- ✅ EMPTY WISHLIST UI (ONLY ADDITION) -->
+        <div class="wishlist-empty">
+            <i class="fas fa-heart-broken mb-3"></i>
+            <h4>Your wishlist is empty</h4>
+            <p>Save books you love and find them here anytime.</p>
+            <a href="{% url 'book_list' %}" class="btn btn-outline-primary mt-2">
+                Browse books
+            </a>
+        </div>
     {% endif %}
 
 </div>
 
-<!-- Hover effect & stock badge styles -->
+<!-- Styles -->
 <style>
+/* Hover effect */
 .wishlist-item:hover {
     background-color: #f9f9f9;
     transition: background-color 0.2s ease-in-out;
 }
 
-/* Stock badges matching Book List page */
+/* Stock badges */
 .badge.in-stock {
-    background-color: #27ae60; /* green */
+    background-color: #27ae60;
     color: #ffffff;
 }
 .badge.low-stock {
-    background-color: #f1c40f; /* yellow */
+    background-color: #f1c40f;
     color: #3e3e3e;
 }
 .badge.out-stock {
-    background-color: #e74c3c; /* red */
+    background-color: #e74c3c;
     color: #ffffff;
+}
+
+/* ✅ EMPTY WISHLIST ALIGNMENT */
+.wishlist-empty {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #666;
+}
+
+.wishlist-empty i {
+    font-size: 3rem;
+    color: #e57373;
+}
+
+.wishlist-empty h4 {
+    font-weight: 600;
 }
 </style>
 {% endblock %}

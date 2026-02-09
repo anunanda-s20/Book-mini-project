@@ -65,13 +65,11 @@
 
                     <!-- Quantity controls -->
                     <td>
-                        <!-- Decrease -->
                         <a href="{% url 'decrease_quantity' item.id %}"
                            class="btn btn-sm btn-outline-secondary">−</a>
 
                         <span class="mx-2">{{ item.quantity }}</span>
 
-                        <!-- Increase (disabled if stock reached) -->
                         <a href="{% url 'increase_quantity' item.id %}"
                            class="btn btn-sm btn-outline-secondary"
                            {% if item.quantity >= item.book.stock %}
@@ -102,12 +100,10 @@
     <!-- Total + buttons -->
     <div class="d-flex justify-content-between align-items-center mt-4">
 
-        <!-- Continue shopping -->
         <a href="{% url 'book_list' %}" class="btn btn-outline-primary">
             ← Continue Shopping
         </a>
 
-        <!-- Total + checkout -->
         <div class="card p-3" style="min-width: 250px;">
             <h5>
                 Total:
@@ -124,15 +120,39 @@
 
     {% else %}  <!-- Cart empty -->
 
-    <div class="text-center mt-5">
-        <h4>Your cart is empty 🛒</h4>
-        <a href="{% url 'book_list' %}"
-           class="btn btn-primary mt-3">
-            Browse Books
+    <!-- ✅ EMPTY CART UI (ONLY ADDITION) -->
+    <div class="cart-empty">
+        <i class="fas fa-shopping-cart mb-3"></i>
+        <h4>Your cart is waiting 🛒</h4>
+        <p>Discover books you’ll love and add them to your cart when you’re ready.</p>
+        <a href="{% url 'book_list' %}" class="btn btn-outline-primary mt-2">
+            Explore books
         </a>
     </div>
 
     {% endif %}
 
 </div>
+
+<!-- Empty cart styles -->
+<style>
+.cart-empty {
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: #666;
+}
+
+.cart-empty i {
+    font-size: 3rem;
+    color: #6c757d;
+}
+
+.cart-empty h4 {
+    font-weight: 600;
+}
+</style>
 {% endblock %}

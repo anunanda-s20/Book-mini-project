@@ -16,7 +16,9 @@
 <div class="container my-4" style="max-width: 900px;">
 
     <!-- Page title -->
-    <h2 class="main-heading mb-4">My Orders</h2>  <!-- Added main-heading class -->
+    <h2 class="mb-4">
+        📦 My Orders
+    </h2>
 
     {% if orders %}
         {% for order in orders %}
@@ -81,9 +83,33 @@
         </div>
         {% endfor %}
     {% else %}
-        <div class="alert alert-info">
-            You haven’t placed any orders yet.
+
+        <!-- ================= EMPTY ORDERS UI ================= -->
+        <div class="text-center mt-5 py-5">
+
+            <!-- Icon -->
+            <div class="mb-3" style="font-size: 3rem;">
+                📘
+            </div>
+
+            <!-- Heading -->
+            <h5 class="fw-bold">
+                Your reading journey hasn’t started yet
+            </h5>
+
+            <!-- Sub text -->
+            <p class="text-muted mt-2">
+                Every great reader begins with a single book.<br>
+                Let’s get started
+            </p>
+
+            <!-- Action button -->
+            <a href="{% url 'book_list' %}" class="btn btn-primary mt-3">
+                Start Reading
+            </a>
+
         </div>
+
     {% endif %}
 
 </div>
@@ -106,14 +132,12 @@
 
             <!-- Modal footer -->
             <div class="modal-footer justify-content-center gap-2">
-                <!-- No button -->
                 <button
                     class="btn btn-outline-secondary action-btn"
                     data-bs-dismiss="modal">
                     No
                 </button>
 
-                <!-- Yes Cancel button -->
                 <a
                     id="confirmCancelBtn"
                     href="#"
