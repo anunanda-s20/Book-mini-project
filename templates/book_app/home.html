@@ -8,86 +8,40 @@
 /* Hero slider layout */
 #heroCarousel { margin: 0; padding: 0; }
 #heroCarousel .carousel-inner,
-#heroCarousel .carousel-item {
-    height: 100vh;
-    width: 100%;
-    background-size: cover;
-    background-position: center;
-}
+#heroCarousel .carousel-item { height: 100vh; width: 100%; background-size: cover; background-position: center; }
 
 /* Hero text positioning */
 #heroCarousel .hero-caption {
-    position: absolute;
-    top: 50%;
-    left: 10%;
-    transform: translateY(-50%);
-    z-index: 5;
-    max-width: 520px;
-    text-align: left;
+    position: absolute; top: 50%; left: 10%;
+    transform: translateY(-50%); z-index: 5; max-width: 520px; text-align: left;
 }
 
 /* Hero heading */
 #heroCarousel .hero-caption h1 {
-    font-size: 3.3rem;
-    font-weight: 1000;
-    line-height: 1.1;
-    letter-spacing: 1px;
-    color: #ffffff;
-    text-shadow: 0 2px 6px rgba(0, 0, 0, 0.35);
-    margin-bottom: 24px;
+    font-size: 3.3rem; font-weight: 1000; line-height: 1.1; letter-spacing: 1px; color: #fff; text-shadow: 0 2px 6px rgba(0,0,0,0.35); margin-bottom: 24px;
 }
 
 /* Hero button */
 #heroCarousel .hero-caption .btn {
-    padding: 1rem 3rem;
-    font-size: 1.15rem;
-    font-weight: 700;
-    border-radius: 6px;
-    background-color: #7478fb;
-    color: #ffffff;
-    border: none;
-    transition: all 0.25s ease;
+    padding: 1rem 3rem; font-size: 1.15rem; font-weight: 700; border-radius: 6px; background-color: #7478fb; color: #fff; border: none; transition: all 0.25s ease;
 }
-#heroCarousel .hero-caption .btn:hover {
-    background-color: #6377f9;
-    transform: translateY(-1px);
-}
+#heroCarousel .hero-caption .btn:hover { background-color: #6377f9; transform: translateY(-1px); }
 
 /* ================= CATEGORY / NEW ARRIVALS / BOOK ESSENTIALS HEADINGS ================= */
-h2.text-center.fw-bold {
-    font-size: 2.4rem;
-    letter-spacing: 1px;
-    margin-bottom: 30px;
-}
+h2.text-center.fw-bold { font-size: 2.4rem; letter-spacing: 1px; margin-bottom: 30px; }
 
 /* Cart icon and Stock */
 .cart-icon-svg { font-size: 20px; }
-.stock {
-    font-weight: 600;
-    font-size: 0.85rem;
-    padding: 0.35rem 0.7rem;
-    border-radius: 0.6rem;
-    font-family: 'Segoe UI', sans-serif;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-.in-stock { background-color: #27ae60; color: #ffffff; }
+.stock { font-weight: 600; font-size: 0.85rem; padding: 0.35rem 0.7rem; border-radius: 0.6rem; font-family: 'Segoe UI', sans-serif; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+.in-stock { background-color: #27ae60; color: #fff; }
 .low-stock { background-color: #f1c40f; color: #3e3e3e; }
-.out-stock { background-color: #e74c3c; color: #ffffff; }
+.out-stock { background-color: #e74c3c; color: #fff; }
 
 /* Kitabay Cart Icon */
-.cart-icon-svg svg {
-    color: #6f4ceb;
-    background: #fff;
-    border-radius: 50%;
-    padding: 4px;
-    transition: 0.3s;
-}
-.cart-icon-svg:hover svg {
-    color: #9253f1;
-    transform: scale(1.1);
-}
+.cart-icon-svg svg { color: #6f4ceb; background: #fff; border-radius: 50%; padding: 4px; transition: 0.3s; }
+.cart-icon-svg:hover svg { color: #9253f1; transform: scale(1.1); }
 
-/* USP / Services Section - keep unchanged */
+/* USP / Services Section */
 .categories-area { background-color: #f8f9fa; padding: 50px 0; }
 .single-cat { text-align: center; padding: 20px; transition: all 0.3s ease; }
 .single-cat .cat-icon img { width: 60px; margin-bottom: 15px; }
@@ -96,15 +50,26 @@ h2.text-center.fw-bold {
 .single-cat:hover { transform: none !important; box-shadow: none !important; }
 
 /* Prevent image drag & selection */
-img {
-    user-select: none;
-    pointer-events: auto;
-    -webkit-user-drag: none;
-    -khtml-user-drag: none;
-    -moz-user-drag: none;
-    -o-user-drag: none;
-    user-drag: none;
+img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-user-drag: none; -moz-user-drag: none; -o-user-drag: none; user-drag: none; }
+
+/* ================= CATEGORY SCROLLER ================= */
+#popularItemsRowWrapper { position: relative; }
+#popularItemsRow { display: flex; flex-wrap: nowrap; overflow-x: auto; scroll-behavior: smooth; gap: 15px; padding-bottom: 10px; }
+#popularItemsRow::-webkit-scrollbar { display: none; }
+
+/* Scroll Arrows (like book detail page) */
+.arrow {
+    position: absolute; top: 50%; transform: translateY(-50%);
+    background-color: rgba(255,255,255,0.9); border: none; font-size: 2rem;
+    padding: 0 15px; cursor: pointer; z-index: 10; border-radius: 8px;
+    display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+    transition: background-color 0.2s;
 }
+.arrow:hover { background-color: rgba(245,245,245,1); }
+.arrow.prev { left: 5px; }
+.arrow.next { right: 5px; }
+
+/* Other styles can remain same as before */
 </style>
 
 <!-- ================= HERO SECTION ================= -->
@@ -114,21 +79,15 @@ img {
         <div class="carousel-item" style="background:url('{% static 'book_app/img/hero/newhero2.jpg' %}') center/cover no-repeat;"></div>
         <div class="carousel-item" style="background:url('{% static 'book_app/img/hero/newhero3.jpg' %}') center/cover no-repeat;"></div>
     </div>
-
-    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-    </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-    </button>
-
+    <button class="carousel-control-prev" type="button" data-bs-target="#heroCarousel" data-bs-slide="prev"><span class="carousel-control-prev-icon"></span></button>
+    <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
     <div class="carousel-caption hero-caption text-start">
         <h1>Discover<br>Your Next<br>Favorite Book</h1>
         <a href="{% url 'book_list' %}" class="btn btn-primary">Shop Now</a>
     </div>
 </div>
 
-<!-- ================= CATEGORY SECTION ================= -->
+<!-- ================= CATEGORY / POPULAR BOOKS ================= -->
 <div class="popular-items pt-50">
     <div class="container-fluid">
         <h2 class="text-center fw-bold mb-4">Explore by Category</h2>
@@ -139,52 +98,52 @@ img {
             {% endfor %}
         </div>
 
-        <div class="row" id="popularItemsRow">
-            {% comment %} Show only first 8 books initially {% endcomment %}
-            {% for item in popular_books|slice:":8" %}
-                <div class="col-lg-3 col-md-6 mb-4 popular-item" data-category="{{ item.category.title|slugify }}">
-                    <div class="card h-100 text-center position-relative">
-
-                        {% if item.stock == 0 %}
-                            <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
-                        {% elif item.stock <= 3 %}
-                            <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
-                        {% else %}
-                            <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
-                        {% endif %}
-
-                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
-                              <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
-                            </svg>
-                        </a>
-
-                        <a href="{% url 'book_detail' item.id %}">
-                            {% with item.images.first as img %}
-                                {% if img %}
-                                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
-                                {% else %}
-                                    <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
-                                {% endif %}
-                            {% endwith %}
-                        </a>
-                        <div class="card-body">
-                            <h5>{{ item.title }}</h5>
-                            <p class="fw-bold">₹ {{ item.price }}</p>
+        <div id="popularItemsRowWrapper">
+            <button class="arrow prev">❮</button>
+            <div id="popularItemsRow">
+                {% for item in popular_books %}
+                    <div class="col-lg-3 col-md-6 mb-4 popular-item" data-category="{{ item.category.title|slugify }}">
+                        <div class="card h-100 text-center position-relative">
+                            {% if item.stock == 0 %}
+                                <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
+                            {% elif item.stock <= 3 %}
+                                <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
+                            {% else %}
+                                <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
+                            {% endif %}
+                            <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                                  <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                                </svg>
+                            </a>
+                            <a href="{% url 'book_detail' item.id %}">
+                                {% with item.images.first as img %}
+                                    {% if img %}
+                                        <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                                    {% else %}
+                                        <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
+                                    {% endif %}
+                                {% endwith %}
+                            </a>
+                            <div class="card-body">
+                                <h5>{{ item.title }}</h5>
+                                <p class="fw-bold">₹ {{ item.price }}</p>
+                            </div>
                         </div>
                     </div>
-                </div>
-            {% endfor %}
+                {% endfor %}
+            </div>
+            <button class="arrow next">❯</button>
         </div>
 
-        <!-- ================= VIEW MORE BUTTON ================= -->
         {% if popular_books|length > 8 %}
-        <div class="text-center">
+        <div class="text-center mt-3">
             <a href="{% url 'book_list' %}" class="btn btn-outline-primary">View More</a>
         </div>
         {% endif %}
     </div>
 </div>
+
 
 <!-- ================= NEW ARRIVALS / BOOK ESSENTIALS / USP ================= -->
 <!-- ================= NEW ARRIVALS ================= -->
@@ -315,12 +274,24 @@ img {
 
 <!-- ================= CATEGORY FILTER SCRIPT ================= -->
 <script>
+document.addEventListener('DOMContentLoaded', () => {
+    const row = document.getElementById('popularItemsRow');
+    const btnPrev = document.querySelector('.arrow.prev');
+    const btnNext = document.querySelector('.arrow.next');
+
+    btnPrev.addEventListener('click', () => {
+        row.scrollBy({ left: -row.offsetWidth, behavior: 'smooth' });
+    });
+
+    btnNext.addEventListener('click', () => {
+        row.scrollBy({ left: row.offsetWidth, behavior: 'smooth' });
+    });
+});
+
 function filterCategory(category) {
     document.querySelectorAll('.popular-item').forEach(item => {
         item.style.display =
-            (category === 'all' || item.dataset.category === category)
-            ? 'block'
-            : 'none';
+            (category === 'all' || item.dataset.category === category) ? 'block' : 'none';
     });
 }
 </script>
