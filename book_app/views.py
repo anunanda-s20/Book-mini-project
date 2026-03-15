@@ -5,7 +5,7 @@ from django.contrib import messages  # show success/error messages
 from django.core.paginator import Paginator  # pagination
 from django.db.models import Q  # advanced search queries
 
-from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address, Category # models
+from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address, Category, BookImage # models
 from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileForm # forms
 
 
@@ -183,22 +183,38 @@ def staff_required(user):
 @login_required
 @user_passes_test(staff_required)
 def add_book(request):
-    form = BookForm(request.POST or None)  # book form
+    form = BookForm(request.POST or None, request.FILES or None)
     if request.method == "POST" and form.is_valid():
-        form.save()  # save new book
+        book = form.save()  # save book first
+
+        # Handle multiple images
+        images = request.FILES.getlist('images')
+        for img in images:
+            BookImage.objects.create(book=book, image=img)
+
         return redirect('manage_books')
+
     return render(request, 'book_app/add_book.html', {'form': form})
+
 
 
 @login_required
 @user_passes_test(staff_required)
 def edit_book(request, id):
-    book = get_object_or_404(Book, id=id)  # get book to edit
-    form = BookForm(request.POST or None, instance=book) # load existing book data
+    book = get_object_or_404(Book, id=id)
+    form = BookForm(request.POST or None, request.FILES or None, instance=book)
+
     if request.method == "POST" and form.is_valid():
-        form.save()  # update book
+        form.save()
+
+        # Handle new images
+        images = request.FILES.getlist('images')
+        for img in images:
+            BookImage.objects.create(book=book, image=img)
+
         return redirect('manage_books')
-    return render(request, 'dashboard/edit_book.html', {'form': form})
+
+    return render(request, 'dashboard/edit_book.html', {'form': form, 'book': book})
 
 
 @login_required
