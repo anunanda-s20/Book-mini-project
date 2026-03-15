@@ -21,26 +21,42 @@
                 <!-- Login Form -->
                 <form method="post">
                     {% csrf_token %}
+
                     {% if request.GET.next %}
                         <input type="hidden" name="next" value="{{ request.GET.next }}">
                     {% endif %}
 
                     <div class="mb-3">
                         <label class="form-label">Username</label>
-                        <input type="text" id="id_username" name="username"
-                            class="form-control" required autofocus>
+                        <input type="text"
+                               id="id_username"
+                               name="username"
+                               class="form-control"
+                               required
+                               autofocus>
                     </div>
 
                     <div class="mb-3">
                         <label class="form-label">Password</label>
-                        <input type="password" name="password"
-                            class="form-control" required>
+                        <input type="password"
+                               name="password"
+                               class="form-control"
+                               required>
                     </div>
 
                     <button type="submit" class="btn btn-dark w-100">
                         Login
                     </button>
-</form>
+
+                    <!-- Forgot Password Link -->
+                    <p class="text-center mt-3">
+                        <a href="{% url 'password_reset' %}">
+                            Forgot Password?
+                        </a>
+                    </p>
+
+                </form>
+
             </div>
 
             <!-- Card Footer -->
@@ -52,6 +68,7 @@
             </div>
 
         </div>
+
     </div>
 </div>
 

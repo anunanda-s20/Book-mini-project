@@ -17,9 +17,29 @@ Including another URLconf
 
 from django.contrib import admin
 from django.urls import path, include
+from django.contrib.auth import views as auth_views  # built-in authentication views (login, password reset)
 
 urlpatterns = [
-    path("admin/", admin.site.urls),
-    path('', include('book_app.urls')),  # app URLs (home, books, login, signup, etc.)
-    # removed: path('accounts/', include('django.contrib.auth.urls'))
+    
+    path("admin/", admin.site.urls),  
+    # Django default admin panel
+
+    path('', include('book_app.urls')),  
+    # all website pages (home, books, login, signup etc.)
+
+
+    # PASSWORD RESET FLOW
+    # ---------------------------
+
+    path('password_reset/',auth_views.PasswordResetView.as_view(template_name='registration/password_reset.html'),name='password_reset'),
+    # page where user enters email to reset password
+
+    path('password_reset_done/',auth_views.PasswordResetDoneView.as_view(template_name='registration/password_reset_done.html'),name='password_reset_done'),
+    # message shown after email is sent
+
+    path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),name='password_reset_confirm'),
+    # link from email → user sets new password
+
+    path('reset_done/',auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),name='password_reset_complete'),
+    # final success page after password change
 ]
