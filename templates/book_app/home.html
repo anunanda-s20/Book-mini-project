@@ -83,7 +83,19 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
     <button class="carousel-control-next" type="button" data-bs-target="#heroCarousel" data-bs-slide="next"><span class="carousel-control-next-icon"></span></button>
     <div class="carousel-caption hero-caption text-start">
         <h1>Discover<br>Your Next<br>Favorite Book</h1>
-        <a href="{% url 'book_list' %}" class="btn btn-primary">Shop Now</a>
+        <div class="d-flex flex-column align-items-start">
+            
+        <a href="{% url 'book_list' %}" class="btn btn-primary mb-2">
+            Shop Now
+        </a>
+
+        {% if request.user.is_superuser %}
+        <a href="{% url 'dashboard' %}" class="btn btn-dark">
+            📊 Admin Dashboard
+        </a>
+        {% endif %}
+    </div>
+
     </div>
 </div>
 
