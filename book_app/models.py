@@ -4,7 +4,7 @@ from django.db.models.signals import post_save#signal-run=model instance=saved
 from django.dispatch import receiver#decorator=connect-funtion-to-signal
 
 
-# USER PROFILE ==========
+# 1.USER PROFILE ==========
 class UserProfile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)#1-1=one user one profile,on dlt both removed
     phone = models.CharField(max_length=10, blank=True)#phone-optional field
@@ -25,7 +25,7 @@ def save_user_profile(sender, instance, **kwargs):#checks-if-user updated
         instance.userprofile.save()#auto-save related profile
 
 
-# CATEGORY ==========
+# 2.CATEGORY ==========
 class Category(models.Model):
     title = models.CharField(max_length=100)#category-name
     description = models.TextField(blank=True)#category-description optional
@@ -39,7 +39,7 @@ class Category(models.Model):
         return self.title#return-category-title
 
 
-# BOOK ==========
+# 3.BOOK ==========
 class Book(models.Model):
 
     # separate books vs accessories
@@ -75,14 +75,14 @@ class Book(models.Model):
     updated_at = models.DateTimeField(auto_now=True)#auto-update datetime
 
     def __str__(self):
-        return self.title#return-book-title
+        return self.title#return-book-title3
 
     @property#dynamic-calculated field
     def availability_status(self):#returns-stock status
         return "In Stock" if self.stock > 0 else "Out of Stock"#check-stock
 
 
-# BOOK IMAGE ==========
+# 4.BOOK IMAGE ==========
 class BookImage(models.Model):
     book = models.ForeignKey(Book,on_delete=models.CASCADE,related_name='images')#1-many=one book many images,on dlt remove images
     image = models.ImageField(upload_to='book_images/')#store-image-path
@@ -91,7 +91,7 @@ class BookImage(models.Model):
         return f"Image for {self.book.title}"#display-image-of-book
 
 
-# ADDRESS ==========
+# 5.ADDRESS ==========
 class Address(models.Model):#store-user-address
     user = models.ForeignKey(User, on_delete=models.CASCADE)#1-many=one user many addresses
     full_name = models.CharField(max_length=100)#receiver-name
@@ -106,7 +106,7 @@ class Address(models.Model):#store-user-address
         return f"{self.full_name} - {self.city}"#display-name-city
 
 
-# ================= ORDER =================
+#  6.ORDER =================
 class Order(models.Model):
     STATUS_CHOICES = [
         ('pending', 'Pending'),
@@ -126,7 +126,7 @@ class Order(models.Model):
     def __str__(self):
         return f"Order #{self.id} - {self.user.username}"#display-order-id-user
 
-
+#8.OrderItem
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE, related_name='items')#1-many=one order many items
     book = models.ForeignKey(Book, on_delete=models.CASCADE)#order-related-book
@@ -137,15 +137,15 @@ class OrderItem(models.Model):
         return f"{self.book.title} x {self.quantity}"#display-book-quantity
 
 
-# ================= CART =================
+#  9.CART =================
 class Cart(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)#1-1=one user one cart
-    created_at = models.DateTimeField(auto_now_add=True)#cart-created datetime
+    created_at = models.DateTimeField(auto_now_add=True)#cart-creation time
 
     def __str__(self):
         return f"Cart of {self.user.username}"#display-cart-owner
 
-
+# 10.CartItems
 class CartItem(models.Model):
     cart = models.ForeignKey(Cart, on_delete=models.CASCADE, related_name='items')#1-many=one cart many items
     book = models.ForeignKey(Book, on_delete=models.CASCADE)#cart-related-book
@@ -155,7 +155,7 @@ class CartItem(models.Model):
         return f"{self.book.title} x {self.quantity}"#display-cart-item
 
 
-# ================= WISHLIST =================
+# 11. WISHLIST =================
 class Wishlist(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)#1-many=one user many wishlist-items
     book = models.ForeignKey(Book, on_delete=models.CASCADE)#1-many=one book many wishlist-entries

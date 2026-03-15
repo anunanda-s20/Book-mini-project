@@ -98,9 +98,26 @@
         </div>
     </div>
 </div>
-
+<!-- allow Enter key to move to next input field -->
 <!-- Auto-focus username field -->
 <script>
-    document.getElementById("id_username")?.focus();
+document.addEventListener("DOMContentLoaded", function () {
+
+    const inputs = document.querySelectorAll("input");
+
+    inputs.forEach((input, index) => {
+        input.addEventListener("keypress", function (e) {
+            if (e.key === "Enter") {
+                e.preventDefault();
+
+                const nextInput = inputs[index + 1];
+                if (nextInput) {
+                    nextInput.focus();  // move cursor to next field
+                }
+            }
+        });
+    });
+
+});
 </script>
 {% endblock %}

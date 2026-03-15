@@ -1,18 +1,110 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<h2>My Addresses</h2>
-<hr>
+<div class="container mt-4 mb-5">
 
-{% if addresses %}
-<ul>
-    {% for addr in addresses %}
-    <li>{{ addr.full_name }} | {{ addr.street }}, {{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</li>
-    {% endfor %}
-</ul>
-{% else %}
-<p>No addresses added yet.</p>
-{% endif %}
+    <!-- Page Heading -->
+    <h2 class="mb-3">
+        <i class="fas fa-map-marker-alt me-2 text-primary"></i> My Addresses
+    </h2>
 
-<a href="{% url 'add_address' %}">➕ Add New Address</a>
+    {% if addresses %}
+
+        <!-- Address List -->
+        <div class="list-group">
+
+            {% for addr in addresses %}
+
+            <!-- Single Address Card -->
+            <div class="list-group-item mb-3 shadow-sm rounded address-item 
+                        d-flex justify-content-between align-items-start">
+
+                <!-- Address Details -->
+                <div>
+                    <h6 class="mb-1">{{ addr.full_name|title }}</h6>
+
+                    <p class="mb-1 text-muted">
+                        {{ addr.street }}, {{ addr.city }}, {{ addr.state }}
+                    </p>
+
+                    <p class="mb-0 fw-semibold">
+                        PIN: {{ addr.pincode }}
+                    </p>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="address-actions mt-2">
+
+                    <!-- Edit -->
+                    <a href="{% url 'edit_address' addr.id %}" 
+                       class="btn btn-sm btn-outline-primary">
+                        <i class="fas fa-edit"></i> Edit
+                    </a>
+
+                    <!-- Delete -->
+                    <a href="{% url 'delete_address' addr.id %}" 
+                       class="btn btn-sm btn-outline-danger">
+                        <i class="fas fa-trash"></i> Delete
+                    </a>
+
+                </div>
+
+            </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- Empty State -->
+        <div class="text-center mt-5">
+            <i class="fas fa-map-marker-alt fa-3x text-muted mb-3"></i>
+            <h5>No addresses added yet</h5>
+            <p class="text-muted">
+                Add your delivery address to place orders easily.
+            </p>
+        </div>
+
+    {% endif %}
+
+    <!-- Add Address Button -->
+    <div class="mt-3">
+        <a href="{% url 'add_address' %}" class="btn btn-sm btn-primary">
+            <i class="fas fa-plus me-1"></i> Add New Address
+        </a>
+    </div>
+
+</div>
+
+
+<!-- Small UI polish -->
+<style>
+
+/* Hover effect for address card */
+.address-item:hover {
+    background-color: #f9f9f9;
+    transition: background-color 0.2s ease-in-out;
+}
+
+/* Action buttons layout */
+.address-actions {
+    display: flex;
+    gap: 8px;
+}
+
+/* Button size polish */
+.address-actions .btn {
+    padding: 4px 10px;
+    font-size: 0.85rem;
+}
+
+/* Slight lift on hover */
+.address-actions .btn:hover {
+    transform: translateY(-1px);
+    transition: 0.15s;
+}
+
+</style>
+
 {% endblock %}

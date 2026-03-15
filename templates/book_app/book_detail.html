@@ -63,7 +63,29 @@
                     <a href="{% url 'add_to_wishlist' book.id %}" class="btn btn-outline-danger mb-2">❤ Add to Wishlist</a>
                 {% endif %}
             {% else %}
-                <p class="mt-2 mb-2"><a href="{% url 'login' %}">Login</a> to buy or save this book.</p>
+                <!-- Logged-out Add to Cart -->
+                <a href="{% url 'login' %}?next={{ request.path }}" 
+                   class="btn btn-outline-primary me-2 mb-2"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="top"
+                   title="Login required to continue">
+                   🔒 Add to Cart
+                </a>
+
+                <!-- Logged-out Add to Wishlist -->
+                <a href="{% url 'login' %}?next={{ request.path }}" 
+                   class="btn btn-outline-danger mb-2"
+                   data-bs-toggle="tooltip"
+                   data-bs-placement="top"
+                   title="Login required to continue">
+                   🔒 Add to Wishlist
+                </a>
+
+                 <!-- Reminder Text -->
+                    <p class="text-muted small mt-1">
+                        You need to log in to add items to your cart or wishlist.
+                    </p>
+
             {% endif %}
 
             <div class="mt-4">
@@ -133,7 +155,7 @@
 </div>
 
 <!-- ================= BOOK ESSENTIALS ON BOOK DETAIL ================= -->
-<section class="my-5" style="background:#faf8ff;">
+<section class="mt-5 mb-5" style="background:#faf8ff;">
     <div class="container">
 
         <h2 class="text-center fw-bold mb-3">Reading Essentials</h2>

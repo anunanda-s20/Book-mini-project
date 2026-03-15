@@ -5,7 +5,7 @@ from .models import Book, Address, UserProfile, Category
 
 
 # ==============================
-# 1️⃣ USER SIGNUP FORM
+# 1️. USER SIGNUP FORM
 # ==============================
 class SimpleUserCreationForm(UserCreationForm):
     email = forms.EmailField(
@@ -37,7 +37,7 @@ class SimpleUserCreationForm(UserCreationForm):
         return email
 
 # ==============================
-# 2️⃣ BOOK FORM (STAFF ONLY)
+# 2️. BOOK FORM (STAFF ONLY)
 # ==============================
 
 
@@ -67,7 +67,7 @@ class BookForm(forms.ModelForm):
                 field.widget.attrs['class'] = 'form-control'
 
 # ==============================
-# 3️⃣ ADDRESS FORM
+# 3️. ADDRESS FORM
 # ==============================
 class AddressForm(forms.ModelForm):
     class Meta:
@@ -93,9 +93,11 @@ class AddressForm(forms.ModelForm):
         if not pincode.isdigit() or len(pincode) != 6:
             raise forms.ValidationError("Enter a valid 6-digit pincode")
         return pincode
+    
+
 
 # ==============================
-# 4️⃣ PROFILE EDIT FORM
+# 4️. PROFILE EDIT FORM
 # ==============================
 class EditProfileForm(forms.ModelForm):
     username = forms.CharField(

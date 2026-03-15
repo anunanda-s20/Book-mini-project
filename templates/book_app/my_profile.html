@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block content %}
-<div class="container mt-4">
+<div class="container mt-4 mb-5">
     <h2 class="mb-4"><i class="fas fa-user me-2"></i>My Profile</h2>
 
     <div class="row">
@@ -37,10 +37,10 @@
             <div class="card shadow-sm p-3">
                 <h5 class="card-title">My Account</h5>
                 <ul class="list-unstyled mb-0">
-                    <li><a href="{% url 'my_orders' %}" class="text-decoration-none">My Orders</a></li>
-                    <li><a href="{% url 'wishlist' %}" class="text-decoration-none">My Wishlist</a></li>
-                    <li><a href="{% url 'address_list' %}" class="text-decoration-none">My Addresses</a></li>
-                    <li><a href="{% url 'logout' %}" class="text-decoration-none text-danger">Logout</a></li>
+                <li class="mb-2"><a class="nav-link" href="{% url 'my_orders' %}">My Orders</a></li>
+                <li class="mb-2"><a class="nav-link" href="{% url 'wishlist' %}">My Wishlist</a></li>
+                <li class="mb-2"><a class="nav-link" href="{% url 'address_list' %}">My Addresses</a></li>
+                <li class="mb-2"><a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a></li>
                 </ul>
             </div>
         </div>
@@ -56,9 +56,7 @@
 .card p, .card a {
     font-size: 0.95rem;
 }
-.card a:hover {
-    text-decoration: underline;
-}
+
 </style>
 
 {% endblock %}

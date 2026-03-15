@@ -3,7 +3,7 @@
 
 {% block content %}
 <section class="new-arrival">
-    <div class="container my-4">
+    <div class="container mt-4 mb-5">
 
         <!-- FILTER BAR -->
         <div class="d-flex justify-content-between align-items-center mb-4 p-3 rounded filter-wrapper">
@@ -64,8 +64,33 @@
             {% endfor %}
         </div>
 
+        <!-- PAGINATION -->
+<div class="d-flex justify-content-center mt-4">  <!-- center pagination -->
+
+    {% if page_obj.has_previous %}  <!-- check if previous page exists -->
+        <a class="btn btn-outline-secondary me-2"
+           href="?page={{ page_obj.previous_page_number }}&order={{ order }}">
+           Previous
+        </a>
+    {% endif %}
+
+    <span class="align-self-center mx-3">  <!-- show current page info -->
+        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+    </span>
+
+    {% if page_obj.has_next %}  <!-- check if next page exists -->
+        <a class="btn btn-outline-secondary ms-2"
+           href="?page={{ page_obj.next_page_number }}&order={{ order }}">
+           Next
+        </a>
+    {% endif %}
+
+</div>
+
     </div>
 </section>
+
+
 
 <!-- ================= STYLES ================= -->
 <style>

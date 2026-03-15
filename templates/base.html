@@ -49,8 +49,8 @@
         .footer-area { background: #001c4a; padding: 60px 0 20px; color: #676767; }
         .footer-tittle h4 { font-weight: 600; margin-bottom: 20px; }
         .footer-tittle ul li { list-style: none; margin-bottom: 10px; }
-        .footer-tittle ul li a { color: #884b4b; }
-        .footer-tittle ul li a:hover { color: #769af5; }
+        .footer-tittle ul li a {color: #d1d1d1;}
+        .footer-tittle ul li a:hover {color: #769af5;}
         .footer-bottom-area { background: #e5e5e5; padding: 15px 0; font-size: 14px; }
     </style>
 </head>
@@ -137,10 +137,11 @@
 
 {% if request.path != '/login/' and request.path != '/signup/' %}
 
+
 <!-- ================= FOOTER ================= -->
-<footer>
+<footer class="mt-auto">
     <div class="footer-area footer-padding">
-        <div class="container-fluid">
+        <div class="container">
             <div class="row d-flex justify-content-between">
 
                 <!-- Logo & description -->
@@ -191,7 +192,7 @@
                     <div class="single-footer-caption mb-50">
                         <h4>Partners</h4>
                         <ul>
-                            <li><a href="#">Image Licensin</a></li>
+                            <li><a href="#">Image Licensing</a></li>
                             <li><a href="#">Style Guide</a></li>
                             <li><a href="#">Privacy Policy</a></li>
                         </ul>
@@ -213,16 +214,30 @@
             </div>
         </div>
     </div>
+
+    <div class="footer-bottom-area text-center">
+        <p class="mb-0">&copy; 2025 Luna Books.</p>
+    </div>
+
 </footer>
 
 
 
-<footer class="bg-dark text-light text-center py-3">
+<!--<footer class="bg-dark text-light text-center py-3">
     <p class="mb-0">&copy; 2025 Luna Books</p>
-</footer>
+</footer>-->
+
+
 
 {% endif %}
-
+<!-- Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
+  return new bootstrap.Tooltip(tooltipTriggerEl)
+})
+</script>
 </body>
 </html>
