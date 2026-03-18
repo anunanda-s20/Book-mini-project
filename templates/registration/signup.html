@@ -103,18 +103,33 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
+    // 👉 get all input fields
     const inputs = document.querySelectorAll("input");
 
-    inputs.forEach((input, index) => {
-        input.addEventListener("keypress", function (e) {
-            if (e.key === "Enter") {
-                e.preventDefault();
+    // 👉 loop through each input
+    inputs.forEach((input, i) => {
 
-                const nextInput = inputs[index + 1];
-                if (nextInput) {
-                    nextInput.focus();  // move cursor to next field
+        // 👉 when key is pressed
+        input.addEventListener("keydown", function (e) {
+
+            // 👉 if Enter key pressed
+            if (e.key === "Enter") {
+
+                e.preventDefault(); // ❌ stop form submit
+
+                // 👉 check next input exists
+                if (inputs[i + 1]) {
+
+                    inputs[i + 1].focus(); // 👉 go to next field
+
+                } else {
+
+                    this.form.submit(); // 👉 last field → submit form
+
                 }
+
             }
+
         });
     });
 
