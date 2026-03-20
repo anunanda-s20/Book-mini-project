@@ -22,15 +22,32 @@ class UserProfileAdmin(admin.ModelAdmin):
 # ================= BOOK (MAIN FIX HERE) =================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    # show product_type in admin list
+
+    # columns shown in admin list page (table view)
     list_display = ('title', 'product_type', 'author', 'price', 'stock', 'is_active', 'category')
 
-    # allow filtering books vs accessories
+    # filters on right side (filter by type, category, status)
     list_filter = ('product_type', 'category', 'is_active')
 
+    # search bar (search by title or author)
     search_fields = ('title', 'author')
+
+    # default ordering (alphabetical by title)
     ordering = ('title',)
 
+    # fields shown in add/edit form (IMPORTANT FIX)
+    # this makes "product_type" visible in admin form
+    fields = (
+        'product_type',   # choose Book or Accessory
+        'title',          # product name
+        'author',         # author name
+        'price',          # price
+        'stock',          # quantity available
+        'is_active',      # show/hide product
+        'category',       # category (UI purpose)
+        'description',    # details
+        'published_date'  # optional date
+    )
 
 # ================= BOOK IMAGE =================
 @admin.register(BookImage)
