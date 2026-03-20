@@ -45,24 +45,34 @@ class BookForm(forms.ModelForm):
     class Meta:
         model = Book
         fields = [
-            'title', 'author', 'price', 'description', 'stock', 
-            'is_active', 'published_date', 'category'  # added category
+            'product_type',   # choose Book or Accessory
+            'title',          # book 
+            'author',         # author 
+            'price',          # price
+            'description',    # description
+            'stock',          # quantity
+            'is_active',      # show/hide product
+            'published_date', # publish date
+            'category'        # category dropdown
         ]
+
         widgets = {
+            'product_type': forms.Select(attrs={'class': 'form-control'}),  # dropdown (Book/Accessory)
             'title': forms.TextInput(attrs={'placeholder': 'Enter book title'}),
             'author': forms.TextInput(attrs={'placeholder': 'Enter author name'}),
-            'price': forms.NumberInput(attrs={'placeholder': 'Enter price in INR', 'min': '0', 'step': '0.01'}),
-            'description': forms.Textarea(attrs={'placeholder': 'Enter book description', 'rows': 4}),
-            'stock': forms.NumberInput(attrs={'placeholder': 'Available quantity', 'min': '0'}),
+            'price': forms.NumberInput(attrs={'placeholder': 'Enter price'}),
+            'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
+            'stock': forms.NumberInput(attrs={'placeholder': 'Stock'}),
             'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'published_date': forms.DateInput(attrs={'type': 'date'}),
-            'category': forms.Select(attrs={'class': 'form-control'})  # dropdown for category
+            'category': forms.Select(attrs={'class': 'form-control'})  # category dropdown
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Add Bootstrap 'form-control' to all fields except checkbox
-        for name, field in self.fields.items():
+
+        # add bootstrap style to all fields
+        for field in self.fields.values():
             if not isinstance(field.widget, forms.CheckboxInput):
                 field.widget.attrs['class'] = 'form-control'
 

@@ -258,14 +258,29 @@ def dashboard(request):
 @login_required
 @user_passes_test(staff_required)
 def manage_books(request):
-    query = request.GET.get('q','')  # search keyword
-    books = Book.objects.all()
+    query = request.GET.get('q', '')  # get search text
+    product_type = request.GET.get('type', '')  # get dropdown value (book/accessory)
+
+    books = Book.objects.all()  # get all items
+
+    # Search filter
     if query:
         books = books.filter(
             Q(title__icontains=query) |
             Q(author__icontains=query)
-        )  # search books
-    return render(request, 'dashboard/manage_books.html', {'books': books, 'query': query})
+        )
+
+    # Product type filter (like admin)
+    if product_type == 'book':
+        books = books.filter(product_type='book')  # only books
+    elif product_type == 'accessory':
+        books = books.filter(product_type='accessory')  # only accessories
+
+    return render(request, 'dashboard/manage_books.html', {
+        'books': books,
+        'query': query,
+        'product_type': product_type  # send to template
+    })
 
 
 @login_required
