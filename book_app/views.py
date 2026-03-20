@@ -15,7 +15,9 @@ def home(request):
 
     hero_range = range(1, 4)  # slider range (1,2,3)
 
-    categories = Category.objects.exclude(title__iexact="Book Accessories")  # exclude accessories category
+    categories = Category.objects.filter(
+    book__product_type='book'
+).distinct()  # exclude accessories category
 
     popular_books = Book.objects.filter(
         is_active=True,
@@ -28,9 +30,10 @@ def home(request):
     ).order_by('-created_at')[:4]  # latest 4 books
 
     book_essentials = Book.objects.filter(
-        is_active=True,
-        product_type='accessory'
-    ).order_by('-created_at')[:4]  # latest 4 accessories
+    is_active=True,
+    product_type='accessory',
+    category__isnull=False
+).order_by('-created_at')[:4]  # latest 4 accessories
 
     return render(request, 'book_app/home.html', {
         "hero_range": hero_range,
@@ -100,9 +103,10 @@ def book_detail(request, id):
     # exclude current-book
 
     book_essentials = Book.objects.filter(
-        is_active=True,
-        product_type='accessory'
-    )[:4]  # 4 accessories
+    is_active=True,
+    product_type='accessory',
+    category__isnull=False
+).order_by('-created_at')[:4]  # 4 accessories
 
     is_wishlisted = (
         Wishlist.objects.filter(user=request.user, book=book).exists() # check if book in wishlist
