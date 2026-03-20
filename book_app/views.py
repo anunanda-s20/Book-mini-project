@@ -75,7 +75,7 @@ def book_list(request):
     elif order == "alpha":
         books = books.order_by("title")
 
-    paginator = Paginator(books, 10)  # 10 books per page
+    paginator = Paginator(books, 8)  # 10 books per page
     page_obj = paginator.get_page(request.GET.get("page")) # Fetch page number from URL and paginate books accordingly
 
     return render(request, "book_app/book_list.html", {

@@ -1,8 +1,9 @@
-from django.db import models#tools-db tables
-from django.contrib.auth.models import User#django-built-in User model=auth
-from django.db.models.signals import post_save#signal-run=model instance=saved
-from django.dispatch import receiver#decorator=connect-funtion-to-signal
+from django.db import models  # tools - db tables
+from django.contrib.auth.models import User  # Django built-in User model
+from django.db.models.signals import post_save  # signal when model is saved
+from django.dispatch import receiver  # decorator to connect function to signal
 
+# hello
 
 # 1.USER PROFILE ==========
 class UserProfile(models.Model):

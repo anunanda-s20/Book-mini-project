@@ -22,10 +22,10 @@ class UserProfileAdmin(admin.ModelAdmin):
 # ================= BOOK (MAIN FIX HERE) =================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
-    # 👇 show product_type in admin list
+    # show product_type in admin list
     list_display = ('title', 'product_type', 'author', 'price', 'stock', 'is_active', 'category')
 
-    # 👇 allow filtering books vs accessories
+    # allow filtering books vs accessories
     list_filter = ('product_type', 'category', 'is_active')
 
     search_fields = ('title', 'author')

@@ -21,6 +21,19 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
 
     <style>
+
+        /* ================= COMMON BUTTON HOVER ================= */
+        /* Apply same hover effect to all buttons */
+        .btn {
+            transition: all 0.3s ease; /* smooth animation */
+        }
+
+       .btn:hover {
+        transform: translateY(-3px) !important;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.3) !important;
+    }
+        
+
         /* ================= BRAND / NAV ================= */
         .navbar { padding-top: 0.8rem; padding-bottom: 0.8rem; }
         .brand-logo { text-decoration: none; gap: 0.6rem; }
@@ -77,7 +90,7 @@
             {% if request.path != '/login/' and request.path != '/signup/' %}
             <form class="d-flex ms-auto me-3" method="get" action="{% url 'book_list' %}">
                 <input class="form-control me-2" type="text" name="q" placeholder="Search books">
-                <button class="btn btn-outline-primary">Search</button>
+                <button class="btn btn-outline-primary" type="submit">Search</button>
             </form>
 
             <ul class="navbar-nav align-items-center">
