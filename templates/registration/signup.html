@@ -1,36 +1,73 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<!-- 🌱 Custom styles for this page -->
+<style>
+/* Login hover */
+.login-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    margin-left: 4px;
+    transition: color 0.3s ease;
+}
+
+.login-link::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: -2px;
+    background-color: #0d6efd;
+    transition: width 0.3s ease;
+}
+
+.login-link:hover {
+    color: #084298;
+}
+
+.login-link:hover::after {
+    width: 100%;
+}
+
+/* Button hover */
+.btn-dark:hover {
+    transform: scale(1.02);
+    transition: 0.2s ease;
+}
+</style>
+
 <!-- Center card vertically + horizontally -->
 <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
 
     <!-- Fixed width column -->
     <div class="col-md-5 col-lg-4">
 
-        <!-- Signup Card -->
-        <div class="card shadow-sm">
+        <!-- Signup card -->
+        <div class="card shadow-sm p-2">
 
-            <!-- Card Header (UNCHANGED) -->
+            <!-- Header -->
             <div class="card-header text-center">
                 <strong>📘 BookStore</strong>
 
-                <h4 class="mt-2 mb-1">Create Your Account</h4>
+                <h4 class="mt-2 mb-1">Create Your Account 📚</h4>
                 <small class="text-muted">
                     Join BookStore to buy and manage your books.
                 </small>
             </div>
 
-            <!-- Card Body -->
+            <!-- Body -->
             <div class="card-body">
 
-                <!-- General form error -->
                 {% if form.errors %}
                     <div class="alert alert-danger py-2 small">
                         Please fix the errors below.
                     </div>
                 {% endif %}
 
-                <!-- Signup Form -->
                 <form method="post" novalidate>
                     {% csrf_token %}
 
@@ -78,56 +115,42 @@
                         {% endif %}
                     </div>
 
-                    <!-- Submit Button -->
+                    <!-- Submit button -->
                     <button type="submit" class="btn btn-dark w-100">
                         Create Account
                     </button>
                 </form>
             </div>
 
-            <!-- Card Footer (UNCHANGED) -->
+            <!-- Footer -->
             <div class="card-footer text-center">
                 <small>
                     Already have an account?
-                    <a href="{% url 'login' %}" class="text-decoration-underline">
-                        Login
-                    </a>
+                    <a href="{% url 'login' %}" class="login-link">Login</a>
                 </small>
             </div>
 
         </div>
     </div>
 </div>
-<!-- allow Enter key to move to next input field -->
-<!-- Auto-focus username field -->
+
+<!--  Enter key moves to next input -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
 
-    // 👉 get all input fields
     const inputs = document.querySelectorAll("input");
 
-    // 👉 loop through each input
     inputs.forEach((input, i) => {
-
-        // 👉 when key is pressed
         input.addEventListener("keydown", function (e) {
 
-            // 👉 if Enter key pressed
             if (e.key === "Enter") {
+                e.preventDefault();
 
-                e.preventDefault(); // ❌ stop form submit
-
-                // 👉 check next input exists
                 if (inputs[i + 1]) {
-
-                    inputs[i + 1].focus(); // 👉 go to next field
-
+                    inputs[i + 1].focus();
                 } else {
-
-                    this.form.submit(); // 👉 last field → submit form
-
+                    this.form.submit();
                 }
-
             }
 
         });
@@ -135,4 +158,5 @@ document.addEventListener("DOMContentLoaded", function () {
 
 });
 </script>
+
 {% endblock %}
