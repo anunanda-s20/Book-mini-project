@@ -2,12 +2,52 @@
 
 {% block content %}
 
+<!-- 🌱 Custom styles (same as signup for consistency) -->
+<style>
+/* Common auth link hover */
+.auth-link {
+    color: #0d6efd;
+    text-decoration: none;
+    font-weight: 500;
+    position: relative;
+    margin-left: 4px;
+    transition: color 0.3s ease;
+}
+
+.auth-link::after {
+    content: "";
+    position: absolute;
+    width: 0%;
+    height: 2px;
+    left: 0;
+    bottom: -2px;
+    background-color: #0d6efd;
+    transition: width 0.3s ease;
+}
+
+.auth-link:hover {
+    color: #084298;
+}
+
+.auth-link:hover::after {
+    width: 100%;
+}
+
+/* Button hover */
+.btn-dark:hover {
+    transform: scale(1.02);
+    transition: 0.2s ease;
+}
+</style>
+
+<!-- Center card -->
 <div class="d-flex justify-content-center align-items-center" style="min-height: 70vh;">
     <div class="col-md-5 col-lg-4">
 
-        <div class="card shadow-sm">
+        <!-- Added padding for spacing -->
+        <div class="card shadow-sm p-2">
 
-            <!-- Card Header -->
+            <!-- Header -->
             <div class="card-header text-center">
                 <h4 class="mb-1">🔑 Login to BookStore</h4>
                 <small class="text-muted">
@@ -15,10 +55,9 @@
                 </small>
             </div>
 
-            <!-- Card Body -->
+            <!-- Body -->
             <div class="card-body">
 
-                <!-- Login Form -->
                 <form method="post">
                     {% csrf_token %}
 
@@ -26,6 +65,7 @@
                         <input type="hidden" name="next" value="{{ request.GET.next }}">
                     {% endif %}
 
+                    <!-- Username -->
                     <div class="mb-3">
                         <label class="form-label">Username</label>
                         <input type="text"
@@ -36,6 +76,7 @@
                                autofocus>
                     </div>
 
+                    <!-- Password -->
                     <div class="mb-3">
                         <label class="form-label">Password</label>
                         <input type="password"
@@ -44,13 +85,14 @@
                                required>
                     </div>
 
+                    <!-- Button -->
                     <button type="submit" class="btn btn-dark w-100">
                         Login
                     </button>
 
-                    <!-- Forgot Password Link -->
+                    <!-- Forgot Password -->
                     <p class="text-center mt-3">
-                        <a href="{% url 'password_reset' %}">
+                        <a href="{% url 'password_reset' %}" class="auth-link">
                             Forgot Password?
                         </a>
                     </p>
@@ -59,11 +101,13 @@
 
             </div>
 
-            <!-- Card Footer -->
+            <!-- Footer -->
             <div class="card-footer text-center">
                 <small>
                     Don’t have an account?
-                    <a href="{% url 'signup' %}">Signup</a>
+                    <a href="{% url 'signup' %}" class="auth-link">
+                        Signup
+                    </a>
                 </small>
             </div>
 
