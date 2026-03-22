@@ -11,7 +11,7 @@
                 <span class="filter-label me-3">Sort:</span>
 
                 <a href="?order=latest" class="filter-link {% if order == 'latest' %}active{% endif %}">Latest</a>
-                <a href="?order=price_low" class="filter-link {% if order == 'price_low' %}active{% endif %}">Price</a>
+                <a href="?order=price_low" class="filter-link {% if order == 'price_low' %}active{% endif %}">Price: Low to High</a>
                 <a href="?order=alpha" class="filter-link {% if order == 'alpha' %}active{% endif %}">A–Z</a>
             </div>
             <p class="mb-0 book-count">Showing {{ page_obj.paginator.count }} books</p>
@@ -60,7 +60,7 @@
                 </div>
             </div>
             {% empty %}
-            <p class="text-center text-muted">No books found.</p>
+            <p class="text-center text-muted">No books found for this selection.</p>
             {% endfor %}
         </div>
 
@@ -99,6 +99,8 @@
     background-color: #faf9fd;
     border: 1px solid #ebe7f2;
 }
+
+
 .filter-label {
     color: #6f6285;
     font-weight: 500;
@@ -110,8 +112,8 @@
     font-weight: 500;
     transition: color 0.2s ease, font-weight 0.2s ease;
 }
-.filter-link:hover { color: #56406f; text-decoration: none; }
-.filter-link.active { color: #4b2f6f; font-weight: 700; }
+.filter-link:hover { color: #5c00c5; text-decoration: none; }
+.filter-link.active { color: #5800bd; font-weight: 700; }
 .book-count { color: #6f6285; font-size: 14px; }
 
 /* STOCK BADGES */
