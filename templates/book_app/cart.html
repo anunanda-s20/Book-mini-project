@@ -3,12 +3,12 @@
 {% block content %}
 <div class="container mt-4 mb-5">
 
-    <h2 class="mb-4">Your Cart</h2>
+    <h2 class="mb-4 cart-title">Your Cart</h2>
 
     {% if items %}  <!-- Cart has items -->
 
     <div class="table-responsive">
-        <table class="table table-bordered align-middle text-center">
+        <table class="table table-bordered align-middle text-center cart-table">
 
             <!-- Table headers -->
             <thead class="table-light">
@@ -123,7 +123,7 @@
     <!-- ✅ EMPTY CART UI (ONLY ADDITION) -->
     <div class="cart-empty">
         <i class="fas fa-shopping-cart mb-3"></i>
-        <h4>Your cart is waiting 🛒</h4>
+        <h5>Your cart is waiting 🛒</h5>
         <p>Discover books you’ll love and add them to your cart when you’re ready.</p>
         <a href="{% url 'book_list' %}" class="btn btn-outline-primary mt-2">
             Explore books
@@ -154,5 +154,42 @@
 .cart-empty h4 {
     font-weight: 600;
 }
+
+
+/* ===== Cart Buttons Final Size Fix ===== */
+
+/* Quantity + Trash buttons */
+/* ===== Cart Buttons Final Size Fix ===== */
+.cart-table .btn {
+    width: 90px;
+    height: 45px;
+    padding: 0;
+    border-radius: 8px;
+    font-size: 19px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cart-table span {
+    margin: 0 8px;
+    font-size: 15px;
+}
+
+.cart-table .btn i {
+    font-size: 14px;
+}
+
+
+/* Reduce only small buttons */
+.btn-sm {
+    font-size: 15px;
+}
+
+
+.cart-title {
+    color: #00147a;   /* your dark blue (same as footer) */
+}
+
 </style>
 {% endblock %}
