@@ -28,7 +28,7 @@
 #heroCarousel .hero-caption .btn:hover { background-color: #6377f9; transform: translateY(-1px); }
 
 /* ================= CATEGORY / NEW ARRIVALS / BOOK ESSENTIALS HEADINGS ================= */
-h2.text-center.fw-bold { font-size: 2.4rem; letter-spacing: 1px; margin-bottom: 30px;  color: #001478; /* same dark blue as footer */}
+h2.text-center.fw-bold { font-size: 2.4rem; letter-spacing: 1px; margin-bottom: 30px;  color: #00147a; /* same dark blue as footer */}
 
 /* Cart icon and Stock */
 .cart-icon-svg { font-size: 20px; }
@@ -70,6 +70,34 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
 .arrow.next { right: 5px; }
 
 /* Other styles can remain same as before */
+
+/* ================= BOOK ESSENTIALS IMAGE FIX ================= */
+.essential-img {
+    height: 500px;        /* same height for all items */
+    width: 100%;
+    object-fit: cover;    /* crop nicely */
+    object-position: center 30%; /* better for candle */
+}
+
+.reading-essentials-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #000672;
+    margin-bottom: 10px;
+}
+
+.reading-essentials-section .card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.reading-subtext {
+    color: #9284fa;      /* soft light purple */
+    font-weight: 500;    /* slightly bold */
+    font-size: 0.95rem;  /* slightly smaller */
+}
 </style>
 
 <!-- ================= HERO SECTION ================= -->
@@ -207,9 +235,14 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
 </section>
 
 <!-- ================= BOOK ESSENTIALS ================= -->
-<section class="my-5" style="background:#faf8ff; padding-top: 30px;">
+<section class="my-5 reading-essentials-section" style="background: linear-gradient(to bottom, #fcfaff, #f7f2ff); padding-top: 35px; padding-bottom: 20px; border-radius: 18px;">
     <div class="container">
-        <h2 class="text-center fw-bold mb-3">Reading Essentials</h2>
+        <h2 class="reading-essentials-title text-center">Reading Essentials</h2>
+        <p class="text-center text-muted mb-1">Bookmarks, candles, clips and more for your reading space</p>
+        <p class="text-center reading-subtext mb-4">
+            Little things that make reading more cozy ♥
+        </p>
+        
         <div class="row">
             {% for item in book_essentials %}
                 <div class="col-lg-3 col-md-6 mb-4">
@@ -232,7 +265,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
                         <a href="{% url 'book_detail' item.id %}">
                             {% with item.images.first as img %}
                                 {% if img %}
-                                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                                    <img src="{{ img.image.url }}" class="card-img-top essential-img" alt="{{ item.title }}">
                                 {% else %}
                                     <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                                 {% endif %}

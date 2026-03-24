@@ -5,7 +5,7 @@
 <div class="container my-5">
 
     <!-- ===== MAIN BOOK SECTION ===== -->
-    <div class="row">
+    <div class="row book-detail-container">
 
         <!-- LEFT: BOOK IMAGES (Carousel) -->
         <div class="col-md-5 d-flex justify-content-center align-items-start pt-3">
@@ -34,7 +34,7 @@
 
         <!-- RIGHT: BOOK DETAILS -->
         <div class="col-md-7">
-            <h2 class="mb-2">{{ book.title }}</h2>
+            <h2 class="book-detail-title">{{ book.title }}</h2>
             <p class="text-muted mb-2">by {{ book.author }}</p>
 
             <p class="mb-2">
@@ -113,64 +113,89 @@
     </div>
 
     <!-- ===== YOU MAY ALSO LIKE ===== -->
-    <div class="row mt-5">
-        <div class="col-12 mb-3">
-            <h4>You may also like</h4>
-            <p class="text-muted">More books you might enjoy</p>
-        </div>
-
-        {% for other_book in suggested_books %}
-        <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-            <div class="card h-100 text-center shadow-sm position-relative">
-                {% if other_book.stock == 0 %}
-                    <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of stock</span>
-                {% elif other_book.stock <= 3 %}
-                    <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
-                {% else %}
-                    <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
-                {% endif %}
-
-                <a href="{% url 'book_detail' other_book.id %}">
-                    {% with other_book.images.first as img %}
-                        {% if img %}
-                            <img src="{{ img.image.url }}" class="card-img-top" alt="{{ other_book.title }}">
-                        {% else %}
-                            <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top" alt="No image">
-                        {% endif %}
-                    {% endwith %}
-                </a>
-
-                <div class="card-body">
-                    <h5 class="card-title">{{ other_book.title }}</h5>
-                    <p class="text-muted">{{ other_book.author }}</p>
-                    <p class="fw-bold">₹ {{ other_book.price }}</p>
-                </div>
-            </div>
-        </div>
-        {% empty %}
-            <p class="text-center text-muted">No recommendations available.</p>
-        {% endfor %}
+    <!-- ===== YOU MAY ALSO LIKE ===== -->
+<div class="row mt-5">
+    <div class="col-12 mb-3">
+        <h4>You may also like</h4>
+        <p class="text-muted">More books you might enjoy</p>
     </div>
+
+    {% for other_book in suggested_books %}
+    <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
+        <div class="card h-100 text-center shadow-sm position-relative">
+
+            {% if other_book.stock == 0 %}
+                <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of stock</span>
+            {% elif other_book.stock <= 3 %}
+                <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
+            {% else %}
+                <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
+            {% endif %}
+
+            <!-- cart icon -->
+            <a href="{% url 'add_to_cart' other_book.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                </svg>
+            </a>
+
+            <a href="{% url 'book_detail' other_book.id %}">
+                {% with other_book.images.first as img %}
+                    {% if img %}
+                        <img src="{{ img.image.url }}" class="card-img-top" alt="{{ other_book.title }}">
+                    {% else %}
+                        <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
+                    {% endif %}
+                {% endwith %}
+            </a>
+
+            <div class="card-body">
+                <h5>{{ other_book.title }}</h5>
+                <p class="text-muted">{{ other_book.author }}</p>
+                <p class="fw-bold">₹ {{ other_book.price }}</p>
+            </div>
+
+        </div>
+    </div>
+    {% empty %}
+        <p class="text-center text-muted">No recommendations available.</p>
+    {% endfor %}
+</div>
 
 </div>
 
 <!-- ================= BOOK ESSENTIALS ON BOOK DETAIL ================= -->
-<section class="mt-5 mb-5" style="background:#faf8ff;">
+<section class="my-5 reading-essentials-section" style="background: linear-gradient(to bottom, #fcfaff, #f7f2ff); padding-top: 35px; padding-bottom: 20px; border-radius: 18px;">
     <div class="container">
 
-        <h2 class="text-center fw-bold mb-3">Reading Essentials</h2>
-
+        <h2 class="reading-essentials-title text-center">Reading Essentials</h2>
+        <p class="text-center text-muted mb-1">Bookmarks, candles, clips and more for your reading space</p>
+        <p class="text-center reading-subtext mb-4">
+            Little things that make reading more cozy ♥
+        </p>
         <div class="row">
             {% for item in book_essentials %}
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                     <div class="card h-100 text-center shadow-sm position-relative">
+                        
+                        {% if other_book.stock == 0 %}
+                            <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of stock</span>
+                        {% elif other_book.stock <= 3 %}
+                            <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
+                        {% else %}
+                            <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
+                        {% endif %}
 
-                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">🛒</a>
+                        <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
+                            <path d="M0 1.5A.5.5 0 0 1 .5 1h1a.5.5 0 0 1 .485.379L2.89 5H14.5a.5.5 0 0 1 .49.598l-1.5 7A.5.5 0 0 1 13 13H4a.5.5 0 0 1-.491-.408L1.01 2H.5a.5.5 0 0 1-.5-.5zM3.14 6l1.25 5h8.22l1.25-5H3.14zM5.5 14a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm6 0a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"/>
+                            </svg>
+                        </a>
 
                         <a href="{% url 'book_detail' item.id %}">
                             {% with item.images.first as img %}
                                 {% if img %}
-                                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                                    <img src="{{ img.image.url }}" class="card-img-top essential-img" alt="{{ item.title }}">
                                 {% else %}
                                     <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                                 {% endif %}
@@ -197,15 +222,79 @@
 <!-- STYLES -->
 <!-- ========================= -->
 <style>
+
+.book-detail-container {
+    align-items: flex-start;
+}
+
+@media (min-width: 768px) {
+    .book-detail-container > .col-md-5 {
+        padding-right: 20px;
+    }
+
+    .book-detail-container > .col-md-7 {
+        padding-left: 20px;
+    }
+}
+
+.book-detail-title {
+    color: #000672;         /* EXACT same as home */
+}
+
 .carousel-hover { transition: transform 0.3s ease; }
 .carousel-hover:hover { transform: scale(1.03); }
 
-.stock { font-weight: 600; font-size: 0.85rem; padding: 0.35rem 0.6rem; border-radius: 0.5rem; color: #fff; }
-.in-stock { background-color: #7AD1A0; }
-.low-stock { background-color: #F7B267; }
-.out-stock { background-color: #FF7F7F; }
+/* stock badge (same as home page) */
+.stock {
+    display: inline-block;
+    font-weight: 600;
+    font-size: 0.85rem;
+    padding: 0.35rem 0.7rem;
+    border-radius: 0.6rem;
+    font-family: 'Segoe UI', sans-serif;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+}
 
-.card-body h5 { font-size: 1rem; font-weight: 600; }
+/* EXACT same colors as home */
+.in-stock {
+    background-color: #27ae60;
+    color: #fff;
+}
+
+.low-stock {
+    background-color: #f1c40f;
+    color: #3e3e3e;
+}
+
+.out-stock {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+
+/* EXACT same cart icon style as home */
+.cart-icon-svg svg {
+    color: #6f4ceb;
+    background: #fff;
+    border-radius: 50%;
+    padding: 4px;
+    transition: 0.3s;
+}
+
+/* hover effect */
+.cart-icon-svg:hover svg {
+    color: #9253f1;
+    transform: scale(1.1);
+}
+
+/* same heading style as home page */
+h2.text-center.fw-bold {
+    font-size: 2.4rem;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    color: #00147a;
+}
+
 .card-body p.text-muted { font-size: 0.85rem; }
 
 .btn-primary:hover { background-color: #3a6e59; }
@@ -220,6 +309,35 @@
 }
 .carousel-control-prev-icon::before { content: '❮'; color: #eeeeee; }
 .carousel-control-next-icon::before { content: '❯'; color: #eeeeee; }
+
+/* ================= BOOK ESSENTIALS IMAGE FIX ================= */
+.essential-img {
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center 30%;
+}
+
+
+.reading-essentials-title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #000672;
+    margin-bottom: 10px;
+}
+
+.reading-essentials-section .card {
+    border: none;
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+.reading-subtext {
+    color: #8a7cf0;      /* soft light purple */
+    font-weight: 500;    /* slightly bold */
+    font-size: 0.95rem;  /* slightly smaller */
+}
 </style>
 
 {% endblock %}

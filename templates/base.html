@@ -22,6 +22,74 @@
 
     <style>
 
+/* CATEGORY BUTTON SPACING */
+.category-filter .btn {
+    margin: 6px;
+    padding: 8px 16px;
+}
+
+/* HERO TEXT POLISH */
+.hero-content h1 {
+    font-weight: 600;   /* was heavier before */
+    letter-spacing: 1px;
+}
+
+@media (max-width: 768px) {
+    .hero-content h1 {
+        font-size: 1.4rem;   /* slightly smaller */
+    }
+}
+
+
+/* MOBILE HERO FIX */
+@media (max-width: 768px) {
+
+    .hero-content h1 {
+        font-size: 1.6rem;   /* reduce size */
+        line-height: 1.3;
+    }
+
+    .hero-content p {
+        font-size: 0.9rem;
+    }
+
+    .hero-content .btn {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .hero-content {
+        padding: 15px;
+    }
+}
+
+/* GLOBAL SECTION SPACING */
+section {
+    padding-top: 40px;
+    padding-bottom: 40px;
+}
+
+/* MOBILE SPACING */
+@media (max-width: 768px) {
+    section {
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+}
+
+h2.text-center.fw-bold {
+    font-size: 2.4rem;
+    letter-spacing: 1px;
+    margin-bottom: 30px;
+    color: #000672;
+}
+
+@media (max-width: 768px) {
+    h2.text-center.fw-bold {
+        font-size: 1.6rem;
+    }
+}
+
         /* ================= COMMON BUTTON HOVER ================= */
         /* Apply same hover effect to all buttons */
         .btn {
