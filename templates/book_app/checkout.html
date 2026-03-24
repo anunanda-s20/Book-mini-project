@@ -3,17 +3,17 @@
 {% block content %}
 <div class="container mt-5 mb-5" style="max-width: 1050px;">
 
-    <h2 class="text-center mb-2">Checkout</h2>
+    {% if cart_items %}
+    <!-- SHOW ONLY WHEN CART HAS ITEMS -->
+    <h2 class="text-center mb-2 checkout-title">Checkout</h2>
     <p class="text-center text-muted mb-4">
         Please review your order before confirming.
     </p>
 
-    {% if cart_items %}
-
     <!-- ================= ORDER SUMMARY ================= -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h2 class="mb-3">Order Summary</h2>
+            <h3 class="mb-3">Order Summary</h3>
 
             <table class="table align-middle">
                 <thead class="table-light">
@@ -48,7 +48,18 @@
     <!-- ================= SHIPPING ADDRESS ================= -->
     <div class="card shadow-sm mb-4">
         <div class="card-body">
-            <h2 class="mb-3">Shipping Address</h2>
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="mb-0">Shipping Address</h3>
+
+                <div class="address-btns">
+                    <a href="{% url 'address_list' %}" class="btn btn-sm btn-outline-primary">
+                        Change Address
+                    </a>
+                    <a href="{% url 'add_address' %}" class="btn btn-sm btn-outline-secondary">
+                        Add New
+                    </a>
+                </div>
+            </div>
 
             {% if address %}
             <div class="border rounded p-3 bg-light">
@@ -68,7 +79,6 @@
 
     <!-- ================= ACTION BUTTONS ================= -->
     <div class="d-flex justify-content-between align-items-center">
-
         <a href="{% url 'view_cart' %}" class="btn btn-outline-secondary">
             ← Back to Cart
         </a>
@@ -86,8 +96,34 @@
     </p>
 
     {% else %}
-    <p class="text-center">Your cart is empty.</p>
+    <div class="text-center mt-5 pt-4">
+        <h5>Your cart is empty 🛒</h5>
+        <p class="text-muted">Looks like you haven’t added anything yet.</p>
+
+        <a href="{% url 'book_list' %}" class="btn btn-primary mt-2">
+            Browse Books
+        </a>
+    </div>
     {% endif %}
 
 </div>
+
+<style>
+.address-btns .btn {
+    min-width: 130px;
+    height: 38px;
+    padding: 0 14px;
+    font-size: 15px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    white-space: nowrap;
+}
+
+.checkout-title {
+    color: #00147a;   /* your dark blue theme */
+}
+</style>
+
 {% endblock %}
