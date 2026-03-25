@@ -1,19 +1,66 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+<style>
+       
+
+.order-success-card {
+    border-radius: 16px;
+}
+
+.order-success-title {
+    color: #00147a;
+    font-weight: 600;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.order-helper-text {
+    color: #6c757d;
+    font-size: 14px;
+    margin-top: 20px;
+}
+
+
+.order-btn {
+    min-width: 200px;   /* makes both buttons equal width */
+    padding: 30px 30px; /* controls height + spacing */
+    font-size: 18px;    /* clean readable size */
+    border-radius: 5px; /* slightly smooth edges */
+}
+
+.order-subtext {
+    color: #9284fa;      /* same as reading essentials */
+    font-weight: 500;
+    font-size: 0.95rem;
+    margin-top: 5px;
+}
+
+.highlight-link {
+    color: #7478fb;
+    font-weight: 600;
+    cursor: default;
+}
+
+
+
+
+    </style>
+
 <div class="container mt-5 mb-5" style="max-width: 700px;">
 
-    <div class="card shadow-sm p-4 text-center">
+    <div class="card shadow-sm p-4 text-center order-success-card">
 
         <!-- Success Icon -->
         <div style="font-size: 60px;">✅</div>
 
         <!-- Title (capitalization polished) -->
-        <h2 class="mt-3">Order Success</h2>
+        <h2 class="mt-3 order-success-title">Order Placed Successfully</h2>
 
         <!-- Clean confirmation message -->
-        <p class="text-muted">
-            Your order has been placed successfully🎉.
+        <p class="order-subtext">
+            Your order has been placed successfully 🎉
         </p>
 
         <!-- Order Info (shown only if order exists) -->
@@ -23,27 +70,30 @@
                 <strong>Order ID:</strong> #{{ order.id }}
             </p>
             <p class="mb-0">
-                <strong>Total Amount:</strong> ₹{{ order.total_amount }}
+                <strong>Total Amount:</strong> ₹{{ order.total_price }}
             </p>
         </div>
         {% endif %}
 
         <!-- Action Buttons -->
         <!-- Primary action first: View My Orders -->
-        <div class="d-flex justify-content-center gap-3 mt-4">
-            <a href="{% url 'my_orders' %}" class="btn btn-primary">
+        <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+            <a href="{% url 'my_orders' %}" class="btn btn-primary order-btn">
                 View My Orders
             </a>
-            <a href="{% url 'book_list' %}" class="btn btn-outline-primary">
+
+            <a href="{% url 'book_list' %}" class="btn btn-secondary order-btn">
                 Continue Shopping
             </a>
         </div>
 
         <!-- Helper text -->
-        <p class="text-muted mt-4" style="font-size: 14px;">
-            You can track your order anytime from “My Orders”.
+        <p class="order-helper-text">
+            You can track your order anytime from 
+            <span class="highlight-link">My Orders</span>.
         </p>
 
     </div>
+   
 </div>
 {% endblock %}
