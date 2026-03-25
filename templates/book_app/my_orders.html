@@ -4,17 +4,26 @@
 {% block content %}
 
 <!-- ================= COMMON BUTTON STYLE ================= -->
-
 <style>
-.cart-title {
+    /* ONE place to edit all action buttons */
+    .action-btn {
+        padding: 14px 14px;
+        font-size: 14px;
+        border-radius: 6px;
+    }
+
+    .cart-title {
     color: #00147a;
 }
+
+
 </style>
 
 <div class="container my-5" style="max-width: 900px;">
 
     <!-- Page title -->
     <h2 class="mb-4 cart-title">🛍️ My Orders</h2>
+
     {% if orders %}
         {% for order in orders %}
         <!-- ================= ORDER CARD ================= -->
