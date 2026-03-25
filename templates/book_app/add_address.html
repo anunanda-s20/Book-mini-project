@@ -21,7 +21,10 @@
             <form method="post">
                 {% csrf_token %}
 
-                <!-- Form level errors (rare but useful) -->
+                <!-- ADD THIS LINE HERE -->
+                <input type="hidden" name="next" value="{{ next }}">
+
+                <!-- Form level errors -->
                 {% if form.non_field_errors %}
                 <div class="alert alert-danger">
                     {{ form.non_field_errors }}

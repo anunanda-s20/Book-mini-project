@@ -52,13 +52,14 @@
                 <h3 class="mb-0">Shipping Address</h3>
 
                 <div class="address-btns">
-                    <a href="{% url 'address_list' %}" class="btn btn-sm btn-outline-primary">
+                    <a href="{% url 'address_list' %}?next=checkout" class="btn btn-sm btn-outline-primary">
                         Change Address
                     </a>
-                    <a href="{% url 'add_address' %}" class="btn btn-sm btn-outline-secondary">
+                    <a href="{% url 'add_address' %}?next=checkout" class="btn btn-sm btn-outline-secondary">
                         Add New
                     </a>
                 </div>
+
             </div>
 
             {% if address %}
@@ -70,8 +71,8 @@
                 PIN: {{ address.pincode }}
             </div>
             {% else %}
-            <p class="text-danger">
-                No address found. Please add one in your profile.
+            <p class="text-danger mb-0">
+                No delivery address found. Please add one to continue your order.
             </p>
             {% endif %}
         </div>
@@ -83,12 +84,18 @@
             ← Back to Cart
         </a>
 
+        {% if address %}
         <form method="post">
             {% csrf_token %}
             <button type="submit" class="btn btn-success px-5">
                 Confirm Order
             </button>
         </form>
+        {% else %}
+        <a href="{% url 'add_address' %}?next=checkout" class="btn btn-primary px-4">
+            Add Address to Continue
+        </a>
+        {% endif %}
     </div>
 
     <p class="text-center text-muted mt-3" style="font-size: 14px;">

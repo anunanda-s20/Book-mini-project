@@ -35,15 +35,21 @@
                 <!-- Action Buttons -->
                 <div class="address-actions mt-2">
 
+                    <!-- Select (NEW BUTTON) -->
+                    <a href="{% url 'select_address' addr.id %}" 
+                    class="btn btn-sm btn-primary">
+                        <i class="fas fa-check"></i> Deliver Here
+                    </a>
+
                     <!-- Edit -->
                     <a href="{% url 'edit_address' addr.id %}" 
-                       class="btn btn-sm btn-outline-primary">
+                    class="btn btn-sm btn-outline-primary">
                         <i class="fas fa-edit"></i> Edit
                     </a>
 
                     <!-- Delete -->
                     <a href="{% url 'delete_address' addr.id %}" 
-                       class="btn btn-sm btn-outline-danger">
+                    class="btn btn-sm btn-outline-danger">
                         <i class="fas fa-trash"></i> Delete
                     </a>
 
@@ -70,10 +76,10 @@
 
     <!-- Add Address Button -->
     <div class="mt-3">
-        <a href="{% url 'add_address' %}" class="btn btn-sm btn-primary">
-            <i class="fas fa-plus me-1"></i> Add New Address
-        </a>
-    </div>
+    <a href="{% url 'add_address' %}{% if request.GET.next %}?next={{ request.GET.next }}{% endif %}" class="btn btn-sm btn-primary">
+        <i class="fas fa-plus me-1"></i> Add New Address
+    </a>
+</div>
 
 </div>
 

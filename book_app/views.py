@@ -409,8 +409,28 @@ def checkout(request):
     total = sum(i.book.price * i.quantity for i in cart_items)  
     # calculate total amount
 
-    address = Address.objects.filter(user=request.user).first()  
-    # get user's saved address
+    # get selected address id from session (saved when user selects/adds address)
+    selected_address_id = request.session.get('selected_address_id')
+
+    address = None  # initially no address
+
+    # if session has selected address id
+    if selected_address_id:
+        address = Address.objects.filter(
+            id=selected_address_id,   # match selected address
+            user=request.user         # ensure it belongs to current user
+        ).first()  # get that address
+
+    # if no valid selected address found
+    if not address:
+        # get latest address of user (fallback)
+        address = Address.objects.filter(user=request.user).order_by('-id').first()
+
+        # if fallback address exists
+        if address:
+            # save it in session as current selected address
+            request.session['selected_address_id'] = address.id
+        # get user's saved address
 
     if not address:
         messages.warning(request, "🚚Please add a delivery address to continue.") 
@@ -536,19 +556,48 @@ def address_list(request):
 
 
 @login_required
+def select_address(request, address_id):
+    # get selected address of current user
+    address = get_object_or_404(Address, id=address_id, user=request.user)
+
+    # save selected address in session
+    request.session['selected_address_id'] = address.id
+
+    messages.success(request, "Address selected successfully.")
+    return redirect('checkout')  # go back to checkout
+
+
+@login_required
 def add_address(request):
+    # Get next page from URL first, or from hidden input after form submit
+    next_page = request.GET.get('next') or request.POST.get('next')
+
     form = AddressForm(request.POST or None)  # address form
+
     if request.method == "POST" and form.is_valid():
-        address = form.save(commit=False)  # don't save yet
-        address.user = request.user  # assign user
-        address.save()  # save address
+        address = form.save(commit=False)   # create address object first
+        address.user = request.user         # connect address to logged-in user
+        address.save()                      # save address in database
 
-        # success message for user
-        messages.success(request, "Address added successfully. Continue to checkout.")
+        # Make this new address the current selected address for checkout
+        request.session['selected_address_id'] = address.id
 
-        return redirect('checkout')
-    # reuse add_address.html for-editing address
-    return render(request, 'book_app/add_address.html', {'form': form, 'mode': 'add'})
+        # If user came from checkout flow, go back to checkout
+        if next_page == 'checkout':
+            messages.success(request, "Address added successfully. Continue to checkout.")
+            return redirect('checkout')
+
+        # Normal address/profile flow
+        messages.success(request, "Address added successfully.")
+        return redirect('address_list')
+
+    # Reuse add_address.html for add mode
+    return render(request, 'book_app/add_address.html', {
+        'form': form,
+        'mode': 'add',
+        'next': next_page,   # send next value to template
+    })
+
 #edit-address
 @login_required
 def edit_address(request, id):
