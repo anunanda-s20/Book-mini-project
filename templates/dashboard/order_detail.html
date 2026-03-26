@@ -9,7 +9,11 @@
 <p><strong>Order ID:</strong> #{{ order.id }}</p>
 <p><strong>User:</strong> {{ order.user.username }}</p>
 <p><strong>Total Price:</strong> ₹{{ order.total_price }}</p>
-<p><strong>Address:</strong> {{ order.address.address_line1 }}, {{ order.address.city }}, {{ order.address.state }}, {{ order.address.pincode }}</p>
+<p>
+    <strong>Address:</strong><br>
+    {{ order.address.street }}<br>
+    {{ order.address.city }}, {{ order.address.state }} - {{ order.address.pincode }}
+</p>
 <p><strong>Placed on:</strong> {{ order.created_at|date:"d M, Y H:i" }}</p>
 <hr>
 
