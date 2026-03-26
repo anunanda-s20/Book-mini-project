@@ -131,6 +131,15 @@ class EditProfileForm(forms.ModelForm):
         model = UserProfile
         fields = ['phone']
 
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['phone'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Enter phone number'
+        })
+
     def clean_phone(self):
         phone = self.cleaned_data.get('phone')
         if phone and (not phone.isdigit() or len(phone) not in [10, 11, 12]):
