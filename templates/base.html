@@ -225,76 +225,84 @@ h2.text-center.fw-bold {
         <div class="container">
             <div class="row d-flex justify-content-between">
 
-                <!-- Logo & description -->
-                <div class="col-xl-3 col-lg-3 col-md-8 col-sm-8">
-                    <div class="single-footer-caption mb-50">
-                        <div class="footer-logo mb-35">
-                            <a href="{% url 'home' %}" style="font-size:24px; font-weight:bold; color:#769af5; text-decoration:none;">
-                                Luna Books
-                            </a>
-                        </div>
-                        <div class="footer-tittle">
-                            <p>Suspendisse varius enim in eros elementum tristique. Duis cursus, mi quis viverra ornare, eros dolor interdum nulla.</p>
-                        </div>
-                        <div class="footer-social">
+            <!-- Logo & description -->
+            <div class="col-xl-3 col-lg-3 col-md-8 col-sm-8">
+                <div class="single-footer-caption mb-50">
+                    <div class="footer-logo mb-35">
+                        <a href="{% url 'home' %}" style="font-size:24px; font-weight:bold; color:#769af5; text-decoration:none;">
+                            Luna Books
+                        </a>
+                    </div>
+                    <div class="footer-tittle">
+                        <p>Your cozy online space to explore, discover, and fall in love with books. 📖🧸🕯️☕🌙</p>
+                        <div class="footer-social mt-3">
                             <a href="#"><i class="fab fa-twitter"></i></a>
-                            <a href="https://bit.ly/sai4ull"><i class="fab fa-facebook-f"></i></a>
+                            <a href="#"><i class="fab fa-facebook-f"></i></a>
                             <a href="#"><i class="fab fa-pinterest-p"></i></a>
                         </div>
                     </div>
                 </div>
-
-                <!-- Quick links -->
-                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
-                    <div class="single-footer-caption mb-50">
-                        <h4>Quick links</h4>
-                        <ul>
-                            <li><a href="#">Image Licensin</a></li>
-                            <li><a href="#">Style Guide</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Shop Category -->
-                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
-                    <div class="single-footer-caption mb-50">
-                        <h4>Shop Category</h4>
-                        <ul>
-                            <li><a href="#">Image Licensin</a></li>
-                            <li><a href="#">Style Guide</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Partners -->
-                <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
-                    <div class="single-footer-caption mb-50">
-                        <h4>Partners</h4>
-                        <ul>
-                            <li><a href="#">Image Licensing</a></li>
-                            <li><a href="#">Style Guide</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Contact -->
-                <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4">
-                    <div class="single-footer-caption mb-50">
-                        <h4>Get in touch</h4>
-                        <ul>
-                            <li><a href="#">(89) 982-278 356</a></li>
-                            <li><a href="#">demo@colorlib.com</a></li>
-                            <li><a href="#">67/A, Colorlib, Green road, NYC</a></li>
-                        </ul>
-                    </div>
-                </div>
-
             </div>
-        </div>
-    </div>
+
+            <!-- Quick Links -->
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                <div class="single-footer-caption mb-50">
+                    <h4>Quick Links</h4>
+                    <ul>
+                        <li><a href="{% url 'home' %}">Home</a></li>
+                        <li><a href="{% url 'book_list' %}">Books</a></li>
+                        <li><a href="{% url 'wishlist' %}">Wishlist</a></li>
+                        <li><a href="{% url 'view_cart' %}">Cart</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Account -->
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                <div class="single-footer-caption mb-50">
+                    <h4>Account</h4>
+                    <ul>
+                        <li><a href="{% url 'my_orders' %}">My Orders</a></li>
+                        <li><a href="{% url 'my_profile' %}">My Profile</a></li>
+                        <li><a href="{% url 'login' %}">Login</a></li>
+                        <li><a href="{% url 'signup' %}">Signup</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- About -->
+            <div class="col-xl-2 col-lg-2 col-md-4 col-sm-4">
+                <div class="single-footer-caption mb-50">
+                    <h4>About</h4>
+                    <ul>
+                        <li><a href="#">About Luna Books</a></li>
+                        <li><a href="#">Contact</a></li>
+                        <li><a href="#">Support</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="col-xl-2 col-lg-3 col-md-4 col-sm-4">
+                <div class="single-footer-caption mb-50">
+                    <h4>Contact</h4>
+                    <ul>
+                        <li><a href="#">Kerala, India</a></li>
+                        <li><a href="#">lunabooks@example.com</a></li>
+                        <li><a href="#">+91 98765 43210</a></li>
+                    </ul>
+                </div>
+            </div>
+
+
+
+            
+
+
+        
+    </div> <!-- row -->
+        </div> <!-- container -->
+    </div> <!-- footer-area -->
 
     <div class="footer-bottom-area text-center">
         <p class="mb-0">&copy; 2025 Luna Books.</p>
