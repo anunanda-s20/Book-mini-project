@@ -3,13 +3,18 @@
 
 {% block content %}
 <div class="container mt-4 mb-5">
-    <h2 class="mb-4"><i class="fas fa-user me-2"></i>My Profile</h2>
+    <h2 class="profile-title mb-4">
+        <i class="fas fa-user me-2"></i>My Profile
+    </h2>
 
     <div class="row">
         <!-- ===================== USER INFO CARD ===================== -->
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm p-3">
-                <h3 class="section-title">Account Information</h3>
+                <h5 class="section-title profile-subtitle">
+                    <i class="fas fa-id-card me-2"></i>Account Information
+                </h5>
+
 
                 <!-- Username -->
                 <p><strong>Name:</strong> {{ user.username }}</p>
@@ -28,20 +33,50 @@
                 </p>
 
                 <!-- Edit Profile Button -->
-                <a href="{% url 'edit_profile' %}" class="btn btn-primary btn-sm mt-2">Edit Profile</a>
+                <a href="{% url 'edit_profile' %}" class="btn btn-primary w-100 mt-2">Edit Profile</a>
             </div>
         </div>
 
         <!-- ===================== ACCOUNT LINKS CARD ===================== -->
         <div class="col-md-6 mb-4">
             <div class="card shadow-sm p-3">
-                <h3 class="section-title">My Account</h3>
+                <h5 class="section-title profile-subtitle">
+                    <i class="fas fa-book me-2"></i>My Account
+                </h5>
+                
                 <ul class="list-unstyled mb-0">
-                <li class="mb-2"><a class="nav-link" href="{% url 'my_orders' %}">My Orders</a></li>
-                <li class="mb-2"><a class="nav-link" href="{% url 'wishlist' %}">My Wishlist</a></li>
-                <li class="mb-2"><a class="nav-link" href="{% url 'address_list' %}">My Addresses</a></li>
-                <li class="mb-2"><a class="nav-link text-danger" href="{% url 'logout' %}">Logout</a></li>
+
+                    <li class="mb-2">
+                        <a class="nav-link" href="{% url 'my_orders' %}">
+                            <i class="fas fa-box me-2"></i>My Orders
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a class="nav-link" href="{% url 'wishlist' %}">
+                            <i class="fas fa-heart me-2 text-danger"></i>My Wishlist
+                        </a>
+                    </li>
+
+                    <li class="mb-2">
+                        <a class="nav-link" href="{% url 'address_list' %}">
+                            <i class="fas fa-map-marker-alt me-2"></i>My Addresses
+                        </a>
+                    </li>
+
+                    
+                    <li class="mb-2">
+                        <form method="post" action="{% url 'logout' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-outline-danger logout-btn d-flex align-items-center justify-content-center">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </button>
+                        </form>
+                    </li>
+
+
                 </ul>
+
             </div>
         </div>
     </div>
@@ -49,12 +84,42 @@
 
 <!-- Optional styling -->
 <style>
-.card-title {
-    font-size: 1.1rem;
-    font-weight: 600;
+
+
+
+/* ================= PROFILE PAGE HEADING BALANCE ================= */
+
+.profile-subtitle {
+    font-size: 1.5rem;   /* control size only */
 }
-.card p, .card a {
-    font-size: 0.95rem;
+
+.nav-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+/* Make account icons blue */
+.nav-link i {
+    color: #3b4da8;  /* your theme purple-blue */
+}
+
+
+/* Hover effect for text + icon */
+.nav-link:hover,
+.nav-link:hover i {
+    color: #397fef;  /* your hover color */
+}
+
+
+/* Custom small logout button */
+.logout-btn {
+    width: 120px;      /* control width */
+    height: 40px;      /* control height */
+    font-size: 0.9rem; /* text size */
+    padding: 20px 20px; /* inner spacing */
+    border-radius: 5px;
+    margin-top: 20px;  /* space above button */
 }
 
 </style>
