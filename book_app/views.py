@@ -90,38 +90,43 @@ def book_list(request):
 
 
 
+# =========================
 # 3️. BOOK DETAIL
 # =========================
 def book_detail(request, id):
 
-    book = get_object_or_404(Book, id=id, is_active=True)  # get book safely
+    # get current book safely
+    book = get_object_or_404(Book, id=id, is_active=True)
 
+    # suggested books (exclude current book)
     suggested_books = Book.objects.filter(
         is_active=True,
         product_type='book'
-    ).exclude(id=id)[:4]  # 4 suggested books
-    # exclude current-book
+    ).exclude(id=id)[:4]
 
+    # book essentials (exclude current product ⭐ FIX ADDED)
     book_essentials = Book.objects.filter(
-    is_active=True,
-    product_type='accessory',
-    category__isnull=False
-).order_by('-created_at')[:4]  # 4 accessories
+        is_active=True,
+        product_type='accessory',
+        category__isnull=False
+    ).exclude(id=id).order_by('-created_at')[:4]  
+    # exclude current product → prevents showing same item again
 
+    # check if current book is in wishlist
     is_wishlisted = (
-        Wishlist.objects.filter(user=request.user, book=book).exists() # check if book in wishlist
-        if request.user.is_authenticated else False # checks if the user is logged-in
-    )  
+        Wishlist.objects.filter(user=request.user, book=book).exists()
+        if request.user.is_authenticated else False
+    )
 
+    # send data to template
     context = {
         'book': book,
         'is_wishlisted': is_wishlisted,
         'suggested_books': suggested_books,
-        'book_essentials': book_essentials, 
+        'book_essentials': book_essentials,
     }
 
     return render(request, 'book_app/book_detail.html', context)
-
 
 
 # 4.AUTHENTICATION

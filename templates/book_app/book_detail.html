@@ -178,13 +178,14 @@
                 <div class="col-xl-3 col-lg-4 col-md-6 mb-4">
                     <div class="card h-100 text-center shadow-sm position-relative">
                         
-                        {% if other_book.stock == 0 %}
+                        {% if item.stock == 0 %}
                             <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of stock</span>
-                        {% elif other_book.stock <= 3 %}
+                        {% elif item.stock <= 3 %}
                             <span class="badge stock low-stock position-absolute top-0 end-0 m-2">Few Left</span>
                         {% else %}
                             <span class="badge stock in-stock position-absolute top-0 end-0 m-2">In Stock</span>
                         {% endif %}
+                        
 
                         <a href="{% url 'add_to_cart' item.id %}" class="position-absolute top-0 start-0 m-2 cart-icon-svg">
                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" viewBox="0 0 16 16">
