@@ -65,27 +65,47 @@
         </div>
 
         <!-- PAGINATION -->
-<div class="d-flex justify-content-center mt-4">  <!-- center pagination -->
 
-    {% if page_obj.has_previous %}  <!-- check if previous page exists -->
-        <a class="btn btn-outline-secondary me-2"
-           href="?page={{ page_obj.previous_page_number }}&order={{ order }}">
-           Previous
-        </a>
-    {% endif %}
+    {% if page_obj.paginator.num_pages > 1 %}
+    <div class="pagination-wrapper text-center mt-5">
+        <nav aria-label="Book pagination">
+            <ul class="pagination custom-pagination justify-content-center">
 
-    <span class="align-self-center mx-3">  <!-- show current page info -->
-        Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
-    </span>
+                <!-- Previous button -->
+                {% if page_obj.has_previous %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.previous_page_number }}&order={{ order }}">
+                        «
+                    </a>
+                </li>
+                {% endif %}
 
-    {% if page_obj.has_next %}  <!-- check if next page exists -->
-        <a class="btn btn-outline-secondary ms-2"
-           href="?page={{ page_obj.next_page_number }}&order={{ order }}">
-           Next
-        </a>
-    {% endif %}
+                <!-- Page numbers -->
+                {% for num in page_obj.paginator.page_range %}
+                    {% if page_obj.number == num %}
+                        <li class="page-item active">
+                            <span class="page-link">{{ num }}</span>
+                        </li>
+                    {% else %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ num }}&order={{ order }}">{{ num }}</a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
 
+                <!-- Next button -->
+                {% if page_obj.has_next %}
+                <li class="page-item">
+                    <a class="page-link" href="?page={{ page_obj.next_page_number }}&order={{ order }}">
+                        »
+                    </a>
+                </li>
+                {% endif %}
+
+        </ul>
+    </nav>
 </div>
+{% endif %}
 
     </div>
 </section>
@@ -112,8 +132,8 @@
     font-weight: 500;
     transition: color 0.2s ease, font-weight 0.2s ease;
 }
-.filter-link:hover { color: #5c00c5; text-decoration: none; }
-.filter-link.active { color: #5800bd; font-weight: 700; }
+.filter-link:hover { color: #6e53ca; text-decoration: none; }
+.filter-link.active { color: #6e53ca; font-weight: 700; }
 .book-count { color: #6f6285; font-size: 14px; }
 
 /* STOCK BADGES */
@@ -140,6 +160,46 @@
 .cart-icon-svg:hover svg {
     color: #9253f1;
     transform: scale(1.1);
+}
+
+
+/* PAGINATION */
+.custom-pagination .page-item {
+    margin: 0 6px;
+}
+
+.custom-pagination .page-link {
+    border: none;
+    min-width: 42px;
+    height: 42px;
+    line-height: 42px;
+    padding: 0;
+    text-align: center;
+    border-radius: 12px;
+    background-color: #f6f1ff;
+    color: #6f4ceb;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(111, 76, 235, 0.08);
+    transition: all 0.25s ease;
+}
+
+.custom-pagination .page-link:hover {
+    background-color: #e9dcff;
+    color: #5800bd;
+    transform: translateY(-2px);
+}
+
+.custom-pagination .page-item.active .page-link {
+    background: linear-gradient(135deg, #7b2ff7, #9d4edd);
+    color: #fff;
+    box-shadow: 0 4px 12px rgba(123, 47, 247, 0.25);
+}
+
+.custom-pagination .page-item.disabled .page-link {
+    background-color: #f1edf7;
+    color: #b3a8c7;
+    pointer-events: none;
+    box-shadow: none;
 }
 </style>
 
