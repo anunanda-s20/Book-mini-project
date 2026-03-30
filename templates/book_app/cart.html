@@ -3,7 +3,9 @@
 {% block content %}
 <div class="container mt-4 mb-5">
 
-    <h2 class="mb-4 page-title">🛒Cart</h2>
+    <h2 class="mb-4 page-title">
+        <i class="fas fa-shopping-cart me-2"></i>Cart
+    </h2>
 
     {% if items %}  <!-- Cart has items -->
 
@@ -123,7 +125,7 @@
     <!-- ✅ EMPTY CART UI (ONLY ADDITION) -->
     <div class="cart-empty">
         <i class="fas fa-shopping-cart mb-3"></i>
-        <h5>Your cart is waiting 🛒</h5>
+        <h5>Your cart is waiting </h5>
         <p>Discover books you’ll love and add them to your cart when you’re ready.</p>
         <a href="{% url 'book_list' %}" class="btn btn-outline-primary mt-2">
             Explore books
@@ -186,6 +188,9 @@
     font-size: 15px;
 }
 
+.page-title i {
+    color: #00147a;
+}
 
 
 
