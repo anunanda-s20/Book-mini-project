@@ -21,7 +21,7 @@
         <div class="row">
             {% for book in page_obj %}
             <div class="col-xl-3 col-lg-4 col-md-6 col-sm-6 mb-4">
-                <div class="card h-100 text-center shadow-sm position-relative">
+                <div class="card h-100 text-center shadow-sm position-relative list-book-card">
 
                     <!-- Stock status badge -->
                     {% if book.stock == 0 %}
@@ -43,7 +43,7 @@
                     <a href="{% url 'book_detail' book.id %}">
                         {% with book.images.first as img %}
                             {% if img %}
-                                <img src="{{ img.image.url }}" class="card-img-top" alt="{{ book.title }}">
+                                <img src="{{ img.image.url }}" class="card-img-top list-book-img" alt="{{ book.title }}">
                             {% else %}
                                 <img src="{% static 'book_app/images/default-book.png' %}" class="card-img-top" alt="No image">
                             {% endif %}
@@ -200,6 +200,21 @@
     color: #b3a8c7;
     pointer-events: none;
     box-shadow: none;
+}
+
+
+/* BOOK LIST IMAGE SIZE */
+.list-book-img {
+    width: 100%;
+    height: 500px;   /* adjust here */
+    object-fit: cover;
+}
+
+/* CURVED CARD LIKE ESSENTIALS */
+.list-book-card {
+    border-radius: 16px;
+    overflow: hidden;
+    
 }
 </style>
 

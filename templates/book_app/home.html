@@ -99,6 +99,27 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
     font-size: 0.95rem;  /* slightly smaller */
 }
 
+.home-book-img {
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+    object-position: center;
+}
+
+
+.book-card {
+    
+    border-radius: 16px;
+    overflow: hidden;
+}
+
+
+.category-img {
+    height: 500px;
+    width: 100%;
+    object-fit: cover;
+}
+
 
 </style>
 
@@ -155,7 +176,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
             <div id="popularItemsRow">
                 {% for item in popular_books %}
                     <div class="col-lg-3 col-md-6 mb-4 popular-item" data-category="{{ item.category.title|slugify }}">
-                        <div class="card h-100 text-center position-relative">
+                        <div class="card h-100 text-center position-relative book-card">
                             {% if item.stock == 0 %}
                                 <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
                             {% elif item.stock <= 3 %}
@@ -171,7 +192,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
                             <a href="{% url 'book_detail' item.id %}">
                                 {% with item.images.first as img %}
                                     {% if img %}
-                                        <img src="{{ img.image.url }}" class="card-img-top" alt="{{ item.title }}">
+                                        <img src="{{ img.image.url }}" class="card-img-top category-img">
                                     {% else %}
                                         <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                                     {% endif %}
@@ -213,7 +234,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
         <div class="row">
             {% for book in new_arrivals %}
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card h-100 text-center position-relative">
+                    <div class="card h-100 text-center position-relative book-card">
 
                         {% if book.stock == 0 %}
                             <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
@@ -232,7 +253,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
                         <a href="{% url 'book_detail' book.id %}">
                             {% with book.images.first as img %}
                                 {% if img %}
-                                    <img src="{{ img.image.url }}" class="card-img-top" alt="{{ book.title }}">
+                                    <img src="{{ img.image.url }}" class="card-img-top home-book-img" alt="{{ book.title }}">
                                 {% else %}
                                     <img src="{% static 'book_app/img/default-book.png' %}" class="card-img-top" alt="No image">
                                 {% endif %}
