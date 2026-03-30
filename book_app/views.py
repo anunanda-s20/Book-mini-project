@@ -140,25 +140,28 @@ def signup(request):
 
 
 def custom_login(request):
-    if request.user.is_authenticated: # check-current user(already logged-in)-logged-in
+    if request.user.is_authenticated:
         return redirect('home')
     
-    # Temporary message if redirected
+    # Temporary message if redirected (ONLY ONCE)
     next_page = request.GET.get('next')
-    if next_page:
+    if next_page and not request.session.get('login_message_shown'):
         messages.info(request, "You must log in to continue to the page you wanted.")
+        request.session['login_message_shown'] = True
 
-
-    if request.method == "POST": #if form-submitted(request method-POST)
-        username = request.POST.get('username') # retrives submitted-formdata 
+    if request.method == "POST":
+        username = request.POST.get('username')
         password = request.POST.get('password')
-        user = authenticate(request, username=username, password=password)  # Verifies-credentials=correct
+        user = authenticate(request, username=username, password=password)
 
-        if user: # if-correct
-            login(request, user)  # Logs the user-(creates session)
+        if user:
+            login(request, user)
+
+            # remove flag after login
+            request.session.pop('login_message_shown', None)
+
             messages.success(request, f"Welcome back, {user.username}!")
-            
-            # Redirect to `next` page if present, else home
+
             next_redirect = request.POST.get('next') or 'home'
             return redirect(next_redirect)
         
@@ -196,6 +199,7 @@ def add_book(request):
         for img in images:
             BookImage.objects.create(book=book, image=img)
 
+        messages.success(request, "Book added successfully.")
         return redirect('manage_books')
 
     return render(request, 'book_app/add_book.html', {'form': form})
@@ -216,6 +220,7 @@ def edit_book(request, id):
         for img in images:
             BookImage.objects.create(book=book, image=img)
 
+        messages.success(request, "Book updated successfully.")
         return redirect('manage_books')
 
     return render(request, 'dashboard/edit_book.html', {'form': form, 'book': book})
@@ -316,26 +321,34 @@ def dashboard_order_detail(request, order_id):
 # 8. CART
 # =========================
 
-@login_required  # only logged-in users can use cart
+@login_required
 def add_to_cart(request, book_id):
 
-    book = get_object_or_404(Book, id=book_id)  # get selected book safely
+    book = get_object_or_404(Book, id=book_id)
 
-    if book.stock <= 0:  # check stock availability
-        messages.error(request, "Out of stock")  # show error message
-        return redirect(request.META.get('HTTP_REFERER', 'home'))  # go back
+    if book.stock <= 0:
+        messages.error(request, "Out of stock")
+        return redirect(request.META.get('HTTP_REFERER', 'home'))
 
-    cart, _ = Cart.objects.get_or_create(user=request.user)  
-    # get user's cart or create new one
+    cart, _ = Cart.objects.get_or_create(user=request.user)
+    item, created = CartItem.objects.get_or_create(cart=cart, book=book)
 
-    item, created = CartItem.objects.get_or_create(cart=cart, book=book)  
-    # get item from cart or create it
+    #  NEW: message for first time add
+    if created:
+        messages.success(request, f'"{book.title}" added to cart.')
 
+    #  EXISTING LOGIC (UNCHANGED)
     if not created and item.quantity < book.stock:
-        item.quantity += 1  # increase quantity if already exists
+        item.quantity += 1
         item.save()
+        messages.success(request, f'Quantity increased for "{book.title}".')
 
-    return redirect('view_cart')  # go to cart page
+    #  NEW: stock limit message (ONLY extra check, no logic change)
+    elif not created and item.quantity >= book.stock:
+        messages.warning(request, "You reached the available stock limit.")
+
+    return redirect('view_cart')
+
 
 
 @login_required  # user must be logged in
@@ -362,7 +375,12 @@ def increase_quantity(request, item_id):
         item.quantity += 1  # increase quantity
         item.save()
 
+        messages.success(request, "Quantity increased.")
+    else:
+        messages.warning(request, "You reached the available stock limit.")
+
     return redirect('view_cart')
+
 
 
 @login_required
@@ -374,8 +392,10 @@ def decrease_quantity(request, item_id):
 
     if item.quantity <= 0:
         item.delete()  # remove item if quantity is 0
+        messages.success(request, "Item removed from cart.")
     else:
         item.save()  # save updated quantity
+        messages.success(request, "Quantity decreased.")
 
     return redirect('view_cart')
 
@@ -385,6 +405,7 @@ def remove_from_cart(request, item_id):
     get_object_or_404(CartItem, id=item_id, cart__user=request.user).delete()
     # delete selected cart item
 
+    messages.success(request, "Item removed from cart.")
     return redirect('view_cart')
 
 
@@ -466,7 +487,7 @@ def checkout(request):
 
         cart_items.delete()  
         # clear cart after order placed
-
+        messages.success(request, "Order placed successfully.")
         return redirect('order_success')  
         # go to success page
 
@@ -522,6 +543,8 @@ def add_to_wishlist(request, book_id):
         user=request.user,
         book=get_object_or_404(Book, id=book_id)
     )  # add book to wishlist
+    
+    messages.success(request, "Book added to wishlist.")
     return redirect('wishlist')
 
 
@@ -531,6 +554,8 @@ def remove_from_wishlist(request, book_id):
         user=request.user,
         book_id=book_id
     ).delete()  # remove from wishlist
+
+    messages.success(request, "Book removed from wishlist.")
     return redirect('wishlist')
 
 
@@ -608,6 +633,8 @@ def edit_address(request, id):
 
     if request.method == "POST" and form.is_valid():
         form.save()
+
+        messages.success(request, "Address updated successfully.")
         return redirect('address_list')
     # use add_address.html template to edit existing address
     return render(request, 'book_app/add_address.html', {'form': form, 'mode': 'edit'})
@@ -620,6 +647,7 @@ def delete_address(request, id):
     address = Address.objects.get(id=id, user=request.user)
     address.delete()
 
+    messages.success(request, "Address deleted successfully.")
     return redirect('address_list')
 
 
