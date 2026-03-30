@@ -14,6 +14,14 @@
     {% endif %}
     </h2>
 
+
+    {% if next == "checkout" %}
+    <div class="alert alert-info py-2">
+        <i class="fas fa-info-circle me-1"></i>
+        This address will be used for your current checkout after saving.
+    </div>
+    {% endif %}
+
     <!-- Address Form Card -->
     <div class="card shadow-sm">
         <div class="card-body">
@@ -113,11 +121,10 @@
 
                     <!-- Submit -->
                     <button type="submit" class="btn btn-outline-primary btn-sm">
-                        <i class="fas fa-plus me-1"></i>
                         {% if mode == "edit" %}
-                            Update Address
+                            <i class="fas fa-save me-1"></i> Update Address
                         {% else %}
-                            Add Address
+                            <i class="fas fa-plus me-1"></i> Add Address
                         {% endif %}
                     </button>
 
