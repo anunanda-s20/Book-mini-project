@@ -538,7 +538,7 @@ def cancel_order(request, order_id):
 # =========================
 @login_required
 def wishlist(request):
-    items = Wishlist.objects.filter(user=request.user)  # get wishlist items
+    items = Wishlist.objects.filter(user=request.user).order_by('-added_at')  # get wishlist items
     return render(request, 'book_app/wishlist.html', {'items': items})
 
 
