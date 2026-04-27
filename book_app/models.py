@@ -121,6 +121,13 @@ class Order(models.Model):
     address = models.ForeignKey(Address, on_delete=models.SET_NULL, null=True, blank=True)#order-linked-address,set null if deleted
     total_price = models.DecimalField(max_digits=8, decimal_places=2)#total-order-price
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')#current-order-status
+
+
+    # Razorpay payment details
+    razorpay_order_id = models.CharField(max_length=100, blank=True, null=True)  # Razorpay order ID
+    razorpay_payment_id = models.CharField(max_length=100, blank=True, null=True)  # Razorpay payment ID
+    razorpay_signature = models.CharField(max_length=200, blank=True, null=True)  # Razorpay verification signature
+
     created_at = models.DateTimeField(auto_now_add=True)#order-created datetime
     updated_at = models.DateTimeField(auto_now=True)#order-updated datetime
 
