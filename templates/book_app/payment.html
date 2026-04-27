@@ -1,0 +1,57 @@
+{% extends 'book_app/base.html' %}
+
+{% block content %}
+
+<div class="container text-center my-5">
+    <h2>Complete Your Payment</h2>
+
+    <p>Order ID: {{ order.id }}</p>
+    <h4>Total Amount: ₹{{ order.total_price }}</h4>
+
+    <button id="rzp-button" class="btn btn-primary mt-3">
+        Pay Now
+    </button>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<form id="payment-form" method="POST" action="{% url 'verify_payment' order.id %}">
+    {% csrf_token %}
+    <input type="hidden" name="razorpay_payment_id" id="razorpay_payment_id">
+    <input type="hidden" name="razorpay_order_id" id="razorpay_order_id">
+    <input type="hidden" name="razorpay_signature" id="razorpay_signature">
+</form>
+
+<script>
+var options = {
+    "key": "{{ razorpay_key_id }}",
+    "amount": "{{ amount }}",
+    "currency": "INR",
+    "name": "Luna Books",
+    "description": "Book Order Payment",
+    "order_id": "{{ razorpay_order_id }}",
+
+    "handler": function (response) {
+        document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
+        document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
+        document.getElementById("razorpay_signature").value = response.razorpay_signature;
+
+        document.getElementById("payment-form").submit();
+    },
+
+    "theme": {
+        "color": "#000672"
+    }
+};
+
+var rzp1 = new Razorpay(options);
+
+document.getElementById("rzp-button").onclick = function(e) {
+    rzp1.open();
+    e.preventDefault();
+}
+
+</script>
+
+
+{% endblock %}
