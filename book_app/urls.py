@@ -72,7 +72,7 @@ urlpatterns = [
     # =========================
     # ABOUT PAGE
     # =========================
-    path('about/', views.about, name='about'),  # ✅ Moved inside urlpatterns
+    path('about/', views.about, name='about'),  #  Moved inside urlpatterns
     #categories-home-page
     path('category/<int:category_id>/', views.category_books, name='category_books'),
 
@@ -80,6 +80,7 @@ urlpatterns = [
     # PAYMENT
     # =========================
     path("test-razorpay/", views.test_razorpay, name="test_razorpay"),
+    path("verify-payment/<int:order_id>/", views.verify_payment, name="verify_payment"),
 ]
 
 
