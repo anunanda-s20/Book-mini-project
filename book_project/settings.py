@@ -124,3 +124,6 @@ LOGOUT_REDIRECT_URL = "home"
 
 # Print emails in terminal instead of sending real email (for development)
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+RAZORPAY_KEY_ID = "rzp_test_SiV9R4XrPJORKv"
+RAZORPAY_KEY_SECRET = "ZAUe173heUwoHdTRZYdCJGNL"

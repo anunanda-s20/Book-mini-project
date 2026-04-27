@@ -5,6 +5,10 @@ from django.contrib import messages  # show success/error messages
 from django.core.paginator import Paginator  # pagination
 from django.db.models import Q  # advanced search queries
 
+import razorpay
+from django.conf import settings
+from django.http import HttpResponse
+
 from .models import Book, Order, OrderItem, Cart, CartItem, Wishlist, Address, Category, BookImage # models
 from .forms import SimpleUserCreationForm, BookForm, AddressForm, EditProfileForm # forms
 
@@ -490,11 +494,7 @@ def checkout(request):
             # reduce book stock
             item.book.save()
 
-        cart_items.delete()  
-        # clear cart after order placed
-        messages.success(request, "Order placed successfully.")
-        return redirect('order_success')  
-        # go to success page
+        return redirect('order_success')
 
     return render(request, 'book_app/checkout.html', {
         'cart_items': cart_items,
@@ -716,3 +716,25 @@ def category_books(request, category_id):
         'category': category,
         'books': books
     })
+
+
+def test_razorpay(request):
+    try:
+        # Create Razorpay client (connect using the keys)
+        client = razorpay.Client(
+            auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+        )
+
+        # Create a test order in Razorpay
+        order = client.order.create({
+            "amount": 50000,        # amount in paise - 500
+            "currency": "INR",      # Indian currency
+            "payment_capture": 1    # auto capture payment
+        })
+
+        # If success - show order ID in browser
+        return HttpResponse(f"Success! Razorpay Order ID: {order['id']}")
+
+    except Exception as e:
+        # If error - show error message
+        return HttpResponse(f"Error: {str(e)}")

@@ -75,7 +75,14 @@ urlpatterns = [
     path('about/', views.about, name='about'),  # ✅ Moved inside urlpatterns
     #categories-home-page
     path('category/<int:category_id>/', views.category_books, name='category_books'),
+
+    # =========================
+    # PAYMENT
+    # =========================
+    path("test-razorpay/", views.test_razorpay, name="test_razorpay"),
 ]
+
+
 
 # =========================
 # MEDIA FILES (DEV MODE)
