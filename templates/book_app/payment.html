@@ -1,4 +1,4 @@
-{% extends 'book_app/base.html' %}
+{% extends 'base.html' %}
 
 {% block content %}
 
@@ -32,11 +32,19 @@ var options = {
     "order_id": "{{ razorpay_order_id }}",
 
     "handler": function (response) {
+        console.log("PAYMENT SUCCESS RESPONSE:", response);
+
         document.getElementById("razorpay_payment_id").value = response.razorpay_payment_id;
         document.getElementById("razorpay_order_id").value = response.razorpay_order_id;
         document.getElementById("razorpay_signature").value = response.razorpay_signature;
 
         document.getElementById("payment-form").submit();
+    },
+
+    "modal": {
+        "ondismiss": function () {
+            alert("Payment popup closed.");
+        }
     },
 
     "theme": {
@@ -49,9 +57,7 @@ var rzp1 = new Razorpay(options);
 document.getElementById("rzp-button").onclick = function(e) {
     rzp1.open();
     e.preventDefault();
-}
-
+};
 </script>
-
 
 {% endblock %}

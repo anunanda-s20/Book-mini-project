@@ -5,6 +5,8 @@ from django.contrib import messages  # show success/error messages
 from django.core.paginator import Paginator  # pagination
 from django.db.models import Q  # advanced search queries
 
+from django.views.decorators.csrf import csrf_exempt
+
 import razorpay
 from django.conf import settings
 from django.http import HttpResponse
@@ -423,86 +425,96 @@ def remove_from_cart(request, item_id):
 # 9. CHECKOUT
 # =========================
 
-@login_required  # only logged-in users can checkout
+@login_required
 def checkout(request):
-
-    cart = Cart.objects.filter(user=request.user).first()  
-    # get current user's cart
+    cart = Cart.objects.filter(user=request.user).first()
 
     if not cart:
-        return redirect('view_cart')  
-        # if no cart, go back to cart page
+        return redirect('view_cart')
 
-    cart_items = cart.items.all()  
-    # get all items in cart
+    cart_items = cart.items.all()
 
-    total = sum(i.book.price * i.quantity for i in cart_items)  
-    # calculate total amount
+    if not cart_items:
+        return redirect('view_cart')
 
-    # get selected address id from session (saved when user selects/adds address)
+    total = sum(i.book.price * i.quantity for i in cart_items)
+
     selected_address_id = request.session.get('selected_address_id')
+    address = None
 
-    address = None  # initially no address
-
-    # if session has selected address id
     if selected_address_id:
         address = Address.objects.filter(
-            id=selected_address_id,   # match selected address
-            user=request.user         # ensure it belongs to current user
-        ).first()  # get that address
+            id=selected_address_id,
+            user=request.user
+        ).first()
 
-    # if no valid selected address found
     if not address:
-        # get latest address of user (fallback)
         address = Address.objects.filter(user=request.user).order_by('-id').first()
 
-        # if fallback address exists
         if address:
-            # save it in session as current selected address
             request.session['selected_address_id'] = address.id
-        # get user's saved address
 
     if not address:
-        messages.warning(request, "🚚Please add a delivery address to continue.") 
-        # show error if no address
-        return redirect('add_address') 
-        # redirect to add new address- to add address
+        messages.warning(request, "🚚 Please add a delivery address to continue.")
+        return redirect('add_address')
 
-    if request.method == "POST":  
-        # when user confirms order
+    if request.method == "POST":
 
+        # Check stock before creating order
+        for item in cart_items:
+            if item.quantity > item.book.stock:
+                messages.error(
+                    request,
+                    f"Only {item.book.stock} copy/copies of {item.book.title} available."
+                )
+                return redirect('view_cart')
+
+        # Create pending order
         order = Order.objects.create(
             user=request.user,
             address=address,
             total_price=total,
             status='pending'
-        )  
-        # create main order
+        )
 
-        for item in cart_items:  
-            # loop through each cart item
-
+        # Create order items
+        # IMPORTANT: stock is NOT reduced here
+        for item in cart_items:
             OrderItem.objects.create(
                 order=order,
                 book=item.book,
                 quantity=item.quantity,
                 price=item.book.price
-            )  
-            # create order item record
+            )
 
-            item.book.stock -= item.quantity  
-            # reduce book stock
-            item.book.save()
+        # Create Razorpay order
+        client = razorpay.Client(
+            auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+        )
 
-        return redirect('order_success')
+        amount_in_paise = int(total * 100)
+
+        razorpay_order = client.order.create({
+            "amount": amount_in_paise,
+            "currency": "INR",
+            "payment_capture": 1
+        })
+
+        order.razorpay_order_id = razorpay_order["id"]
+        order.save()
+
+        return render(request, "book_app/payment.html", {
+            "order": order,
+            "razorpay_key_id": settings.RAZORPAY_KEY_ID,
+            "razorpay_order_id": razorpay_order["id"],
+            "amount": amount_in_paise,
+        })
 
     return render(request, 'book_app/checkout.html', {
         'cart_items': cart_items,
         'total': total,
         'address': address
-    })  
-    # show checkout page
-
+    })
 
 
 # 10.USER ORDERS
@@ -738,3 +750,60 @@ def test_razorpay(request):
     except Exception as e:
         # If error - show error message
         return HttpResponse(f"Error: {str(e)}")
+    
+
+
+@csrf_exempt
+@login_required
+def verify_payment(request, order_id):
+
+    order = get_object_or_404(Order, id=order_id, user=request.user)
+
+    razorpay_payment_id = request.POST.get("razorpay_payment_id") or request.GET.get("razorpay_payment_id")
+    razorpay_order_id = request.POST.get("razorpay_order_id") or request.GET.get("razorpay_order_id")
+    razorpay_signature = request.POST.get("razorpay_signature") or request.GET.get("razorpay_signature")
+
+    if not razorpay_payment_id:
+        messages.error(request, "Payment failed or cancelled.")
+        return redirect("checkout")
+
+    client = razorpay.Client(
+        auth=(settings.RAZORPAY_KEY_ID, settings.RAZORPAY_KEY_SECRET)
+    )
+
+    params_dict = {
+        "razorpay_order_id": razorpay_order_id,
+        "razorpay_payment_id": razorpay_payment_id,
+        "razorpay_signature": razorpay_signature,
+    }
+
+    try:
+        client.utility.verify_payment_signature(params_dict)
+
+        # Save payment details
+        order.razorpay_payment_id = razorpay_payment_id
+        order.razorpay_signature = razorpay_signature
+        order.status = "paid"
+        order.save()
+
+        # Reduce stock ONLY after successful payment
+        for item in order.items.all():
+            if item.quantity <= item.book.stock:
+                item.book.stock -= item.quantity
+                item.book.save()
+            else:
+                messages.error(request, f"Stock issue for {item.book.title}.")
+                return redirect("checkout")
+
+        # Clear cart
+        cart = Cart.objects.filter(user=request.user).first()
+        if cart:
+            cart.items.all().delete()
+
+        messages.success(request, "Payment successful!")
+        return redirect("order_success")
+
+    except Exception as e:
+        print("SIGNATURE ERROR:", e)
+        messages.error(request, "Payment verification failed.")
+        return redirect("checkout")
