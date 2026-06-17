@@ -80,9 +80,9 @@
 
     {% else %}
         <!-- ✅ EMPTY WISHLIST UI (ONLY ADDITION) -->
-        <div class="wishlist-empty">
+        <div class="cart-empty">
             <i class="fas fa-heart-broken mb-3"></i>
-            <h4>Your wishlist is empty</h4>
+            <h5>Your wishlist is empty</h5>
             <p>Save books you love and find them here anytime.</p>
             <a href="{% url 'book_list' %}" class="btn btn-outline-primary mt-2">
                 Browse books
@@ -94,6 +94,13 @@
 
 <!-- Styles -->
 <style>
+.wishlist-empty h4 {
+    font-weight: 600;
+    font-size: 1.25rem;
+    margin-bottom: 10px;
+}
+
+
 /* Hover effect */
 .wishlist-item:hover {
     background-color: #f9f9f9;
@@ -115,7 +122,7 @@
 }
 
 /* ✅ EMPTY WISHLIST ALIGNMENT */
-.wishlist-empty {
+.cart-empty {
     min-height: 60vh;
     display: flex;
     flex-direction: column;
@@ -125,13 +132,15 @@
     color: #666;
 }
 
-.wishlist-empty i {
+.cart-empty i {
     font-size: 3rem;
     color: #e57373;
 }
 
-.wishlist-empty h4 {
-    font-weight: 600;
+.cart-empty h4 {
+    margin-bottom: 10px;
 }
+
+
 </style>
 {% endblock %}
