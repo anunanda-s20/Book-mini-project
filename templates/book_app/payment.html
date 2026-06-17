@@ -5,7 +5,9 @@
 <div class="container text-center my-5">
     <h2>Complete Your Payment</h2>
 
-    <p>Order ID: {{ order.id }}</p>
+    <p class="order-id-text">
+        Order ID: <span class="order-id-badge">#{{ order.id }}</span>
+    </p>
     <h4>Total Amount: ₹{{ order.total_price }}</h4>
 
     <button id="rzp-button" class="btn btn-primary mt-3">
@@ -60,4 +62,21 @@ document.getElementById("rzp-button").onclick = function(e) {
 };
 </script>
 
+<style>
+.order-id-text {
+    font-size: 1.05rem;
+    margin-top: 10px;
+    color: #12396b;
+}
+
+.order-id-badge {
+    font-weight: 900;
+    color: #40668c;
+    background: #f1f3f5;
+    padding: 4px 10px;
+    border-radius: 8px;
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+</style>
 {% endblock %}
