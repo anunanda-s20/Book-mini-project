@@ -157,8 +157,37 @@ h2.text-center.fw-bold {
         .footer-area .single-footer-caption h4 {
         color: #162f6f; !important;
     }
+
     
-    </style>
+
+    
+
+
+.search-input {
+    border-radius: 30px;
+    border: 1px solid #e1ddf3;
+    padding: 15px 25px;
+}
+
+
+
+
+
+.search-btn {
+    border-radius: 30px;
+    padding: 10px 50px;
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+}
+
+
+
+
+</style>
 </head>
 
 <body class="d-flex flex-column min-vh-100">
@@ -181,9 +210,17 @@ h2.text-center.fw-bold {
 
         <div class="collapse navbar-collapse" id="mainNavbar">
             {% if request.path != '/login/' and request.path != '/signup/' %}
-            <form class="d-flex ms-auto me-3" method="get" action="{% url 'book_list' %}">
-                <input class="form-control me-2" type="text" name="q" placeholder="Search books">
-                <button class="btn btn-outline-primary" type="submit">Search</button>
+            <form class="d-flex ms-auto me-3 search-form" method="get" action="{% url 'book_list' %}">
+                <input
+                    class="form-control search-input"
+                    type="text"
+                    name="q"
+                    placeholder="Search books"
+                >
+
+                <button class="btn btn-primary search-btn" type="submit">
+                    Search
+                </button>
             </form>
 
             <ul class="navbar-nav align-items-center">
