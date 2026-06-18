@@ -4,10 +4,33 @@
 
 <!-- ================= COMMON BUTTON STYLE ================= -->
 <style>
-    .action-btn { padding: 14px 14px; font-size: 14px; border-radius: 6px; }
+    .action-btn { padding: 14px 14px; font-size: 14px; border-radius: 6px; } */
     .status-badge { padding: 4px 10px; border-radius: 5px; font-weight: 500; }
     .modal-footer .btn { padding: 12px 12px; font-size: 12px; border-radius: 5px; }
     .modal-footer .btn + .btn { margin-left: 8px; }
+
+    .add-book-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 20px;
+    font-size: 20px;
+    font-weight: 500;
+    border-radius: 6px;
+    line-height: 1;
+}
+
+.apply-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px 20px;
+    font-size: 18px;
+    font-weight: 500;
+    border-radius: 10px;
+    line-height: 1;
+    min-width: 90px; /* keeps it visually balanced */
+}
 </style>
 
 <div class="container my-4" style="max-width: 1000px;">
@@ -15,7 +38,9 @@
     <!-- Page title -->
     <h2 class="dashboard-page-title mb-4">Manage Books</h2>
     <p class="text-muted">Add, View, edit, or delete books</p>
-    <a href="{% url 'add_book' %}" class="btn btn-sm btn-success mb-3">+ Add Book</a>
+    <a href="{% url 'add_book' %}" class="btn btn-success mb-3 add-book-btn">
+        + Add Book
+    </a>
 
     <!-- 🔍 SEARCH + FILTER FORM -->
     <form method="get" class="mb-3 d-flex gap-2">
@@ -32,7 +57,9 @@
         </select>
 
         <!-- submit button -->
-        <button type="submit" class="btn btn-primary">Apply</button>
+        <button type="submit" class="btn btn-primary apply-btn">
+            Apply
+        </button>
     </form>
 
     {% if books %}
