@@ -1,5 +1,41 @@
 {% extends 'base.html' %}
+
 {% block content %}
-<h2>About Us</h2>
-<p>Welcome to Luna Books! We are passionate about books and reading.</p>
+
+<div class="container my-5">
+
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-sm p-4 text-center">
+
+                <h2 class="mb-3">About Luna Books</h2>
+
+                <p class="lead">
+                    Welcome to Luna Books! We are passionate about books and reading.
+                </p>
+
+                <p class="about-subtext">
+                    Luna Books is your cozy online space to explore, discover, and fall in love with books.
+                </p>
+
+            </div>
+
+        </div>
+    </div>
+
+</div>
+
+<style>
+.card {
+    border-radius: 12px;
+}
+
+.about-subtext {
+    color: #9284fa;
+    font-weight: 500;
+}
+</style>
+
+
 {% endblock %}
