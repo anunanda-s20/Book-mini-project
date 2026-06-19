@@ -17,7 +17,7 @@
                 <h3>{{ total_books }}</h3>
                 <a href="{% url 'manage_books' %}" class="btn btn-sm btn-primary mt-2">
                     Manage Books
-                </a> <!-- Short: Click to manage all books -->
+                </a> <!-- Store manage all books -->
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
         <div class="card shadow-sm text-center">
             <div class="card-body">
                 <h5 class="card-title text-uppercase">Total Revenue</h5>
-                <h3>₹{{ total_revenue }}</h3> <!-- Short: Revenue from completed orders -->
+                <h3>₹{{ total_revenue }}</h3> <!-- Revenue from completed orders -->
             </div>
         </div>
     </div>
@@ -48,7 +48,7 @@
         <div class="card shadow-sm text-center">
             <div class="card-body">
                 <h5 class="card-title text-uppercase">Pending Orders</h5>
-                <h3>{{ pending_orders }}</h3> <!-- Short: Number of pending orders -->
+                <h3>{{ pending_orders }}</h3> <!-- Number of pending orders -->
             </div>
         </div>
     </div>
@@ -89,12 +89,12 @@
                     <span class="badge px-3 py-2 text-success" style="background:#E6F4EA;">Delivered</span>
                 {% elif order.status == 'cancelled' %}
                     <span class="badge px-3 py-2 text-danger" style="background:#F8D7DA;">Cancelled</span>
-                {% endif %} <!-- Short: Color-coded badge -->
+                {% endif %} <!-- Color-coded badge -->
             </td>
             <td>
                 <a href="{% url 'dashboard_order_detail' order.id %}" class="btn btn-sm btn-outline-secondary">
                     Details
-                </a> <!-- Short: View order details -->
+                </a> <!-- View order details -->
             </td>
         </tr>
         {% empty %}
@@ -135,7 +135,7 @@
         <li class="page-item disabled"><span class="page-link">Next</span></li>
         {% endif %}
     </ul>
-</nav> <!-- Short: Paginate orders for easy navigation -->
+</nav> <!-- Paginate orders for easy navigation -->
 {% endif %}
 
 {% endblock %}

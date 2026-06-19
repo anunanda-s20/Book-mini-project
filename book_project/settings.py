@@ -36,7 +36,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
 
-    # Our app (AppConfig REQUIRED for signals)
+    # app (AppConfig required for signals)
     "book_app.apps.BookAppConfig",
 ]
 
@@ -107,7 +107,7 @@ USE_TZ = True
 # ================= STATIC FILES =================
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [
-    BASE_DIR / "book_app" / "static",  # <-- tells Django to look here for static files
+    BASE_DIR / "book_app" / "static",  # -  for static files
 ]
 
 
@@ -122,7 +122,7 @@ LOGIN_REDIRECT_URL = "home"
 LOGOUT_REDIRECT_URL = "home"
 
 
-# Print emails in terminal instead of sending real email (for development)
+# Provide - emails in terminal instead of sending real email (for development)
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 EMAIL_HOST = 'smtp.gmail.com'

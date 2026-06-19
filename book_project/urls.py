@@ -38,7 +38,7 @@ urlpatterns = [
     # message shown after email is sent
 
     path('reset/<uidb64>/<token>/',auth_views.PasswordResetConfirmView.as_view(template_name='registration/password_reset_confirm.html'),name='password_reset_confirm'),
-    # link from email → user sets new password
+    # link from email -to- user sets new password
 
     path('reset_done/',auth_views.PasswordResetCompleteView.as_view(template_name='registration/password_reset_complete.html'),name='password_reset_complete'),
     # final success page after password change

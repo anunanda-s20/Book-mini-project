@@ -37,7 +37,7 @@ urlpatterns = [
     #Address-edit & dlt
     path('address/edit/<int:id>/', views.edit_address, name='edit_address'),
     path('address/delete/<int:id>/', views.delete_address, name='delete_address'),
-
+    #Address-select
     path('select-address/<int:address_id>/', views.select_address, name='select_address'),
 
     # =========================

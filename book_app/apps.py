@@ -7,7 +7,7 @@ class BookAppConfig(AppConfig):  # Configuration class for this app
     # Sets the default primary key type for models (auto-increment ID)
     default_auto_field = 'django.db.models.BigAutoField'
 
-    # Name of the app (must match the app folder name)
+    # Name of the app
     name = 'book_app'
 
     # This method runs once when Django starts

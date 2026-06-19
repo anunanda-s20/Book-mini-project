@@ -19,7 +19,7 @@ class UserProfileAdmin(admin.ModelAdmin):
     search_fields = ('user__username', 'phone')
 
 
-# ================= BOOK (MAIN FIX HERE) =================
+# ================= BOOK (MAIN) =================
 @admin.register(Book)
 class BookAdmin(admin.ModelAdmin):
 

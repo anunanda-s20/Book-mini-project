@@ -110,13 +110,13 @@ def book_detail(request, id):
         product_type='book'
     ).exclude(id=id)[:4]
 
-    # book essentials (exclude current product ⭐ FIX ADDED)
+    # book essentials (exclude-current product )
     book_essentials = Book.objects.filter(
         is_active=True,
         product_type='accessory',
         category__isnull=False
     ).exclude(id=id).order_by('-created_at')[:4]  
-    # exclude current product → prevents showing same item again
+    # exclude current product = prevents showing same item again
 
     # check if current book is in wishlist
     is_wishlisted = (

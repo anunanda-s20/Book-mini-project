@@ -50,14 +50,14 @@
         + Add Book
     </a>
 
-    <!-- 🔍 SEARCH + FILTER FORM -->
+    <!-- SEARCH + FILTER FORM -->
     <form method="get" class="mb-3 d-flex gap-2">
         
         <!-- search input -->
         <input type="text" name="q" value="{{ query }}" 
                class="form-control" placeholder="Search by title or author">
 
-        <!-- 🎯 product type dropdown -->
+        <!-- product type dropdown -->
         <select name="type" class="form-select" style="max-width:200px;">
             <option value="">All</option>
             <option value="book" {% if product_type == "book" %}selected{% endif %}>Books</option>
@@ -88,7 +88,7 @@
                 <td>{{ book.title }}</td>
                 <td>{{ book.author }}</td>
 
-                <!-- 📌 status logic -->
+                <!-- status logic -->
                 <td>
                     {% if not book.is_active %}
                         <span class="status-badge text-danger" style="background:#F8D7DA;">Inactive</span>

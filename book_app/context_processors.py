@@ -3,7 +3,7 @@
 from .models import Wishlist  # Import Wishlist model
 
 def wishlist_count(request):
-    # This function will run for every request (if added in settings)
+    # This function will run for every request
 
     # If user is logged in
     if request.user.is_authenticated:
