@@ -108,9 +108,9 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
 
 
 .book-card {
-    
     border-radius: 16px;
     overflow: hidden;
+    height: 100%;
 }
 
 
@@ -118,6 +118,22 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
     height: 500px;
     width: 100%;
     object-fit: cover;
+}
+
+@media (max-width: 768px) {
+
+    .home-book-img,
+    .essential-img,
+    .category-img {
+        height: 350px;
+        min-width: 250px;
+    }
+
+}
+
+
+.card-body h5 {
+    min-height: 50px;
 }
 
 
@@ -289,7 +305,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
         <div class="row">
             {% for item in book_essentials %}
                 <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card h-100 text-center position-relative">
+                    <div class="card h-100 text-center position-relative book-card">
 
                         {% if item.stock == 0 %}
                             <span class="badge stock out-stock position-absolute top-0 end-0 m-2">Out of Stock</span>
