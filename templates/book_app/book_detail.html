@@ -149,7 +149,7 @@
                 {% endwith %}
             </a>
 
-            <div class="card-body">
+            <div class="card-body pt-3">
                 <h5>{{ other_book.title }}</h5>
                 <p class="text-muted">{{ other_book.author }}</p>
                 <p class="fw-bold">₹ {{ other_book.price }}</p>
@@ -203,7 +203,7 @@
                             {% endwith %}
                         </a>
 
-                        <div class="card-body">
+                        <div class="card-body pt-3">
                             <h5 class="card-title">{{ item.title }}</h5>
                             <p class="text-muted">{{ item.author }}</p>
                             <p class="fw-bold">₹ {{ item.price }}</p>
@@ -338,6 +338,21 @@ h2.text-center.fw-bold {
     color: #8a7cf0;      /* soft light purple */
     font-weight: 500;    /* slightly bold */
     font-size: 0.95rem;  /* slightly smaller */
+}
+
+
+
+@media (max-width: 767px) {
+    .book-detail-title {
+        margin-top: 30px;
+    }
+}
+
+
+@media (max-width: 767px) {
+    .reading-subtext {
+        margin-top: 15px;
+    }
 }
 </style>
 
