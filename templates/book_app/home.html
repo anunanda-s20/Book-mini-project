@@ -133,6 +133,14 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
 }
 
 
+@media (max-width: 768px) {
+    .category-filter-buttons {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 8px;
+    }
+}
 
 
 
@@ -179,7 +187,7 @@ img { user-select: none; pointer-events: auto; -webkit-user-drag: none; -khtml-u
         </p>
 
 
-        <div class="text-center mb-4">
+        <div class="text-center mb-4 category-filter-buttons">
             <button onclick="filterCategory('all')" class="btn btn-primary btn-sm">All</button>
             {% for cat in categories %}
                 <button onclick="filterCategory('{{ cat.title|slugify }}')" class="btn btn-outline-primary btn-sm">{{ cat.title }}</button>
