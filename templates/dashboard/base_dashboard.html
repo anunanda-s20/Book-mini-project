@@ -96,18 +96,56 @@
     color: #084298;
     border-left-color: #0d6efd;
 }
-    </style>
+
+@media (max-width: 768px) {
+
+    .dashboard-nav {
+        display: flex;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+
+        gap: 8px;
+
+        /* ✅ THIS IS THE KEY FIX */
+        padding-right: 20px;
+        padding-bottom: 6px;
+
+        -webkit-overflow-scrolling: touch;
+        scroll-padding-right: 20px;
+    }
+
+    .dashboard-nav .nav-btn {
+        flex: 0 0 auto;
+    }
+
+    /* hide ugly scrollbar but keep scroll working */
+    .dashboard-nav::-webkit-scrollbar {
+        height: 4px;
+    }
+
+    .dashboard-nav::-webkit-scrollbar-thumb {
+        background: #ccc;
+        border-radius: 10px;
+    }
+}
+
+
+
+
+</style>
+
 </head>
 
 <body>
 
 <!-- ================= DASHBOARD HEADER ================= -->
 <header class="dashboard-header">
-    <div class="container d-flex justify-content-between align-items-center">
+    <div class="container-fluid px-3">
+    <div class="d-flex align-items-center justify-content-between">
 
         <h2 class="page-title dashboard-title">Admin Dashboard📊 </h2>
 
-        <nav class="dashboard-nav d-flex align-items-center">
+        <nav class="dashboard-nav d-flex align-items-center flex-nowrap">
 
             <a href="{% url 'dashboard' %}" class="nav-btn">
                 <i class="fa-solid fa-house me-1"></i> Dashboard
