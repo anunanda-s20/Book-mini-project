@@ -4,9 +4,9 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 urlpatterns = [
-    # =========================
+    # ========================
     # HOME & PUBLIC PAGES
-    # =========================
+    # ========================
     path('', views.home, name='home'),  # Home page
     path('books/', views.book_list, name='book_list'),  # List all books
     path('books/<int:id>/', views.book_detail, name='book_detail'),  # Book detail
