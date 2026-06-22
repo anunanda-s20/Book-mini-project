@@ -15,6 +15,8 @@ Django settings for book_project project.
 """
 
 from pathlib import Path
+import dj_database_url
+import os
 
 # Base directory
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -81,7 +83,8 @@ WSGI_APPLICATION = "book_project.wsgi.application"
 
 
 # ================= DATABASE =================
-DATABASES = {
+# Old local PostgreSQL settings
+'''DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'book_db',
@@ -90,6 +93,15 @@ DATABASES = {
         'HOST': 'localhost',
         'PORT': '5432',
     }
+}
+'''
+
+# New database settings using dj-database-url
+# Use Render PostgreSQL database from DATABASE_URL during hosting
+DATABASES = {
+    "default": dj_database_url.config(
+        default=os.environ.get("DATABASE_URL")
+    )
 }
 
 
