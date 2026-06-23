@@ -141,33 +141,36 @@
 <!-- ================= DASHBOARD HEADER ================= -->
 <header class="dashboard-header">
     <div class="container-fluid px-3">
-    <div class="d-flex align-items-center justify-content-between">
+        <div class="d-flex align-items-center justify-content-between">
 
-        <h2 class="page-title dashboard-title">Admin Dashboard📊 </h2>
+            <h2 class="page-title dashboard-title mb-0">
+                Admin Dashboard📊
+            </h2>
 
-        <nav class="dashboard-nav d-flex align-items-center flex-nowrap">
+            <nav class="dashboard-nav d-flex align-items-center flex-nowrap">
 
-            <a href="{% url 'dashboard' %}" class="nav-btn">
-                <i class="fa-solid fa-house me-1"></i> Dashboard
-            </a>
+                <a href="{% url 'dashboard' %}" class="nav-btn">
+                    <i class="fa-solid fa-house me-1"></i> Dashboard
+                </a>
 
-            <a href="{% url 'manage_books' %}" class="nav-btn">
-                <i class="fa-solid fa-book me-1"></i> Manage Books
-            </a>
+                <a href="{% url 'manage_books' %}" class="nav-btn">
+                    <i class="fa-solid fa-book me-1"></i> Manage Books
+                </a>
 
-            <a href="{% url 'home' %}" class="nav-btn">
-                <i class="fa-solid fa-arrow-left me-1"></i> Back to Site
-            </a>
+                <a href="{% url 'home' %}" class="nav-btn">
+                    <i class="fa-solid fa-arrow-left me-1"></i> Back to Site
+                </a>
 
-            <!-- Small Logout Button -->
-            <form method="post" action="{% url 'logout' %}" class="ms-2">
-                {% csrf_token %}
-                <button class="btn btn-sm btn-outline-danger px-2 py-1" title="Logout">
-                    <i class="fa-solid fa-right-from-bracket"></i>
-                </button>
-            </form>
+                <form method="post" action="{% url 'logout' %}" class="ms-2">
+                    {% csrf_token %}
+                    <button class="btn btn-sm btn-outline-danger px-2 py-1" title="Logout">
+                        <i class="fa-solid fa-right-from-bracket"></i>
+                    </button>
+                </form>
 
-        </nav>
+            </nav>
+
+        </div>
     </div>
 </header>
 

@@ -15,7 +15,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
     <!-- Main CSS -->
-    <link rel="stylesheet" href="{% static 'book_app/style.css' %}">
+    <link rel="stylesheet" href="{% static 'book_app/CSS/style.css' %}">
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500;600;700&display=swap" rel="stylesheet">
@@ -209,7 +209,7 @@ h2.text-center.fw-bold {
         </button>
 
         <div class="collapse navbar-collapse" id="mainNavbar">
-            {% if request.path != '/login/' and request.path != '/signup/' %}
+            {% if not request.resolver_match.url_name in "login signup" %}
             <form class="d-flex ms-auto me-3 search-form" method="get" action="{% url 'book_list' %}">
                 <input
                     class="form-control search-input"

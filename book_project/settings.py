@@ -25,8 +25,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY (development only)
 SECRET_KEY = "django-insecure-%v+$^=u=%8_cym@j=2n3h$5ywjtk=gz9k_(clkre3rn@1s13o"
 
-DEBUG = True
-ALLOWED_HOSTS = ['*']
+DEBUG = False
+ALLOWED_HOSTS = [
+    "book-mini-project-2.onrender.com",
+    "127.0.0.1",
+    "localhost"
+]
 
 
 # ================= APPLICATIONS =================
@@ -117,11 +121,16 @@ USE_TZ = True
 
 
 # ================= STATIC FILES =================
-STATIC_URL = "/static/"
+STATIC_URL = '/static/'
+
 STATICFILES_DIRS = [
-    BASE_DIR / "book_app" / "static",  # -  for static files
+    BASE_DIR / 'book_app' / 'static'
 ]
+
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+
+
 
 # ================= MEDIA FILES =================
 MEDIA_URL = "/media/"

@@ -63,7 +63,7 @@ class BookForm(forms.ModelForm):
             'price': forms.NumberInput(attrs={'placeholder': 'Enter price'}),
             'description': forms.Textarea(attrs={'placeholder': 'Enter description'}),
             'stock': forms.NumberInput(attrs={'placeholder': 'Stock'}),
-            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'published_date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
             'published_date': forms.DateInput(attrs={'type': 'date'}),
             'category': forms.Select(attrs={'class': 'form-control'})  # category dropdown
         }
