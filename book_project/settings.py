@@ -49,10 +49,16 @@ INSTALLED_APPS = [
 ]
 
 # Cloudinary account credentials for storing uploaded media files online
-CLOUDINARY_STORAGE = {
+'''CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dv7liwxsl',
     'API_KEY': '313474996779814',
     'API_SECRET': 'fvDH9YYIAOXpSsr9Q4JxF1gspjU',
+}'''
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('dv7liwxsl'),
+    'API_KEY': os.environ.get('313474996779814'),
+    'API_SECRET': os.environ.get('fvDH9YYIAOXpSsr9Q4JxF1gspjU'),
 }
 
 # Store uploaded images/files in Cloudinary instead of the local media folder
