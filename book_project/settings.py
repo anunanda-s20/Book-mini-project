@@ -44,8 +44,26 @@ INSTALLED_APPS = [
 
     # app (AppConfig required for signals)
     "book_app.apps.BookAppConfig",
+    'cloudinary',
+    'cloudinary_storage',
 ]
 
+# Cloudinary account credentials for storing uploaded media files online
+'''CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dv7liwxsl',
+    'API_KEY': '313474996779814',
+    'API_SECRET': 'fvDH9YYIAOXpSsr9Q4JxF1gspjU',
+}'''
+
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': os.environ.get('dv7liwxsl'),
+    'API_KEY': os.environ.get('313474996779814'),
+    'API_SECRET': os.environ.get('fvDH9YYIAOXpSsr9Q4JxF1gspjU'),
+}
+
+# Store uploaded images/files in Cloudinary instead of the local media folder
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
 
 # ================= MIDDLEWARE =================
@@ -107,10 +125,7 @@ WSGI_APPLICATION = "book_project.wsgi.application"
 # Use Render PostgreSQL database from DATABASE_URL during hosting
 DATABASES = {
     "default": dj_database_url.config(
-        default=os.environ.get(
-            "DATABASE_URL",
-            "postgresql://postgres:postgresql@12345@localhost:5432/book_db"
-        )
+        default=os.environ.get("DATABASE_URL")
     )
 }
 
@@ -142,8 +157,11 @@ STATICFILES_STORAGE = (
 
 
 # ================= MEDIA FILES =================
+# remove MEDIA_ROOT completely
 MEDIA_URL = "/media/"
-MEDIA_ROOT = BASE_DIR / "media"
+
+# MEDIA_ROOT removed (optional-cleanup)
+# MEDIA_ROOT = BASE_DIR / "media"
 
 
 # ================= AUTH SETTINGS =================
