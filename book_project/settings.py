@@ -108,26 +108,24 @@ WSGI_APPLICATION = "book_project.wsgi.application"
 
 
 # ================= DATABASE =================
-# Old local PostgreSQL settings
-'''DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'book_db',
-        'USER': 'postgres',       
-        'PASSWORD': 'postgresql@12345',
-        'HOST': 'localhost',
-        'PORT': '5432',
-    }
-}
-'''
 
-# New database settings using dj-database-url
-# Use Render PostgreSQL database from DATABASE_URL during hosting
-DATABASES = {
-    "default": dj_database_url.config(
-        default=os.environ.get("DATABASE_URL")
-    )
-}
+DATABASE_URL = os.environ.get("DATABASE_URL")
+
+if DATABASE_URL:
+    DATABASES = {
+        "default": dj_database_url.parse(DATABASE_URL)
+    }
+else:
+    DATABASES = {
+        "default": {
+            "ENGINE": "django.db.backends.postgresql",
+            "NAME": "book_db",
+            "USER": "postgres",
+            "PASSWORD": "postgresql@12345",
+            "HOST": "localhost",
+            "PORT": "5432",
+        }
+    }
 
 
 # ================= PASSWORD VALIDATION =================
