@@ -25,7 +25,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY (development only)
 SECRET_KEY = "django-insecure-%v+$^=u=%8_cym@j=2n3h$5ywjtk=gz9k_(clkre3rn@1s13o"
 
-DEBUG = False
+DEBUG = True
 ALLOWED_HOSTS = [
     "book-mini-project-2.onrender.com",
     "127.0.0.1",
@@ -155,11 +155,8 @@ STATICFILES_STORAGE = (
 
 
 # ================= MEDIA FILES =================
-# remove MEDIA_ROOT completely
 MEDIA_URL = "/media/"
-
-# MEDIA_ROOT removed (optional-cleanup)
-# MEDIA_ROOT = BASE_DIR / "media"
+MEDIA_ROOT = BASE_DIR / "media"
 
 
 # ================= AUTH SETTINGS =================
