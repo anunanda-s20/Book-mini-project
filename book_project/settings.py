@@ -44,17 +44,10 @@ INSTALLED_APPS = [
 
     # app (AppConfig required for signals)
     "book_app.apps.BookAppConfig",
+
     'cloudinary',
     'cloudinary_storage',
 ]
-
-# Cloudinary account credentials for storing uploaded media files online
-'''CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dv7liwxsl',
-    'API_KEY': '313474996779814',
-    'API_SECRET': 'fvDH9YYIAOXpSsr9Q4JxF1gspjU',
-}'''
-
 
 CLOUDINARY_STORAGE = {
     "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
@@ -62,9 +55,7 @@ CLOUDINARY_STORAGE = {
     "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
 }
 
-# Store uploaded images/files in Cloudinary instead of the local media folder
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
+DEFAULT_FILE_STORAGE = "cloudinary_storage.storage.MediaCloudinaryStorage"
 
 # ================= MIDDLEWARE =================
 MIDDLEWARE = [
