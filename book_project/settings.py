@@ -57,9 +57,9 @@ INSTALLED_APPS = [
 
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': os.environ.get('dv7liwxsl'),
-    'API_KEY': os.environ.get('313474996779814'),
-    'API_SECRET': os.environ.get('fvDH9YYIAOXpSsr9Q4JxF1gspjU'),
+    "CLOUD_NAME": os.environ.get("CLOUDINARY_CLOUD_NAME"),
+    "API_KEY": os.environ.get("CLOUDINARY_API_KEY"),
+    "API_SECRET": os.environ.get("CLOUDINARY_API_SECRET"),
 }
 
 # Store uploaded images/files in Cloudinary instead of the local media folder
